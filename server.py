@@ -6,6 +6,8 @@ import data_manager
 app = Flask(__name__)
 questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
 question_headers = data_manager.QUESTION_HEADER
+answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
+answer_headers = data_manager.ANSWER_HEADER
 
 
 @app.route("/")
@@ -16,5 +18,16 @@ def main():
                            )
 
 
+@app.route("/question/<question_id>")
+def display_question(question_id):
+    target_question = [question for question in questions if question['id']==question_id][0]
+    target_answers = [answer for answer in answers if answer['question_id'] == question_id]
+    return render_template("question.html", question=target_question, answers=target_answers, answer_headers=answer_headers)
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(
+        host='0.0.0.0',
+        port=8000,
+        debug=True,
+    )
