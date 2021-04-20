@@ -14,7 +14,7 @@ answer_headers = data_manager.ANSWER_HEADER
 @app.route("/")
 def main():
     return render_template("list.html",
-                           questions=sorted(questions, key=lambda item: item['vote_number']),
+                           questions=sorted(questions, reverse=True, key=lambda item: int(item['vote_number'])),
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in question_headers]
                            )
@@ -26,7 +26,7 @@ def display_question(question_id):
     target_answers = [answer for answer in answers if answer['question_id'] == question_id]
     return render_template("question.html",
                            question=target_question,
-                           answers=sorted(target_answers, key=lambda item: item['vote_number']),
+                           answers=sorted(target_answers, key=lambda item: int(item['vote_number'])),
                            answer_headers=answer_headers,
                            question_id=question_id
                            )
@@ -39,7 +39,7 @@ def add_question():
         util.setup_dict(new_question, util.generate_id(), question_headers, request.form)
         connection.append_data(questions, new_question)
         connection.write_data_in_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
-        return redirect("/")
+        return redirect("/question/" + new_question["id"])
     return render_template("add-question.html")
 
 
