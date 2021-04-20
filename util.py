@@ -1,6 +1,5 @@
 import random
 import string
-from datetime import datetime
 
 
 # Function to generate ids for new questions or answers:
@@ -31,7 +30,7 @@ def add_characters(pool, aspect, characters):
         characters.append(random.choice(pool))
 
 
-# Setting up dictionaries: needs refactor!
+# Setting up dictionaries!
 def setting_up_dict(ques_or_answ, id_type, submission_time, view_number, question_id, data_header, form):
     for header in data_header:
         if header == "id":
