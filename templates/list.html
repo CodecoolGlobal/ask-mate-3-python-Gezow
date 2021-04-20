@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -7,6 +7,7 @@
   <body>
     <h1>{% block heading %}Questions{% endblock heading %}</h1>
     <p><br></p>
+        {% block page_content %}
         <table  style="text-aign:center" border="1">
             <tr>
                 {% for header in question_headers %}
@@ -25,5 +26,6 @@
             </tr>
             {% endfor %}
         </table>
+        {% endblock %}
   </body>
 </html>

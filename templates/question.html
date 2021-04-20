@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>{{question['title']}}</title>
-  </head>
-  <body>
-    <h1><strong>{{question['title']}}</strong></h1>
+{% extends "list.html" %}
+{% block heading %}{{question['title']}}{% endblock %}
+{% block page_content %}
     <p style="border:1px; border-style:solid; padding: 10px; col">{{question['message']}}</p>
     <p><small>Submission time: {{question['submission_time']}} Viewed: {{question['view_number']}} Vote(s): {{question['vote_number']}} {{question['image']}}</small></p>
     <p><button onclick="window.location.href='/question/<question_id>/vote_up';">Vote up</button>&nbsp;&nbsp;<button onclick="window.location.href='/question/<question_id>/vote_down';">Vote down</button></p>
@@ -17,5 +12,4 @@
         <p><button onclick="window.location.href='/answer/<answer_id>/vote_up';">Vote up</button>&nbsp;&nbsp;<button onclick="window.location.href='/answer/<answer_id>/vote_down';">Vote down</button></p>
         <hr>
       {% endfor %}
-  </body>
-</html>
+{% endblock %}
