@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, request
 import connection
 import data_manager
-# import util
 import util
 
 app = Flask(__name__)
@@ -36,7 +35,7 @@ def display_question(question_id):
 def add_question():
     if request.method == "POST":
         new_question = {}
-        util.setup_dict(new_question, util.generate_id(), question_headers, request.form)
+        util.setup_dict(new_question, util.generate_id(), None, question_headers, request.form)
         connection.append_data(questions, new_question)
         connection.write_data_in_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
         return redirect("/question/" + new_question["id"])
@@ -75,6 +74,17 @@ def vote_down_answer(answer_id):
     connection.write_data_in_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer["question_id"]
     return redirect("/question/" + question_id)
+
+
+@app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
+def add_answer(question_id):
+    if request.method == "POST":
+        new_answer = {}
+        util.setup_dict(new_answer, util.generate_id(), question_id, answer_headers, request.form)
+        connection.append_data(answers, new_answer)
+        connection.write_data_in_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
+        return redirect("/question/" + question_id)
+    return render_template("add-answer.html", question_id=question_id)
 
 
 if __name__ == "__main__":

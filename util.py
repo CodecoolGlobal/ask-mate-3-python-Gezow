@@ -29,7 +29,7 @@ def add_characters(pool, aspect, characters):
         characters.append(random.choice(pool))
 
 
-def setup_dict(ques_or_answ, id_type, data_header, form):
+def setup_dict(ques_or_answ, id_type, question_id, data_header, form):
     for header in data_header:
         if header == "id":
             ques_or_answ[header] = id_type
@@ -39,5 +39,7 @@ def setup_dict(ques_or_answ, id_type, data_header, form):
             ques_or_answ[header] = str(0)
         elif header == "image":
             ques_or_answ[header] = "X"
+        elif header == "question_id":
+            ques_or_answ[header] = question_id
         else:
             ques_or_answ[header] = form[header]
