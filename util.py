@@ -31,25 +31,20 @@ def add_characters(pool, aspect, characters):
 
 
 # Setting up dictionaries!
-def setting_up_dict(ques_or_answ, id_type, submission_time, view_number, question_id, data_header, form):
+def setting_up_dict(ques_or_answ, id_type, submission_time, view_or_vote_number, question_id, data_header, form):
     for header in data_header:
         if header == "id":
             ques_or_answ[header] = id_type
         elif header == "submission_time":
             ques_or_answ[header] = submission_time
         elif header == "view_number" or header == "vote_number":
-            ques_or_answ[header] = view_number
+            ques_or_answ[header] = view_or_vote_number
         elif header == "image":
             ques_or_answ[header] = "X"
         elif header == "question_id":
             ques_or_answ[header] = question_id
         else:
             ques_or_answ[header] = form[header]
-
-
-# Finds an object in database by it's unique id.
-def find_target_component(unique_list, unique_id):
-    return [que_or_ans for que_or_ans in unique_list if que_or_ans['id'] == unique_id][0]
 
 
 # Generates a list of objects that possess the value (or unique id) we are searching for.

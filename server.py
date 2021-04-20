@@ -22,7 +22,7 @@ def main():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    target_question = util.find_target_component(questions, question_id)
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     target_question["view_number"] = str(int(target_question["view_number"]) + 1)
     target_answers = util.generate_lst_of_targets(answers, question_id, "question_id")
     return render_template("question.html",
@@ -47,7 +47,7 @@ def add_question():
 
 @app.route("/question/<question_id>/vote_up")
 def vote_up_question(question_id):
-    target_question = util.find_target_component(questions, question_id)
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     target_question["vote_number"] = str(int(target_question["vote_number"]) + 1)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
     return redirect("/question/" + question_id)
@@ -55,7 +55,7 @@ def vote_up_question(question_id):
 
 @app.route("/question/<question_id>/vote_down")
 def vote_down_question(question_id):
-    target_question = util.find_target_component(questions, question_id)
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     target_question["vote_number"] = str(int(target_question["vote_number"]) - 1)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
     return redirect("/question/" + question_id)
@@ -63,7 +63,7 @@ def vote_down_question(question_id):
 
 @app.route("/answer/<answer_id>/vote_up")
 def vote_up_answer(answer_id):
-    target_answer = util.find_target_component(answers, answer_id)
+    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
     target_answer["vote_number"] = str(int(target_answer["vote_number"]) + 1)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer["question_id"]
@@ -72,7 +72,7 @@ def vote_up_answer(answer_id):
 
 @app.route("/answer/<answer_id>/vote_down")
 def vote_down_answer(answer_id):
-    target_answer = util.find_target_component(answers, answer_id)
+    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
     target_answer["vote_number"] = str(int(target_answer["vote_number"]) - 1)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer["question_id"]
@@ -93,7 +93,7 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
-    target_question = util.find_target_component(questions, question_id)
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     questions.remove(target_question)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
     for answer in answers:
@@ -105,7 +105,7 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
-    target_answer = util.find_target_component(answers, answer_id)
+    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
     answers.remove(target_answer)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer['question_id']
