@@ -22,10 +22,11 @@ def main():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     target_question = [question for question in questions if question['id'] == question_id][0]
+    target_question["view_number"] = str(int(target_question["view_number"]) + 1)
     target_answers = [answer for answer in answers if answer['question_id'] == question_id]
     return render_template("question.html",
                            question=target_question,
-                           answers=sorted(target_answers, key=lambda item: int(item['vote_number'])),
+                           answers=sorted(target_answers, reverse=True, key=lambda item: int(item['vote_number'])),
                            answer_headers=answer_headers,
                            question_id=question_id
                            )
@@ -86,17 +87,16 @@ def add_answer(question_id):
         return redirect("/question/" + question_id)
     return render_template("add-answer.html", question_id=question_id)
 
+
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
     target_question = [question for question in questions if question['id'] == question_id][0]
     questions.remove(target_question)
     connection.write_data_in_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
-
     for answer in answers:
         if answer['question_id'] == question_id:
             answers.remove(answer)
     connection.write_data_in_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
-
     return redirect("/")
 
 
@@ -105,9 +105,7 @@ def delete_answer(answer_id):
     target_answer = [answer for answer in answers if answer['id'] == answer_id][0]
     answers.remove(target_answer)
     connection.write_data_in_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
-    question_id = target_answer['question_id']
-    return redirect("/question/" + question_id)
-
+    return redirect("/question/" + target_answer['question_id'])
 
 
 if __name__ == "__main__":
