@@ -1,14 +1,15 @@
 {% extends "list.html" %}
+{% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
 {% block heading %}{{question['title']}}{% endblock %}
 {% block page_content %}
-    <p style="border:1px; border-style:solid; padding: 10px; col">{{question['message']}}</p>
-    <p><small>Submission time: {{question['submission_time']}} Viewed: {{question['view_number']}} Vote(s): {{question['vote_number']}} {{question['image']}}</small></p>
+    <p style="border:1px; border-style:solid; padding: 10px;">{{question['message']}}</p>
+    <p><small>Submission time: {{question['submission_time']}}&nbsp;&nbsp;Viewed: {{question['view_number']}}&nbsp;&nbsp;Vote(s): {{question['vote_number']}}&nbsp;&nbsp;{{question['image']}}</small></p>
     <p><button onclick="window.location.href='/question/<question_id>/vote_up';">Vote up</button>&nbsp;&nbsp;<button onclick="window.location.href='/question/<question_id>/vote_down';">Vote down</button></p>
     <br/>
     <h3><strong>Answers:</strong></h3>
       {% for answer in answers %}
         <p>{{answer['message']}}</p>
-        <p><small>Vote(s): {{answer['vote_number']}} {{answer['image']}}</small></p>
+        <p><small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;{{answer['image']}}</small></p>
         <p><button onclick="window.location.href='/answer/<answer_id>/vote_up';">Vote up</button>&nbsp;&nbsp;<button onclick="window.location.href='/answer/<answer_id>/vote_down';">Vote down</button></p>
         <hr>
       {% endfor %}
