@@ -13,7 +13,7 @@ answer_headers = data_manager.ANSWER_HEADER
 @app.route("/")
 def main():
     return render_template("list.html",
-                           questions=sorted(questions, reverse=True, key=lambda item: int(item['vote_number'])),
+                           questions=sorted(questions, reverse=True, key=lambda item: item['submission_time']),
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in question_headers]
                            )
