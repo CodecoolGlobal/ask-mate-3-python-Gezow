@@ -1,10 +1,9 @@
-import data_manager
 import random
 import string
 from datetime import datetime
 
 
-# Function to generate ids for new user stories:
+# Function to generate ids for new questions or answers:
 def generate_id(
         number_of_small_letters=4,
         number_of_capital_letters=2,
@@ -13,12 +12,15 @@ def generate_id(
         allowed_special_chars=r"_+-!"
         ):
     characters = []
+    # Calling 'add_characters()' function for each argument.
     add_characters(string.ascii_lowercase, number_of_small_letters, characters)
     add_characters(string.ascii_uppercase,
                    number_of_capital_letters, characters)
     add_characters("0123456789", number_of_digits, characters)
     add_characters(allowed_special_chars, number_of_special_chars, characters)
+    # Shuffle the output list
     random.shuffle(characters)
+    # Return output list as one string.
     return ''.join(characters)
 
 
@@ -29,17 +31,28 @@ def add_characters(pool, aspect, characters):
         characters.append(random.choice(pool))
 
 
-def setup_dict(ques_or_answ, id_type, question_id, data_header, form):
+# Setting up dictionaries: needs refactor!
+def setting_up_dict(ques_or_answ, id_type, submission_time, view_number, question_id, data_header, form):
     for header in data_header:
         if header == "id":
             ques_or_answ[header] = id_type
         elif header == "submission_time":
-            ques_or_answ[header] = str(datetime.now()).split(".")[0]
+            ques_or_answ[header] = submission_time
         elif header == "view_number" or header == "vote_number":
-            ques_or_answ[header] = str(0)
+            ques_or_answ[header] = view_number
         elif header == "image":
             ques_or_answ[header] = "X"
         elif header == "question_id":
             ques_or_answ[header] = question_id
         else:
             ques_or_answ[header] = form[header]
+
+
+# Finds an object in database by it's unique id.
+def find_target_component(unique_list, unique_id):
+    return [que_or_ans for que_or_ans in unique_list if que_or_ans['id'] == unique_id][0]
+
+
+# Generates a list of objects that possess the value (or unique id) we are searching for.
+def generate_lst_of_targets(unique_list, unique_id, search_for):
+    return [que_or_ans for que_or_ans in unique_list if que_or_ans[search_for] == unique_id]
