@@ -14,5 +14,5 @@ def write_data_in_file(file_name, user_data, DATA_HEADER, separator=","):
 
 
 def get_all_user_data(DATA_FILE_PATH):
-    with open(DATA_FILE_PATH) as datas:
-        return [data for data in csv.DictReader(datas)]
+    with open(DATA_FILE_PATH) as infos:
+        return [data for data in csv.DictReader(infos)]
