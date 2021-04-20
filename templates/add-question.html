@@ -1,0 +1,13 @@
+{% extends "list.html" %}
+{% block title %}Ask Mate - Ask a question!{% endblock title %}
+{% block heading %}Ask a question!{% endblock heading %}
+{% block page_content %}
+    <form action="/add-question" method="post">
+        <p><label for="title-input">Title:</label></p>
+            <input id="title-input" name="title" minlength="3">
+
+        <p><label for="message-input">Question:</label></p>
+            <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"></textarea>
+        <p><button type="submit">Ask this question!</button></p>
+    </form>
+{% endblock %}

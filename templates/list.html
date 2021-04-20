@@ -8,6 +8,7 @@
     <h1>{% block heading %}Questions{% endblock heading %}</h1>
     <p><br></p>
         {% block page_content %}
+        <p><a href="/add-question">Ask a question!</a></p>
         <table  style="text-aign:center" border="1">
             <tr>
                 {% for header in question_headers %}

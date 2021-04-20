@@ -1,5 +1,7 @@
+import data_manager
 import random
 import string
+from datetime import datetime
 
 
 # Function to generate ids for new user stories:
@@ -25,3 +27,17 @@ def generate_id(
 def add_characters(pool, aspect, characters):
     for addition in range(aspect):
         characters.append(random.choice(pool))
+
+
+def setup_dict(ques_or_answ, id_type, data_header, form):
+    for header in data_header:
+        if header == "id":
+            ques_or_answ[header] = id_type
+        elif header == "submission_time":
+            ques_or_answ[header] = str(datetime.now()).split(".")[0]
+        elif header == "view_number" or header == "vote_number":
+            ques_or_answ[header] = str(0)
+        elif header == "image":
+            ques_or_answ[header] = "X"
+        else:
+            ques_or_answ[header] = form[header]
