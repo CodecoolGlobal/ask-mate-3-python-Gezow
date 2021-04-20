@@ -14,7 +14,7 @@ answer_headers = data_manager.ANSWER_HEADER
 @app.route("/")
 def main():
     return render_template("list.html",
-                           questions=questions,
+                           questions=sorted(questions, key=lambda item: item['vote_number']),
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in question_headers]
                            )
@@ -27,8 +27,25 @@ def display_question(question_id):
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
-                           answer_headers=answer_headers
+                           answer_headers=answer_headers,
+                           question_id=question_id
                            )
+
+
+@app.route("/question/<question_id>/vote_up")
+def vote_up_question(question_id):
+    target_question = [question for question in questions if question['id'] == question_id][0]
+    target_question["vote_number"] = str(int(target_question["vote_number"]) + 1)
+    connection.write_data_in_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
+    return redirect("/question/" + question_id)
+
+
+@app.route("/question/<question_id>/vote_down")
+def vote_down_question(question_id):
+    target_question = [question for question in questions if question['id'] == question_id][0]
+    target_question["vote_number"] = str(int(target_question["vote_number"]) - 1)
+    connection.write_data_in_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
+    return redirect("/question/" + question_id)
 
 
 if __name__ == "__main__":
