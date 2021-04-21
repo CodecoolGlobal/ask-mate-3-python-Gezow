@@ -73,7 +73,6 @@ def display_question(question_id):
 
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
-    images = data_manager.IMAGE_DIR_PATH
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
     if request.method == "POST":
         new_question = {}
@@ -81,7 +80,7 @@ def add_question():
         if request.files["image"]:
             image = request.files['image']
             filename = new_id + "." + "".join(image.filename.split(".")[1])
-            image.save(os.path.join(images, filename))
+            image.save(os.path.join(data_manager.IMAGE_DIR_PATH, filename))
         else:
             filename = None
         util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, filename, None,
