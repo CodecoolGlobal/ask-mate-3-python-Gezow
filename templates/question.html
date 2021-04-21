@@ -8,9 +8,10 @@
             Submission time: {{question['submission_time']}}&nbsp;&nbsp;
             Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
             Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
-            {{question['image']}}
+            {{ question["image"] }}
         </small>
     </p>
+    <p><img src="images/iJ07rl92Oj.png" alt="User image."></p>
     <p>
         <button onclick="window.location.href='/question/{{ question_id }}/vote_up?';">Vote up</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;

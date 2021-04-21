@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, request
-from werkzeug.utils import secure_filename
 import os
 
 import connection
@@ -76,12 +75,15 @@ def display_question(question_id):
 def add_question():
     if request.method == "POST":
         new_question = {}
-        util.setting_up_dict(new_question, util.generate_id(), str(datetime.now()).split(".")[0], 0,
-                             request.files["image"], None, question_headers, request.form)
+        new_id = util.generate_id()
         if request.files["image"]:
             image = request.files['image']
-            image.filename = new_question["id"] + "." + image.filename
-            image.save(os.path.join(data_manager.IMAGE_DIR_PATH, secure_filename(image.filename)))
+            filename = new_id + "." + "".join(image.filename.split(".")[1])
+            image.save(os.path.join(data_manager.IMAGE_DIR_PATH, filename))
+        else:
+            filename = None
+        util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, filename, None,
+                             question_headers, request.form)
         connection.append_data(questions, new_question)
         connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
         return redirect("/question/" + new_question["id"])
@@ -140,8 +142,6 @@ def delete_question(question_id):
     for answer in answers:
         if answer['question_id'] != question_id:
             answers_back.append(answer)
-    for image in images:
-        if image.filename
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, answer_headers)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     questions.remove(target_question)

@@ -6,9 +6,7 @@ import string
 def generate_id(
         number_of_small_letters=4,
         number_of_capital_letters=2,
-        number_of_digits=2,
-        number_of_special_chars=2,
-        allowed_special_chars=r"_+-!"
+        number_of_digits=4,
         ):
     characters = []
     # Calling 'add_characters()' function for each argument.
@@ -16,7 +14,6 @@ def generate_id(
     add_characters(string.ascii_uppercase,
                    number_of_capital_letters, characters)
     add_characters("0123456789", number_of_digits, characters)
-    add_characters(allowed_special_chars, number_of_special_chars, characters)
     # Shuffle the output list
     random.shuffle(characters)
     # Return output list as one string.
