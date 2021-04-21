@@ -3,6 +3,7 @@ import connection
 import data_manager
 import util
 from datetime import datetime
+import os
 
 
 app = Flask(__name__)
@@ -54,11 +55,12 @@ def main():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
+    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
     answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_question = util.generate_lst_of_targets(connection.get_all_user_data(data_manager.QUESTION_FILE_PATH),
-                                                   question_id, 'id')[0]
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     if request.args.get("voted") != "True":
         target_question["view_number"] = str(int(target_question["view_number"]) + 1)
+        connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
     target_answers = util.generate_lst_of_targets(answers, question_id, "question_id")
     return render_template("question.html",
                            question=target_question,
@@ -71,6 +73,7 @@ def display_question(question_id):
 
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
+    images = data_manager.IMAGE_DIR_PATH
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
     if request.method == "POST":
         new_question = {}
@@ -78,7 +81,7 @@ def add_question():
         if request.files["image"]:
             image = request.files['image']
             filename = new_id + "." + "".join(image.filename.split(".")[1])
-            image.save(data_manager.IMAGE_DIR_PATH, filename)
+            image.save(os.path.join(images, filename))
         else:
             filename = None
         util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, filename, None,
