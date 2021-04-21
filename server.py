@@ -94,13 +94,14 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
+    answers_back = []
+    for answer in answers:
+        if answer['question_id'] != question_id:
+            answers_back.append(answer)
+    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, answer_headers)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     questions.remove(target_question)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
-    for answer in answers:
-        if answer['question_id'] == question_id:
-            answers.remove(answer)
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     return redirect("/")
 
 
