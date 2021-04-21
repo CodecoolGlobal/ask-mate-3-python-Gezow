@@ -1,4 +1,7 @@
 from flask import Flask, render_template, redirect, request
+from werkzeug.utils import secure_filename
+import os
+
 import connection
 import data_manager
 import util
@@ -9,6 +12,7 @@ questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
 question_headers = data_manager.QUESTION_HEADER
 answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
 answer_headers = data_manager.ANSWER_HEADER
+images = data_manager.IMAGE_DIR_PATH
 
 
 @app.route("/")
@@ -20,16 +24,16 @@ def main():
         sorted_questions = sorted(questions, key=lambda item: item['submission_time'])
         order = "desc"
     elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['view_number'])
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item['view_number']))
         order = "asc"
     elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: item['view_number'])
+        sorted_questions = sorted(questions, key=lambda item: int(item['view_number']))
         order = "desc"
     elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['vote_number'])
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item['vote_number']))
         order = "asc"
     elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: item['vote_number'])
+        sorted_questions = sorted(questions, key=lambda item: int(item['vote_number']))
         order = "desc"
     elif request.args.get("order_by") == "title" and request.args.get("order_direction") == "desc":
         sorted_questions = sorted(questions, reverse=True, key=lambda item: item['title'])
@@ -72,8 +76,12 @@ def display_question(question_id):
 def add_question():
     if request.method == "POST":
         new_question = {}
-        util.setting_up_dict(new_question, util.generate_id(), str(datetime.now()).split(".")[0], 0, None,
-                             question_headers, request.form)
+        util.setting_up_dict(new_question, util.generate_id(), str(datetime.now()).split(".")[0], 0,
+                             request.files["image"], None, question_headers, request.form)
+        if request.files["image"]:
+            image = request.files['image']
+            image.filename = new_question["id"] + "." + image.filename
+            image.save(os.path.join(data_manager.IMAGE_DIR_PATH, secure_filename(image.filename)))
         connection.append_data(questions, new_question)
         connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
         return redirect("/question/" + new_question["id"])
@@ -132,6 +140,8 @@ def delete_question(question_id):
     for answer in answers:
         if answer['question_id'] != question_id:
             answers_back.append(answer)
+    for image in images:
+        if image.filename
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, answer_headers)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     questions.remove(target_question)
