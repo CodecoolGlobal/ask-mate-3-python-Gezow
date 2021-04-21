@@ -23,7 +23,8 @@ def main():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
-    target_question["view_number"] = str(int(target_question["view_number"]) + 1)
+    if request.args.get("voted") != "True":
+        target_question["view_number"] = str(int(target_question["view_number"]) + 1)
     target_answers = util.generate_lst_of_targets(answers, question_id, "question_id")
     return render_template("question.html",
                            question=target_question,
@@ -50,7 +51,7 @@ def vote_up_question(question_id):
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     target_question["vote_number"] = str(int(target_question["vote_number"]) + 1)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
-    return redirect("/question/" + question_id)
+    return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/question/<question_id>/vote_down")
@@ -58,7 +59,7 @@ def vote_down_question(question_id):
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     target_question["vote_number"] = str(int(target_question["vote_number"]) - 1)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, question_headers)
-    return redirect("/question/" + question_id)
+    return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_up")
@@ -67,7 +68,7 @@ def vote_up_answer(answer_id):
     target_answer["vote_number"] = str(int(target_answer["vote_number"]) + 1)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer["question_id"]
-    return redirect("/question/" + question_id)
+    return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_down")
@@ -76,7 +77,7 @@ def vote_down_answer(answer_id):
     target_answer["vote_number"] = str(int(target_answer["vote_number"]) - 1)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, answer_headers)
     question_id = target_answer["question_id"]
-    return redirect("/question/" + question_id)
+    return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
