@@ -13,8 +13,42 @@ answer_headers = data_manager.ANSWER_HEADER
 
 @app.route("/")
 def main():
+    if request.args.get("order_by") == "submission_time" and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['submission_time'])
+        order = "asc"
+    elif request.args.get("order_by") == "submission_time" and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: item['submission_time'])
+        order = "desc"
+    elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['view_number'])
+        order = "asc"
+    elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: item['view_number'])
+        order = "desc"
+    elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['vote_number'])
+        order = "asc"
+    elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: item['vote_number'])
+        order = "desc"
+    elif request.args.get("order_by") == "title" and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['title'])
+        order = "asc"
+    elif request.args.get("order_by") == "title" and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: item['title'])
+        order = "desc"
+    elif request.args.get("order_by") == "message" and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['message'])
+        order = "asc"
+    elif request.args.get("order_by") == "message" and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: item['message'])
+        order = "desc"
+    else:
+        order = "asc"
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['submission_time'])
     return render_template("list.html",
-                           questions=sorted(questions, reverse=True, key=lambda item: item['submission_time']),
+                           questions=sorted_questions,
+                           if_reversed=order,
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in question_headers]
                            )

@@ -13,10 +13,11 @@
         <table  style="text-aign:center" border="1">
             <tr>
                 {% for header in question_headers %}
-                {% if header == 'Id' or header == 'Image' %}
-                    <th align="center"> {{header}} </th>
-                {% else %}
-                    <th align="center"><a href="/?order_by={{header}}&order_direction=desc">{{header}} - descending</a></th>
+                    {% if header == 'Id' or header == 'Image' %}
+                        <th align="center"> {{header}}</th>
+                    {% else %}
+                        <th align="center"><a href="/?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                    {% endif %}
                 {% endfor %}
             </tr>
             {% for question in questions %}
