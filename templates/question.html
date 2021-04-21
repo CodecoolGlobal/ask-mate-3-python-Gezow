@@ -7,11 +7,12 @@
         <small>
             Submission time: {{question['submission_time']}}&nbsp;&nbsp;
             Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
+            View number: {{question['view_number']}}&nbsp;&nbsp;
             {{question['image']}}
         </small>
     </p>
     <p>
-        <button onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
+        <button onclick="window.location.href='/question/{{ question_id }}/vote_up?';">Vote up</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>
