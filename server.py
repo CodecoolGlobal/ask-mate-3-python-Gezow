@@ -1,6 +1,4 @@
-from flask import Flask, render_template, redirect, request
-import os
-
+from flask import Flask, render_template, redirect, request, url_for
 import connection
 import data_manager
 import util
@@ -67,7 +65,8 @@ def display_question(question_id):
                            question=target_question,
                            answers=sorted(target_answers, reverse=True, key=lambda item: int(item['vote_number'])),
                            answer_headers=answer_headers,
-                           question_id=question_id
+                           question_id=question_id,
+                           IMAGE_DIR_PATH=images
                            )
 
 
@@ -79,7 +78,7 @@ def add_question():
         if request.files["image"]:
             image = request.files['image']
             filename = new_id + "." + "".join(image.filename.split(".")[1])
-            image.save(os.path.join(data_manager.IMAGE_DIR_PATH, filename))
+            image.save(images, filename)
         else:
             filename = None
         util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, filename, None,
