@@ -8,11 +8,15 @@
     <h1>{% block heading %}Questions{% endblock heading %}</h1>
     <p><br></p>
         {% block page_content %}
-        <p><a href="/add-question">Ask a question!</a></p>
+        <p><a href="/add-question">Ask a question!</a>
+        </p>
         <table  style="text-aign:center" border="1">
             <tr>
                 {% for header in question_headers %}
-                <th align="center"> {{header}} </th>
+                {% if header == 'Id' or header == 'Image' %}
+                    <th align="center"> {{header}} </th>
+                {% else %}
+                    <th align="center"><a href="/?order_by={{header}}&order_direction=desc">{{header}} - descending</a></th>
                 {% endfor %}
             </tr>
             {% for question in questions %}
