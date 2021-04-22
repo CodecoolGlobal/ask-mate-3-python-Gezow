@@ -172,6 +172,8 @@ def delete_question(question_id):
             answers_back.append(answer)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, data_manager.ANSWER_HEADER)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
+    if target_question['image']:
+        os.remove(data_manager.IMAGE_DIR_PATH + "/" + target_question['image'])
     questions.remove(target_question)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
     return redirect("/")
@@ -183,6 +185,8 @@ def delete_answer(answer_id):
     target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
     answers.remove(target_answer)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
+    if target_answer['image']:
+        os.remove(data_manager.IMAGE_DIR_PATH + "/" + target_answer['image'])
     question_id = target_answer['question_id']
     return redirect("/question/" + question_id)
 
