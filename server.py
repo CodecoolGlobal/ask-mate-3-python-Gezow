@@ -109,27 +109,21 @@ def edit_question(question_id):
 @app.route("/question/<question_id>/vote_up")
 def vote_up_question(question_id):
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
-    target_question["vote_number"] = str(int(target_question["vote_number"]) + 1)
-    connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
+    util.vote(questions, question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, 1)
     return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/question/<question_id>/vote_down")
 def vote_down_question(question_id):
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
-    target_question["vote_number"] = str(int(target_question["vote_number"]) - 1)
-    connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
+    util.vote(questions, question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, -1)
     return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_up")
 def vote_up_answer(answer_id):
     answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
-    target_answer["vote_number"] = str(int(target_answer["vote_number"]) + 1)
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
+    target_answer = util.vote(answers, answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, 1)
     question_id = target_answer["question_id"]
     return redirect("/question/" + question_id + "?voted=True")
 
@@ -137,9 +131,7 @@ def vote_up_answer(answer_id):
 @app.route("/answer/<answer_id>/vote_down")
 def vote_down_answer(answer_id):
     answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
-    target_answer["vote_number"] = str(int(target_answer["vote_number"]) - 1)
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
+    target_answer = util.vote(answers, answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, -1)
     question_id = target_answer["question_id"]
     return redirect("/question/" + question_id + "?voted=True")
 

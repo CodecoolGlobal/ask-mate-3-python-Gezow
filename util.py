@@ -2,6 +2,7 @@ import random
 import string
 import os
 import data_manager
+import connection
 
 
 # Function to generate ids for new questions or answers:
@@ -59,3 +60,10 @@ def save_images(form, id_type):
     filename = id_type + "." + "".join(image.filename.split(".")[1])
     image.save(os.path.join(data_manager.IMAGE_DIR_PATH, filename))
     return filename
+
+
+def vote(questions_or_answers, unique_id, FILE_PATH, HEADER, vote):
+    target_object = generate_lst_of_targets(questions_or_answers, unique_id, 'id')[0]
+    target_object["vote_number"] = str(int(target_object["vote_number"]) + vote)
+    connection.write_data_file(FILE_PATH, questions_or_answers, HEADER)
+    return target_object
