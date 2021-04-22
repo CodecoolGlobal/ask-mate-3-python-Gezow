@@ -77,7 +77,7 @@ def add_question():
     if request.method == "POST":
         new_question = {}
         new_id = util.generate_id()
-        if request.files:
+        if request.files['image']:
             filename = util.save_images(request.files, new_id)
         else:
             filename = None
@@ -132,12 +132,12 @@ def add_answer(question_id):
     answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
     if request.method == "POST":
         new_answer = {}
-        if request.files:
-            filename = util.save_images(request.files, question_id)
-            print("okay")
+        new_id = util.generate_id()
+        if request.files['image']:
+            filename = util.save_images(request.files, new_id)
         else:
             filename = None
-        util.setting_up_dict(new_answer, util.generate_id(), str(datetime.now()).split(".")[0], 0, filename, question_id,
+        util.setting_up_dict(new_answer, new_id, str(datetime.now()).split(".")[0], 0, filename, question_id,
                              data_manager.ANSWER_HEADER, request.form)
         connection.append_data(answers, new_answer)
         connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
