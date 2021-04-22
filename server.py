@@ -81,12 +81,29 @@ def add_question():
             filename = util.save_images(request.files, new_id)
         else:
             filename = None
-        util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, filename, None,
+        util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, 0, filename, None,
                              data_manager.QUESTION_HEADER, request.form)
         connection.append_data(questions, new_question)
         connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
         return redirect("/question/" + new_question["id"])
     return render_template("add-question.html")
+
+
+@app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
+def edit_question(question_id):
+    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
+    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
+    if request.method == "POST":
+        if request.files['image']:
+            filename = util.save_images(request.files, question_id)
+        else:
+            filename = target_question['image']
+        util.setting_up_dict(target_question, question_id, target_question['submission_time'], target_question['view_number'],
+                         target_question['vote_number'], filename, None,
+                         data_manager.QUESTION_HEADER, request.form)
+        connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
+        return redirect("/question/" + target_question['id'])
+    return render_template("edit_question.html", question=target_question)
 
 
 @app.route("/question/<question_id>/vote_up")
@@ -137,7 +154,7 @@ def add_answer(question_id):
             filename = util.save_images(request.files, new_id)
         else:
             filename = None
-        util.setting_up_dict(new_answer, new_id, str(datetime.now()).split(".")[0], 0, filename, question_id,
+        util.setting_up_dict(new_answer, new_id, str(datetime.now()).split(".")[0], 0, 0, filename, question_id,
                              data_manager.ANSWER_HEADER, request.form)
         connection.append_data(answers, new_answer)
         connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
