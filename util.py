@@ -31,11 +31,11 @@ def add_characters(pool, aspect, characters):
 
 
 # Setting up dictionaries!
-def setting_up_dict(ques_or_answ, id_type, submission_time, view_number, vote_number, image_input, question_id, data_header,
+def setting_up_dict(ques_or_answ, id_used, submission_time, view_number, vote_number, image_input, question_id, data_header,
                     form):
     for header in data_header:
         if header == "id":
-            ques_or_answ[header] = id_type
+            ques_or_answ[header] = id_used
         elif header == "submission_time":
             ques_or_answ[header] = submission_time
         elif header == "view_number":

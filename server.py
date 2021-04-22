@@ -158,14 +158,14 @@ def add_answer(question_id):
 def delete_question(question_id):
     answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    answers_back = []
+    remaining_answers = []
     for answer in answers:
         if answer['question_id'] != question_id:
-            answers_back.append(answer)
+            remaining_answers.append(answer)
         else:
             if answer["image"]:
                 os.remove(data_manager.IMAGE_DIR_PATH + "/" + answer['image'])
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, data_manager.ANSWER_HEADER)
+    connection.write_data_file(data_manager.ANSWER_FILE_PATH, remaining_answers, data_manager.ANSWER_HEADER)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     if target_question['image']:
         os.remove(data_manager.IMAGE_DIR_PATH + "/" + target_question['image'])
