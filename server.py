@@ -5,42 +5,19 @@ import util
 from datetime import datetime
 import os
 
-
 app = Flask(__name__)
 
 
 @app.route("/")
 def main():
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    if request.args.get("order_by") == "submission_time" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['submission_time'])
+    if request.args.get("order_by") and request.args.get("order_direction") == "desc":
+        sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item[request.args.get("order_by")])
+        if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
         order = "asc"
-    elif request.args.get("order_by") == "submission_time" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: item['submission_time'])
-        order = "desc"
-    elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item['view_number']))
-        order = "asc"
-    elif request.args.get("order_by") == "view_number" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: int(item['view_number']))
-        order = "desc"
-    elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item['vote_number']))
-        order = "asc"
-    elif request.args.get("order_by") == "vote_number" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: int(item['vote_number']))
-        order = "desc"
-    elif request.args.get("order_by") == "title" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['title'])
-        order = "asc"
-    elif request.args.get("order_by") == "title" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: item['title'])
-        order = "desc"
-    elif request.args.get("order_by") == "message" and request.args.get("order_direction") == "desc":
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['message'])
-        order = "asc"
-    elif request.args.get("order_by") == "message" and request.args.get("order_direction") == "asc":
-        sorted_questions = sorted(questions, key=lambda item: item['message'])
+    elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
+        sorted_questions = sorted(questions, key=lambda item: int(item[request.args.get("order_by")])
+        if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
         order = "desc"
     else:
         order = "asc"
@@ -98,9 +75,10 @@ def edit_question(question_id):
             filename = util.save_images(request.files, question_id)
         else:
             filename = target_question['image']
-        util.setting_up_dict(target_question, question_id, target_question['submission_time'], target_question['view_number'],
-                         target_question['vote_number'], filename, None,
-                         data_manager.QUESTION_HEADER, request.form)
+        util.setting_up_dict(target_question, question_id, target_question['submission_time'],
+                             target_question['view_number'],
+                             target_question['vote_number'], filename, None,
+                             data_manager.QUESTION_HEADER, request.form)
         connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
         return redirect("/question/" + target_question['id'])
     return render_template("edit_question.html", question=target_question)
