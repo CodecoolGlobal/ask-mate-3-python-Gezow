@@ -162,6 +162,9 @@ def delete_question(question_id):
     for answer in answers:
         if answer['question_id'] != question_id:
             answers_back.append(answer)
+        else:
+            if answer["image"]:
+                os.remove(data_manager.IMAGE_DIR_PATH + "/" + answer['image'])
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers_back, data_manager.ANSWER_HEADER)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     if target_question['image']:
