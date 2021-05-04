@@ -172,6 +172,17 @@ def find_answer(cursor, answer_id):
 
 
 @database_common.connection_handler
+def look_for_comments(cursor, db, id_type, unique_id):
+    query = """
+            SELECT * FROM %s
+            WHERE %s = '%s'
+            ORDER BY submission_time
+            """ % (db, id_type, unique_id)
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def find_answer_by_question_id(cursor, question_id):
     query ="""
     SELECT * FROM answer
@@ -187,4 +198,14 @@ def delete_answers_by_question_id(cursor, question_id):
             DELETE FROM answer
             WHERE question_id = '%s'
             """ % question_id
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
+    query = """
+            INSERT INTO comment
+            (question_id, answer_id, message, submission_time, edited_count)
+            VALUES (%s,%s,'%s','%s',%s)
+            """ % (question_id, answer_id, message, submission_time, edited_count)
     cursor.execute(query)

@@ -38,7 +38,8 @@ def display_question(question_id):
                            answers=target_answers,
                            answer_headers=data_manager.ANSWER_HEADER,
                            question_id=question_id,
-                           IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH
+                           IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH,
+                           question_comments=data_manager.look_for_comments('comment', 'question_id', question_id)
                            )
 
 
@@ -146,6 +147,15 @@ def delete_answer(answer_id):
         os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
     data_manager.delete_from_db(answer_id, 'answer')
     return redirect("/question/" + str(target_answer['question_id']))
+
+
+@app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
+def new_comment_to_question(question_id):
+    if request.method == 'POST':
+        submission_time = str(datetime.now()).split(".")[0]
+        data_manager.add_comment(question_id, 'null', request.form['message'], submission_time, 'null')
+        return redirect("/question/" + question_id)
+    return render_template('add-comment.html', question_id=question_id)
 
 
 if __name__ == "__main__":

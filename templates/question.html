@@ -17,8 +17,18 @@
         <button onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>
+        <button onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;&nbsp;
+        <button onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
+        <button onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
+    </p>
+    <h4><strong>comments:</strong></h4>
+    <p>
+        {% for comment in question_comments %}
+        {{comment['message']}}<br>
+        <small>
+            Submission time: {{comment['submission_time']}}<br><br>
+        </small>
+        {% endfor %}
     </p>
     <br/>
     <h3><strong>Answers:</strong></h3>
@@ -33,7 +43,8 @@
         <p>
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
-            <button onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>
+            <button onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
+            <button onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
         </p>
         <hr>
       {% endfor %}
