@@ -21,7 +21,7 @@ def main():
         order = "desc"
     else:
         order = "asc"
-        sorted_questions = sorted(questions, reverse=True, key=lambda item: item['submission_time'])
+        sorted_questions = data_manager.get_questions()
     return render_template("list.html",
                            questions=sorted_questions,
                            if_reversed=order,
