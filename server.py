@@ -45,19 +45,23 @@ def display_question(question_id):
 
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
     if request.method == "POST":
-        new_question = {}
-        new_id = util.generate_id()
+        submission_time = str(datetime.now()).split(".")[0]
+        title = request.form['title']
+        message = request.form['message']
+        data_manager.add_new_question(submission_time=submission_time,
+                                      view_number=0,
+                                      vote_number=0,
+                                      title=title,
+                                      message=message
+                                      )
+        new_question = data_manager.find_id(submission_time, title)
         if request.files['image']:
-            filename = util.save_images(request.files, new_id)
+            filename = util.save_images(request.files, str(new_question["id"]))
         else:
-            filename = None
-        util.setting_up_dict(new_question, new_id, str(datetime.now()).split(".")[0], 0, 0, filename, None,
-                             data_manager.QUESTION_HEADER, request.form)
-        connection.append_data(questions, new_question)
-        connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
-        return redirect("/question/" + new_question["id"])
+            filename = ""
+        data_manager.update_image(filename, new_question["id"])
+        return redirect("/question/" + str(new_question["id"]))
     return render_template("add-question.html")
 
 

@@ -67,3 +67,37 @@ def find_answers_to_question(cursor, question_id):
             ORDER BY vote_number;""" % question_id
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def add_new_question(
+        cursor, submission_time, view_number, vote_number, title, message):
+    query = """
+            INSERT INTO question
+            (submission_time, view_number, vote_number, title, message)
+            VALUES ('%s', %s, %s, '%s', '%s');""" % (submission_time,
+                                                     view_number,
+                                                     vote_number,
+                                                     title,
+                                                     message
+                                                     )
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_id(cursor, submission_time, title):
+    query2 = """
+            SELECT id FROM question
+            WHERE submission_time = '%s'
+            AND title = '%s'""" % (submission_time, title)
+    cursor.execute(query2)
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
+def update_image(cursor, filename, unique_id):
+    query = """
+            UPDATE question 
+            SET image = '%s'
+            WHERE id = '%s';""" % (filename, unique_id)
+    cursor.execute(query)
