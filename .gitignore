@@ -34,8 +34,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-static/images
-/images
+static/images/question/
+static/images/answer/
 
 # PyInstaller
 #  Usually these files are written by a python script from a templates
