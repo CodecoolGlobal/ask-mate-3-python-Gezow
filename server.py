@@ -127,31 +127,24 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    remaining_answers = []
-    for answer in answers:
-        if answer['question_id'] != question_id:
-            remaining_answers.append(answer)
-        else:
-            if answer["image"]:
-                os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + answer['image'])
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, remaining_answers, data_manager.ANSWER_HEADER)
-    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
+    target_answers = data_manager.find_answer_by_question_id(question_id)
+    target_question = data_manager.find_target_question(question_id)[0]
+    for answer in target_answers:
+        if answer['image']:
+            os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + answer['image'])
+    data_manager.delete_answers_by_question_id(question_id)
     if target_question['image']:
         os.remove(data_manager.Q_IMAGE_DIR_PATH + "/" + target_question['image'])
-    questions.remove(target_question)
-    connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
+    data_manager.delete_from_db(question_id, 'question')
     return redirect("/")
 
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
     target_answer = data_manager.find_answer(answer_id)[0]
-    print(target_answer)
     if target_answer['image']:
         os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
-    data_manager.delete_answer(answer_id)
+    data_manager.delete_from_db(answer_id, 'answer')
     return redirect("/question/" + str(target_answer['question_id']))
 
 

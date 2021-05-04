@@ -153,11 +153,11 @@ def add_new_answer(
 
 
 @database_common.connection_handler
-def delete_answer(cursor, answer_id):
+def delete_from_db(cursor, unique_id, db):
     query = """
-            DELETE FROM answer
+            DELETE FROM %s
             WHERE id = '%s'
-            """ % answer_id
+            """ % (db, unique_id)
     cursor.execute(query)
 
 
@@ -169,3 +169,22 @@ def find_answer(cursor, answer_id):
     """ % answer_id
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def find_answer_by_question_id(cursor, question_id):
+    query ="""
+    SELECT * FROM answer
+    WHERE question_id = '%s'
+    """ % question_id
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_answers_by_question_id(cursor, question_id):
+    query = """
+            DELETE FROM answer
+            WHERE question_id = '%s'
+            """ % question_id
+    cursor.execute(query)
