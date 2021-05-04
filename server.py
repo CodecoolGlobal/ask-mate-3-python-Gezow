@@ -59,7 +59,7 @@ def add_question():
             filename = util.save_images(request.files, str(new_question["id"]), data_manager.Q_IMAGE_DIR_PATH)
         else:
             filename = ""
-        data_manager.update_image(filename, new_question["id"])
+        data_manager.update_image(filename, new_question["id"], 'question')
         return redirect("/question/" + str(new_question["id"]))
     return render_template("add-question.html")
 
@@ -120,7 +120,7 @@ def add_answer(question_id):
             filename = util.save_images(request.files, str(new_answer["id"]), data_manager.A_IMAGE_DIR_PATH)
         else:
             filename = ""
-        data_manager.update_image(filename, new_answer["id"])
+        data_manager.update_image(filename, new_answer["id"], 'answer')
         return redirect("/question/" + question_id)
     return render_template("add-answer.html", question_id=question_id)
 
@@ -147,14 +147,12 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_answer = util.generate_lst_of_targets(answers, answer_id, 'id')[0]
-    answers.remove(target_answer)
-    connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
+    target_answer = data_manager.find_answer(answer_id)[0]
+    print(target_answer)
     if target_answer['image']:
         os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
-    question_id = target_answer['question_id']
-    return redirect("/question/" + question_id)
+    data_manager.delete_answer(answer_id)
+    return redirect("/question/" + str(target_answer['question_id']))
 
 
 if __name__ == "__main__":

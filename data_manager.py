@@ -96,11 +96,11 @@ def find_question_id(cursor, submission_time, title):
 
 
 @database_common.connection_handler
-def update_image(cursor, filename, unique_id):
+def update_image(cursor, filename, unique_id, db):
     query = """
-            UPDATE question 
+            UPDATE %s 
             SET image = '%s'
-            WHERE id = '%s';""" % (filename, unique_id)
+            WHERE id = '%s';""" % (db, filename, unique_id)
     cursor.execute(query)
 
 
@@ -150,3 +150,22 @@ def add_new_answer(
             (submission_time, vote_number, question_id, message)
             VALUES ('%s', %s, %s, '%s');""" % (submission_time, vote_number, question_id, message)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def delete_answer(cursor, answer_id):
+    query = """
+            DELETE FROM answer
+            WHERE id = '%s'
+            """ % answer_id
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_answer(cursor, answer_id):
+    query ="""
+    SELECT * FROM answer
+    WHERE id = '%s'
+    """ % answer_id
+    cursor.execute(query)
+    return cursor.fetchall()
