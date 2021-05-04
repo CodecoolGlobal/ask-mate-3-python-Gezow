@@ -26,8 +26,8 @@ def get_questions(cursor):
 @database_common.connection_handler
 def get_ordered_questions_desc(cursor, filter_type):
     query = """
-                SELECT * FROM question
-                ORDER BY %s DESC;""" % filter_type
+            SELECT * FROM question
+            ORDER BY %s DESC;""" % filter_type
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -35,7 +35,35 @@ def get_ordered_questions_desc(cursor, filter_type):
 @database_common.connection_handler
 def get_ordered_questions_asc(cursor, filter_type):
     query = """
-                SELECT * FROM question
-                ORDER BY %s;""" % filter_type
+            SELECT * FROM question
+            ORDER BY %s;""" % filter_type
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def find_target_question(cursor, question_id):
+    query = """
+            SELECT * FROM question
+            WHERE id = '%s';""" % question_id
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def update_view_number(cursor, question_id):
+    query = """
+            UPDATE question
+            SET view_number = view_number + 1
+            WHERE id = '%s';""" % question_id
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_answers_to_question(cursor, question_id):
+    query = """
+            SELECT * FROM answer
+            WHERE question_id = '%s'
+            ORDER BY vote_number;""" % question_id
     cursor.execute(query)
     return cursor.fetchall()

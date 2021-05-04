@@ -29,16 +29,14 @@ def main():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     if request.args.get("voted") != "True":
-        target_question["view_number"] = str(int(target_question["view_number"]) + 1)
-        connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
-    target_answers = util.generate_lst_of_targets(answers, question_id, "question_id")
+        data_manager.update_view_number(question_id)
+    target_question = data_manager.find_target_question(question_id)[0]
+    target_answers = data_manager.find_answers_to_question(question_id)
+    print(target_question)
     return render_template("question.html",
                            question=target_question,
-                           answers=sorted(target_answers, reverse=True, key=lambda item: int(item['vote_number'])),
+                           answers=target_answers,
                            answer_headers=data_manager.ANSWER_HEADER,
                            question_id=question_id,
                            IMAGE_DIR_PATH=data_manager.IMAGE_DIR_PATH
