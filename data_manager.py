@@ -87,11 +87,11 @@ def add_new_question(
 
 @database_common.connection_handler
 def find_question_id(cursor, submission_time, title):
-    query2 = """
+    query = """
             SELECT id FROM question
             WHERE submission_time = '%s'
             AND title = '%s'""" % (submission_time, title)
-    cursor.execute(query2)
+    cursor.execute(query)
     return cursor.fetchone()
 
 
@@ -121,6 +121,7 @@ def vote(cursor, id, db, up_or_down):
             WHERE id = '%s'
             """ % (db, up_or_down, id)
     cursor.execute(query)
+
 
 @database_common.connection_handler
 def find_question_id_from_answer_id(cursor, answer_id):
@@ -163,10 +164,10 @@ def delete_from_db(cursor, unique_id, db):
 
 @database_common.connection_handler
 def find_answer(cursor, answer_id):
-    query ="""
-    SELECT * FROM answer
-    WHERE id = '%s'
-    """ % answer_id
+    query = """
+            SELECT * FROM answer
+            WHERE id = '%s'
+            """ % answer_id
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -184,10 +185,10 @@ def look_for_comments(cursor, db, id_type, unique_id):
 
 @database_common.connection_handler
 def find_answer_by_question_id(cursor, question_id):
-    query ="""
-    SELECT * FROM answer
-    WHERE question_id = '%s'
-    """ % question_id
+    query = """
+            SELECT * FROM answer
+            WHERE question_id = '%s'
+            """ % question_id
     cursor.execute(query)
     return cursor.fetchall()
 
