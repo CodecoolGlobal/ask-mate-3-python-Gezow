@@ -55,10 +55,10 @@ def generate_lst_of_targets(unique_list, unique_id, search_for):
     return [que_or_ans for que_or_ans in unique_list if que_or_ans[search_for] == unique_id]
 
 
-def save_images(form, id_type):
+def save_images(form, id_type, dir_path):
     image = form['image']
     filename = id_type + "." + "".join(image.filename.split(".")[1])
-    image.save(os.path.join(data_manager.IMAGE_DIR_PATH, filename))
+    image.save(os.path.join(dir_path, filename))
     return filename
 
 

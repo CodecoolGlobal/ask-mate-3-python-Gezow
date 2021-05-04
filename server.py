@@ -39,7 +39,7 @@ def display_question(question_id):
                            answers=target_answers,
                            answer_headers=data_manager.ANSWER_HEADER,
                            question_id=question_id,
-                           IMAGE_DIR_PATH=data_manager.IMAGE_DIR_PATH
+                           IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH
                            )
 
 
@@ -55,9 +55,9 @@ def add_question():
                                       title=title,
                                       message=message
                                       )
-        new_question = data_manager.find_id(submission_time, title)
+        new_question = data_manager.find_question_id(submission_time, title)
         if request.files['image']:
-            filename = util.save_images(request.files, str(new_question["id"]))
+            filename = util.save_images(request.files, str(new_question["id"]), data_manager.Q_IMAGE_DIR_PATH)
         else:
             filename = ""
         data_manager.update_image(filename, new_question["id"])
@@ -67,19 +67,16 @@ def add_question():
 
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
 def edit_question(question_id):
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
+    target_question = data_manager.find_target_question(question_id)[0]
     if request.method == "POST":
         if request.files['image']:
-            filename = util.save_images(request.files, question_id)
+            filename = util.save_images(request.files, question_id, data_manager.Q_IMAGE_DIR_PATH)
         else:
             filename = target_question['image']
-        util.setting_up_dict(target_question, question_id, target_question['submission_time'],
-                             target_question['view_number'],
-                             target_question['vote_number'], filename, None,
-                             data_manager.QUESTION_HEADER, request.form)
-        connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
-        return redirect("/question/" + target_question['id'])
+        title = request.form['title']
+        message = request.form['message']
+        data_manager.edit_question(question_id, title, message, filename)
+        return redirect("/question/" + str(target_question['id']))
     return render_template("edit_question.html", question=target_question)
 
 
@@ -120,7 +117,7 @@ def add_answer(question_id):
         new_answer = {}
         new_id = util.generate_id()
         if request.files['image']:
-            filename = util.save_images(request.files, new_id)
+            filename = util.save_images(request.files, new_id, data_manager.Q_IMAGE_DIR_PATH)
         else:
             filename = None
         util.setting_up_dict(new_answer, new_id, str(datetime.now()).split(".")[0], 0, 0, filename, question_id,
@@ -141,11 +138,11 @@ def delete_question(question_id):
             remaining_answers.append(answer)
         else:
             if answer["image"]:
-                os.remove(data_manager.IMAGE_DIR_PATH + "/" + answer['image'])
+                os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + answer['image'])
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, remaining_answers, data_manager.ANSWER_HEADER)
     target_question = util.generate_lst_of_targets(questions, question_id, 'id')[0]
     if target_question['image']:
-        os.remove(data_manager.IMAGE_DIR_PATH + "/" + target_question['image'])
+        os.remove(data_manager.Q_IMAGE_DIR_PATH + "/" + target_question['image'])
     questions.remove(target_question)
     connection.write_data_file(data_manager.QUESTION_FILE_PATH, questions, data_manager.QUESTION_HEADER)
     return redirect("/")
@@ -158,7 +155,7 @@ def delete_answer(answer_id):
     answers.remove(target_answer)
     connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
     if target_answer['image']:
-        os.remove(data_manager.IMAGE_DIR_PATH + "/" + target_answer['image'])
+        os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
     question_id = target_answer['question_id']
     return redirect("/question/" + question_id)
 

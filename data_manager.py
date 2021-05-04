@@ -4,7 +4,8 @@ import database_common
 
 QUESTION_FILE_PATH = os.getenv(
     'QUESTION_FILE_PATH') if 'QUESTION_FILE_PATH' in os.environ else 'sample_data/question.csv'
-IMAGE_DIR_PATH = os.getenv('IMAGE_DIR_PATH') if 'IMAGE_DIR_PATH' in os.environ else 'static/images'
+Q_IMAGE_DIR_PATH = os.getenv('Q_IMAGE_DIR_PATH') if 'Q_IMAGE_DIR_PATH' in os.environ else 'static/images/question'
+A_IMAGE_DIR_PATH = os.getenv('A_IMAGE_DIR_PATH') if 'A_IMAGE_DIR_PATH' in os.environ else 'static/images/answer'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_FILE_PATH = os.getenv('ANSWER_FILE_PATH') if 'ANSWER_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
@@ -85,7 +86,7 @@ def add_new_question(
 
 
 @database_common.connection_handler
-def find_id(cursor, submission_time, title):
+def find_question_id(cursor, submission_time, title):
     query2 = """
             SELECT id FROM question
             WHERE submission_time = '%s'
@@ -100,4 +101,13 @@ def update_image(cursor, filename, unique_id):
             UPDATE question 
             SET image = '%s'
             WHERE id = '%s';""" % (filename, unique_id)
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def edit_question(cursor, question_id, title, message, image):
+    query = """
+            UPDATE question 
+            SET title = '%s', message = '%s', image = '%s'
+            WHERE id = '%s'""" % (title, message, image, question_id)
     cursor.execute(query)
