@@ -13,11 +13,11 @@ def main():
     questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
     if request.args.get("order_by") and request.args.get("order_direction") == "desc":
         sorted_questions = sorted(questions, reverse=True, key=lambda item: int(item[request.args.get("order_by")])
-                           if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
+        if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
         order = "asc"
     elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
         sorted_questions = sorted(questions, key=lambda item: int(item[request.args.get("order_by")])
-                           if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
+        if item[request.args.get("order_by")].isnumeric() else item[request.args.get("order_by")])
         order = "desc"
     else:
         order = "asc"
