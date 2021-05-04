@@ -10,9 +10,8 @@ ANSWER_FILE_PATH = os.getenv('ANSWER_FILE_PATH') if 'ANSWER_FILE_PATH' in os.env
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
-from typing import List, Dict
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
+# from typing import List, Dict
+# from psycopg2 import sql
 
 
 @database_common.connection_handler
@@ -20,5 +19,23 @@ def get_questions(cursor):
     query = """
             SELECT * FROM question
             ORDER BY submission_time;"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_ordered_questions_desc(cursor, filter_type):
+    query = """
+                SELECT * FROM question
+                ORDER BY %s DESC;""" % filter_type
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_ordered_questions_asc(cursor, filter_type):
+    query = """
+                SELECT * FROM question
+                ORDER BY %s;""" % filter_type
     cursor.execute(query)
     return cursor.fetchall()
