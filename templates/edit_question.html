@@ -1,0 +1,6 @@
+{% extends "add-question.html" %}
+{% block heading %}Edit a question!{% endblock heading %}
+{% block action %}action="/question/{{question['id']}}/edit_question"{% endblock action %}
+{% block bodytitle %}value="{{ question['title']}}"{% endblock bodytitle %}
+{% block question %}{{ question['message']}}{% endblock question %}
+{% block button %}Edit this question!{% endblock button %}

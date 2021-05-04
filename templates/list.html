@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Ask Mate{% endblock title %}</title>
+  </head>
+  <body>
+    <h1>Ask Mate</h1>
+    <h2>{% block heading %}{% endblock heading %}</h2>
+    <p><br></p>
+        {% block page_content %}
+        <p><a href="/add-question">Ask a question!</a>
+        </p>
+        <table border="1">
+            <tr>
+                {% for header in question_headers %}
+                    {% if header == 'Id' or header == 'Image' %}
+                        <th align="center"> {{header}}</th>
+                    {% else %}
+                        <th align="center"><a href="/?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% for question in questions %}
+            <tr>
+                {% for key in question.keys() %}
+                {% if key == 'id' %}
+                    <td align="center"><a href="/question/{{ question['id'] }}">{{question['id']}}</a></td>
+                {% elif key == 'image' %}
+                    {% if question["image"] %}
+                        <td align="center"><img src="{{ url_for("static", filename="/images/" + question[key]) }}" alt="User image." width="100"></td>
+                    {% else %}
+                        <td align="center">No pic added...</td>
+                    {% endif %}
+                {% else %}
+                    <td align="center">{{question[key]}}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        {% endblock %}
+  </body>
+</html>
