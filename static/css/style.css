@@ -1,26 +1,20 @@
 body {
     font-family: Source Sans Pro,sans-serif;
-    background-color: white;
+    background-color: whitesmoke;
     color: black;
 }
 
 .header img {
     float: left;
-    width: 100px;
-    height: 100px;
-    background: white;
-}
-
-.header h1 {
-    position: relative;
-    top: 18px;
-    left: 10px;
-    color: #F68A07FF
+    width: 120px;
+    height: 120px;
+    background: whitesmoke;
 }
 
 .button {
-    margin-top: 20px;
-    background-color: #03b2c4;
+    margin-top: 30px;
+    margin-left: 50px;
+    background-color: #52c6d2;
     color: white;
     padding: 14px 25px;
     text-align: center;
@@ -63,7 +57,7 @@ table.a {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #03b2c4;
+  background-color: #52c6d2;
   color: white;
 }
 

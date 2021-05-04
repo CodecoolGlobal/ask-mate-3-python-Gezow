@@ -9,14 +9,15 @@
   <div class="content-wrapper">
       <div class="header">
           <img src="static/images/logo_200x200.png" alt="logo" />
-          <h1>Ask Mate</h1>
+          <h2><a href="/add-question" class="button">Ask a question!</a></h2>
+
+
+
       </div>
       <h2>{% block heading %}{% endblock heading %}</h2>
       <p><br></p>
       {% block page_content %}
-      <div class="add-button">
-          <p><a href="/add-question" class="button">Ask a question!</a></p>
-      </div>
+
       <div class="table">
           <table id="question-list">
               <tr>
