@@ -111,3 +111,42 @@ def edit_question(cursor, question_id, title, message, image):
             SET title = '%s', message = '%s', image = '%s'
             WHERE id = '%s'""" % (title, message, image, question_id)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def vote(cursor, id, db, up_or_down):
+    query = """
+            UPDATE %s
+            SET vote_number = vote_number + %s
+            WHERE id = '%s'
+            """ % (db, up_or_down, id)
+    cursor.execute(query)
+
+@database_common.connection_handler
+def find_question_id_from_answer_id(cursor, answer_id):
+    query = """
+            SELECT question_id FROM answer
+            WHERE id = '%s'
+            """ % answer_id
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
+def find_answer_id(cursor, submission_time, message):
+    query = """
+            SELECT id FROM answer
+            WHERE submission_time = '%s'
+            AND message = '%s'""" % (submission_time, message)
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
+def add_new_answer(
+        cursor, submission_time, vote_number, question_id, message):
+    query = """
+            INSERT INTO answer
+            (submission_time, vote_number, question_id, message)
+            VALUES ('%s', %s, %s, '%s');""" % (submission_time, vote_number, question_id, message)
+    cursor.execute(query)

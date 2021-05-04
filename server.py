@@ -33,7 +33,6 @@ def display_question(question_id):
         data_manager.update_view_number(question_id)
     target_question = data_manager.find_target_question(question_id)[0]
     target_answers = data_manager.find_answers_to_question(question_id)
-    print(target_question)
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
@@ -82,48 +81,46 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/vote_up")
 def vote_up_question(question_id):
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    util.vote(questions, question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, 1)
+    data_manager.vote(question_id, 'question', 1)
     return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/question/<question_id>/vote_down")
 def vote_down_question(question_id):
-    questions = connection.get_all_user_data(data_manager.QUESTION_FILE_PATH)
-    util.vote(questions, question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, -1)
+    data_manager.vote(question_id, 'question', -1)
     return redirect("/question/" + question_id + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_up")
 def vote_up_answer(answer_id):
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_answer = util.vote(answers, answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, 1)
-    question_id = target_answer["question_id"]
-    return redirect("/question/" + question_id + "?voted=True")
+    data_manager.vote(answer_id, 'answer', 1)
+    question_id = data_manager.find_question_id_from_answer_id(answer_id)['question_id']
+    return redirect("/question/" + str(question_id) + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_down")
 def vote_down_answer(answer_id):
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
-    target_answer = util.vote(answers, answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, -1)
-    question_id = target_answer["question_id"]
-    return redirect("/question/" + question_id + "?voted=True")
+    data_manager.vote(answer_id, 'answer', -1)
+    question_id = data_manager.find_question_id_from_answer_id(answer_id)['question_id']
+    return redirect("/question/" + str(question_id) + "?voted=True")
 
 
 @app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
 def add_answer(question_id):
-    answers = connection.get_all_user_data(data_manager.ANSWER_FILE_PATH)
     if request.method == "POST":
-        new_answer = {}
-        new_id = util.generate_id()
+        submission_time = str(datetime.now()).split(".")[0]
+        message = request.form['message']
+        data_manager.add_new_answer(submission_time=submission_time,
+                                    vote_number=0,
+                                    question_id=question_id,
+                                    message=message
+                                    )
+        new_answer = data_manager.find_answer_id(submission_time, message)
         if request.files['image']:
-            filename = util.save_images(request.files, new_id, data_manager.Q_IMAGE_DIR_PATH)
+            filename = util.save_images(request.files, str(new_answer["id"]), data_manager.A_IMAGE_DIR_PATH)
         else:
-            filename = None
-        util.setting_up_dict(new_answer, new_id, str(datetime.now()).split(".")[0], 0, 0, filename, question_id,
-                             data_manager.ANSWER_HEADER, request.form)
-        connection.append_data(answers, new_answer)
-        connection.write_data_file(data_manager.ANSWER_FILE_PATH, answers, data_manager.ANSWER_HEADER)
+            filename = ""
+        data_manager.update_image(filename, new_answer["id"])
         return redirect("/question/" + question_id)
     return render_template("add-answer.html", question_id=question_id)
 
