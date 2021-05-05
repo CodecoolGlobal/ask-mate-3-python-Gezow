@@ -1,1 +1,15 @@
 {% extends "list.html" %}
+
+{% block table_header %}
+      <tr>
+          {% for header in question_headers %}
+                <th align="center"> {{header}}</th>
+          {% endfor %}
+      </tr>
+{% endblock table_header %}
+{% block home_button %}
+    <div>
+        <br>
+        <p><a class="post-button" href="/list">Go to questions...</a></p>
+    </div>
+{% endblock home_button %}
