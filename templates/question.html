@@ -25,7 +25,7 @@
         <button onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </p>
-    <h3><hr><strong>comments:</strong></h3>
+    <h3><hr><strong>Comments:</strong></h3>
     <p>
     {% if question_comments %}
         {% for comment in question_comments %}
@@ -54,7 +54,7 @@
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
         </p>
-          <h5><strong>comments:</strong></h5>
+          <h4><strong>Comments:</strong></h4>
         <p>
             {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                 {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
@@ -67,5 +67,5 @@
         </p>
         <hr>
       {% endfor %}
-    <p><a class="button" href="/">Back to questions...</a></p>
+    <p><a class="post-button" href="/">Back to questions...</a></p>
 {% endblock page_content %}
