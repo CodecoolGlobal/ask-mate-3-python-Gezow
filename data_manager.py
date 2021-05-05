@@ -230,3 +230,12 @@ def filter_questions(cursor, search_field_text):
                                                 )
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def edit_answer(cursor, answer_id, message, image):
+    query = """
+            UPDATE answer 
+            SET message = '%s', image = '%s'
+            WHERE id = '%s'""" % (message, image, answer_id)
+    cursor.execute(query)

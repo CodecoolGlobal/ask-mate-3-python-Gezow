@@ -192,6 +192,20 @@ def search_in_questions():
                                                  for header in data_manager.QUESTION_HEADER])
 
 
+@app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
+def edit_answer(answer_id):
+    target_answer = data_manager.find_answer(answer_id)[0]
+    if request.method == "POST":
+        if request.files['image']:
+            filename = util.save_images(request.files, answer_id, data_manager.A_IMAGE_DIR_PATH)
+        else:
+            filename = target_answer['image']
+        message = request.form['message']
+        data_manager.edit_answer(answer_id, message, filename)
+        return redirect("/question/" + str(target_answer['question_id']))
+    return render_template("edit_answer.html", answer=target_answer)
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

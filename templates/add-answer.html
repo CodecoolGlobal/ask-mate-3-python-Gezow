@@ -4,9 +4,10 @@
 {% block page_content %}
 <div class="centered">
 {% block page_title %}<h2 class="page_title"><hr>Answer the question!</h2>{% endblock %}
-    <form action="/question/{{ question_id }}/new_answer" method="post" enctype="multipart/form-data">
+    <form {% block form_action %} action="/question/{{ question_id }}/new_answer" {% endblock %} method="post" enctype="multipart/form-data">
         <p><label for="message-input">Your answer:</label></p>
-            <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"></textarea>
+            <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"
+                      >{% block textarea_values %}{% endblock %}</textarea>
         <p><button class="post-button" type="submit"><strong>Post answer!</strong></button></p>
         <p><label for="image-input" >Upload a picture: </label></p>
         <input type="file" id="image-input" name="image">
