@@ -85,6 +85,14 @@ h2 {
 h3 {
     color: #52c6d2;
 }
+
+h4 {
+    color: #52c6d2;
+}
+
+.comment {
+    font-size: small;
+}
 .header img {
     float: left;
     width: 120px;
@@ -125,7 +133,7 @@ h3 {
 
 .small-button {
     border: none;
-    margin-top: 30px;
+    margin-top: 15px;
     margin-left: 0px;
     background-color: #F68A07FF;
     color: white;
@@ -139,6 +147,22 @@ h3 {
   background-color: #52c6d2;
 }
 
+.smaller-button {
+    border: none;
+    margin-top: 10px;
+    margin-left: 0px;
+    background-color: #F68A07FF;
+    color: white;
+    padding: 5px 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: smaller;
+}
+
+.smaller-button:hover {
+  background-color: #52c6d2;
+}
 table.a {
     color: white;
 }

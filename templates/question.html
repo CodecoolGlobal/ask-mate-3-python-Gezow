@@ -1,6 +1,7 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
 {% block page_content %}
+{% block heading %}{% endblock heading %}
 <div class="left-aligned">
     <h2>{{question['title']}}</h2>
     <div class="bubble">
@@ -26,25 +27,25 @@
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </div>
-        <h3><hr><strong>Comments:</strong></h3>
+        <h4><hr><strong>Comments:</strong></h4>
         <p>
         {% if question_comments %}
             {% for comment in question_comments %}
-            {{comment['message']}}<br><br>
-            <small>
-                Submission time: {{comment['submission_time']}}<br>
-                Edited: {{comment['edited_count']}} &nbsp;&nbsp;
+                <p class="comment">{{comment['message']}}</p>
+                <p class="comment">
+                Submission time: {{comment['submission_time']}}
+                Edited: {{comment['edited_count']}} &nbsp;&nbsp;</p>
+                <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';">Delete</button>
-                <br><br>
-            </small>
+                </p>
             {% endfor %}
         {% else %}
             No comments yet...
         {% endif %}
         </p>
         <br/>
-        <h3><hr><strong>Answers:</strong></h3>
+        <h2><hr><strong>Answers:</strong></h2>
           {% for answer in answers %}
             <p>{{answer['message']}}</p>
             <p>
