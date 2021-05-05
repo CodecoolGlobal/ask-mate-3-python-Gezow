@@ -167,7 +167,18 @@ def add_comment_to_answer(answer_id):
         submission_time = str(datetime.now()).split(".")[0]
         data_manager.add_comment('null', answer_id, request.form["message"], submission_time, 'null')
         return redirect("/question/" + str(q_id))
-    return render_template('add-comment-answer.html', answer_id=answer_id)
+    return render_template('add-comment-answer.html',
+                           answer_id=answer_id,
+                           question_id=q_id
+                           )
+
+
+@app.route("/search")
+def search_in_questions():
+    if request.args.get("q"):
+        searched_items = data_manager.filter_questions(request.args.get("q"))
+
+    return render_template("search.html")
 
 
 if __name__ == "__main__":
