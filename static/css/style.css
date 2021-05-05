@@ -23,25 +23,29 @@ body {
 
 #header-container {
     width: 100%px;
-    height: 150px;
+    height: 130px;
 }
 
 #hd-left {
     float: left;
     height: 120px;
-    width: 120px;
+    width: 380px;
+    padding-top: 0px;
+    padding-left: 220px;
 }
 
 #hd-middle {
     float: left;
     height: 120px;
-    width: 400px;
+    width: 120px;
+    padding-left: 0px;
 }
 
 #hd-right {
     float: left;
     height: 120px;
     width: 300px;
+    padding-left: 80px;
 }
 
 #search_bar {
@@ -52,6 +56,10 @@ body {
     float: left;
     width: 200px;
     background: #f1f1f1;
+}
+
+#search_bar:hover {
+    background-color: white;
 }
 #search_button {
     margin-top: 58px;
@@ -71,7 +79,7 @@ body {
 }
 
 .page-content {
-    padding-top: 150px;
+    padding-top: 130px;
 }
 
 .page-title {
