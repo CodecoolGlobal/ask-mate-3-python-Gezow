@@ -5,12 +5,12 @@
 <div class="centered">
 {% block page_title %}<h1 class="page-title">What's Your question?</h1>{% endblock %}
     <form {% block action %}action="/add-question"{% endblock action %} method="post" enctype="multipart/form-data">
-        <p><label for="title-input">Title:</label></p>
-            <input id="title-input" name="title" minlength="3" {% block bodytitle %}{% endblock bodytitle %}>
-        <p><label for="message-input">Question:</label></p>
-            <textarea id="message-input" name="message" minlength="5" rows="6" cols="30">{% block question %}{% endblock question %}</textarea>
+        <p><label for="title-input"><h3>Title:</h3></label></p>
+            <input id="title-input" name="title" minlength="3" size="105"{% block bodytitle %}{% endblock bodytitle %}>
+        <p><label for="message-input"><h3>Question:</h3></label></p>
+            <textarea id="message-input" name="message" minlength="5" rows="20" cols="100">{% block question %}{% endblock question %}</textarea>
         <p><button class="post-button" type="submit">{% block button %}<strong>Ask question!</strong>{% endblock button %}</button></p>
-        <p><label for="image-input" >Upload a picture: </label></p>
+        <p><label for="image-input" ><h3>Upload a picture:</h3></label></p>
             <input type="file" id="image-input" name="image">
     </form>
 </div>
