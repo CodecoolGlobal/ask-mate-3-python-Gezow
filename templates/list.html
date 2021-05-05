@@ -4,21 +4,19 @@
     <meta charset="utf-8">
     <title>{% block title %}Ask Mate{% endblock title %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo_200x200.png') }}">
   </head>
   <body>
   <div class="content-wrapper">
+
       <div class="header">
-          <a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a>
-          <h2><a href="/add-question" class="button">Ask a question!</a></h2>
-          <div class="search_bar">
-              <form action="/search">
-                  <label for="search_bar"></label>
-                  <input type="text" name="q" id="search_bar">
-              <button type="submit">Search</button>
-              </form>
+          <div id="header-container">
+              <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+              <div id="hd-middle"><h2><a href="/add-question" class="button">Ask a question!</a></h2></div>
+              <div id="hd-right">Search box here</div>
           </div>
       </div>
+      <div class="page-content">
+
       <h2>{% block heading %}{% endblock heading %}</h2>
       <p><br></p>
       {% block page_content %}
@@ -52,7 +50,10 @@
               </tr>
             {% endfor %}
           </table>
+          </div>
       </div>
-      {% endblock %}
+
+  </div>
+  {% endblock %}
   </body>
 </html>

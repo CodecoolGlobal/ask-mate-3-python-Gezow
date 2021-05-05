@@ -13,6 +13,37 @@ body {
     margin: 20px;
 }
 
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: whitesmoke;
+}
+
+#header-container {
+    width: 100%px;
+    height: 150px;
+}
+
+#hd-left {
+    float: left;
+    width: 120px;
+}
+
+#hd-middle {
+    float: left;
+    width: 400px;
+}
+
+#hd-right {
+    float: left;
+    width: 200px;
+}
+
+.page-content {
+    padding-top: 150px;
+}
+
 .header img {
     float: left;
     width: 120px;
@@ -113,6 +144,7 @@ table.a {
     color: #F68A07FF;
 }
 .bubble {
+    z-index: -1;
     margin-left: 0px;
     width: 700px;
     margin-top: 30px;
