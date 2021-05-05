@@ -213,3 +213,20 @@ def add_comment(cursor, question_id, answer_id, message, submission_time, edited
             """ % (question_id, answer_id, message, submission_time, edited_count)
     print(query)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def filter_questions(cursor, search_field_text):
+    query = """
+            SELECT question.id, question.submission_time, view_number, question.vote_number, question.title, question.message,
+            question.image
+            FROM question
+            FULL OUTER JOIN answer ON question.id = answer.question_id
+            WHERE question.message ILIKE '%s'
+            OR question.title ILIKE '%s'
+            OR answer.message ILIKE '%s';""" % ('%' + search_field_text + '%',
+                                                '%' + search_field_text + '%',
+                                                '%' + search_field_text + '%'
+                                                )
+    cursor.execute(query)
+    return cursor.fetchall()

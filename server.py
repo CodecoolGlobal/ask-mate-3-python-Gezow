@@ -161,8 +161,6 @@ def new_comment_to_question(question_id):
 @app.route("/answer/<answer_id>/new_comment", methods=["GET", "POST"])
 def add_comment_to_answer(answer_id):
     q_id = data_manager.find_question_id_from_answer_id(answer_id)['question_id']
-    print(answer_id)
-    print(q_id)
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
         data_manager.add_comment('null', answer_id, request.form["message"], submission_time, 'null')
@@ -176,9 +174,13 @@ def add_comment_to_answer(answer_id):
 @app.route("/search")
 def search_in_questions():
     if request.args.get("q"):
-        searched_items = data_manager.filter_questions(request.args.get("q"))
-
-    return render_template("search.html")
+        relevant_questions = data_manager.filter_questions(request.args.get("q"))
+        print(relevant_questions)
+        return render_template("searched_list.html",
+                               questions=relevant_questions,
+                               if_reversed="asc",
+                               question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                                 for header in data_manager.QUESTION_HEADER])
 
 
 if __name__ == "__main__":
