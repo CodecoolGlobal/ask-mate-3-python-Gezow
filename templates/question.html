@@ -1,71 +1,73 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
-
 {% block page_content %}
-{% block heading %}{% endblock heading %}
-<h2><hr>{{question['title']}}</h2>
-<div class="bubble">
-    {{question['message']}}
+<div class="left-aligned">
+    <h2><hr>{{question['title']}}</h2>
+    <div class="bubble">
+        {{question['message']}}
+    </div>
+    <div>
+        {% if question["image"] %}
+            <p><img src="{{ url_for("static", filename="/images/question/" + question["image"]) }}" alt="User image." width="450"></p>
+        {% endif %}
+        <p>
+            <small>
+                Submission time: {{question['submission_time']}}&nbsp;&nbsp;
+                Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
+                Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
+            </small>
+        </p>
+    </div>
+    <div class="buttons">
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
+    </div>
+        <h3><hr><strong>Comments:</strong></h3>
+        <p>
+        {% if question_comments %}
+            {% for comment in question_comments %}
+            {{comment['message']}}<br>
+            <small>
+                Submission time: {{comment['submission_time']}}<br><br>
+            </small>
+            {% endfor %}
+        {% else %}
+            No comments yet...
+        {% endif %}
+        </p>
+        <br/>
+        <h3><hr><strong>Answers:</strong></h3>
+          {% for answer in answers %}
+            <p>{{answer['message']}}</p>
+            <p>
+                {% if answer["image"] %}
+                    <img src="{{ url_for("static", filename="/images/answer/" + answer["image"]) }}" alt="User image." width="290">
+                {% endif %}
+            </p>
+            <p><small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small></p>
+    <div class="buttons">
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
+    </div>
+              <h4><strong>Comments:</strong></h4>
+            <p>
+                {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
+                    {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
+                        {{ comment["message"] }}<br>
+                        <small>Submission time: {{ comment["submission_time"] }}</small><br><br>
+                    {% endfor %}
+                {% else %}
+                    No comments yet...
+                {% endif %}
+            </p>
+            <hr>
+          {% endfor %}
+        <p><a class="post-button" href="/">Back to questions...</a></p>
 </div>
-    {% if question["image"] %}
-        <p><img src="{{ url_for("static", filename="/images/question/" + question["image"]) }}" alt="User image." width="450"></p>
-    {% endif %}
-    <p>
-        <small>
-            Submission time: {{question['submission_time']}}&nbsp;&nbsp;
-            Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
-            Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
-        </small>
-    </p>
-    <p>
-        <button onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
-        <button onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
-    </p>
-    <h3><hr><strong>Comments:</strong></h3>
-    <p>
-    {% if question_comments %}
-        {% for comment in question_comments %}
-        {{comment['message']}}<br>
-        <small>
-            Submission time: {{comment['submission_time']}}<br><br>
-        </small>
-        {% endfor %}
-    {% else %}
-        No comments yet...
-    {% endif %}
-    </p>
-    <br/>
-    <h3><hr><strong>Answers:</strong></h3>
-      {% for answer in answers %}
-        <p>{{answer['message']}}</p>
-        <p>
-            {% if answer["image"] %}
-                <img src="{{ url_for("static", filename="/images/answer/" + answer["image"]) }}" alt="User image." width="290">
-            {% endif %}
-        </p>
-        <p><small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small></p>
-        <p>
-            <button onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
-            <button onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
-            <button onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
-            <button onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
-        </p>
-          <h4><strong>Comments:</strong></h4>
-        <p>
-            {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
-                {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
-                    {{ comment["message"] }}<br>
-                    <small>Submission time: {{ comment["submission_time"] }}</small><br><br>
-                {% endfor %}
-            {% else %}
-                No comments yet...
-            {% endif %}
-        </p>
-        <hr>
-      {% endfor %}
-    <p><a class="post-button" href="/">Back to questions...</a></p>
 {% endblock page_content %}

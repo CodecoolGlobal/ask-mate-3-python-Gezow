@@ -8,6 +8,11 @@ body {
     margin: auto;
     text-align: center;
 }
+
+.left-aligned {
+    margin: 20px;
+}
+
 .header img {
     float: left;
     width: 120px;
@@ -43,6 +48,22 @@ body {
 }
 
 .post-button:hover {
+  background-color: #52c6d2;
+}
+
+.small-button {
+    border: none;
+    margin-top: 30px;
+    margin-left: 0px;
+    background-color: #F68A07FF;
+    color: white;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.small-button:hover {
   background-color: #52c6d2;
 }
 
