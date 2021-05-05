@@ -58,7 +58,7 @@
             {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                 {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                     {{ comment["message"] }}<br>
-                    <small>Submission time: {{ comment["submission_time"] }}</small>
+                    <small>Submission time: {{ comment["submission_time"] }}</small><br><br>
                 {% endfor %}
             {% else %}
                 No comments yet...

@@ -157,7 +157,7 @@ def add_new_answer(
 def delete_from_db(cursor, unique_id, db):
     query = """
             DELETE FROM %s
-            WHERE id = '%s'
+            WHERE id = '%s';
             """ % (db, unique_id)
     cursor.execute(query)
 
@@ -177,7 +177,7 @@ def look_for_comments(cursor, db, id_type, unique_id):
     query = """
             SELECT * FROM %s
             WHERE %s = '%s'
-            ORDER BY submission_time
+            ORDER BY submission_time;
             """ % (db, id_type, unique_id)
     cursor.execute(query)
     return cursor.fetchall()
@@ -187,7 +187,7 @@ def look_for_comments(cursor, db, id_type, unique_id):
 def find_answer_by_question_id(cursor, question_id):
     query = """
             SELECT * FROM answer
-            WHERE question_id = '%s'
+            WHERE question_id = '%s';
             """ % question_id
     cursor.execute(query)
     return cursor.fetchall()
@@ -197,16 +197,19 @@ def find_answer_by_question_id(cursor, question_id):
 def delete_answers_by_question_id(cursor, question_id):
     query = """
             DELETE FROM answer
-            WHERE question_id = '%s'
+            WHERE question_id = '%s';
             """ % question_id
     cursor.execute(query)
 
 
 @database_common.connection_handler
 def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
+    print('q_id: ', question_id)
+    print('a_id: ', answer_id)
     query = """
             INSERT INTO comment
             (question_id, answer_id, message, submission_time, edited_count)
-            VALUES (%s,%s,'%s','%s',%s)
+            VALUES (%s, %s, '%s','%s',%s);
             """ % (question_id, answer_id, message, submission_time, edited_count)
+    print(query)
     cursor.execute(query)

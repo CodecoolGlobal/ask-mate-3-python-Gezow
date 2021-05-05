@@ -2,7 +2,7 @@
 {% block title %}Ask Mate - Add comment!{% endblock title %}
 {% block heading %}Add comment!{% endblock heading %}
 {% block page_content %}
-    <form action="/question/{{ question_id }}/new_comment" method="post">
+    <form {% block comment_action %}action="/question/{{ question_id }}/new_comment"{% endblock %} method="post">
         <p><label for="message-input">Your comment:</label></p>
             <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"></textarea>
         <p><button type="submit">Post comment!</button></p>
