@@ -1,6 +1,5 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - Add comment!{% endblock title %}
-{% block heading %}Add comment!{% endblock heading %}
 {% block page_content %}
 {% block page_title %}<h2 class="page_title"><hr>Add comment!</h2>{% endblock %}
     <form action="/question/{{ question_id }}/new_comment" method="post">
