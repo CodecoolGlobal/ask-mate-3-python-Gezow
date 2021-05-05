@@ -10,7 +10,8 @@ body {
 }
 
 .left-aligned {
-    margin: 20px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 .header {
@@ -27,19 +28,43 @@ body {
 
 #hd-left {
     float: left;
+    height: 120px;
     width: 120px;
 }
 
 #hd-middle {
     float: left;
+    height: 120px;
     width: 400px;
 }
 
 #hd-right {
     float: left;
-    width: 200px;
+    height: 120px;
+    width: 300px;
 }
 
+#search_bar {
+    margin-top: 58px;
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 200px;
+    background: #f1f1f1;
+}
+#search_button {
+    margin-top: 58px;
+    float: left;
+    width: 40px;
+    padding: 10px;
+    background: #52c6d2;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
 .page-content {
     padding-top: 150px;
 }

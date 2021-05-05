@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title>{% block title %}Ask Mate{% endblock title %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo_200x200.png') }}">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <meta charset="utf-8">
+      <title>{% block title %}Ask Mate{% endblock title %}</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <link rel="icon" href="{{ url_for('static', filename='images/logo_200x200.png') }}">
   </head>
   <body>
   <div class="content-wrapper">
@@ -13,11 +14,14 @@
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
               <div id="hd-middle"><h2><a href="/add-question" class="button">Ask a question!</a></h2></div>
-              <div id="hd-right"><form action="/search">
-                  <label for="search_bar"></label>
-                  <input type="text" name="q" id="search_bar">
-                  <button type="submit">Search</button></form></div>
-          </div>
+              <div id="hd-right">
+                  <form action="/search">
+                      <label for="search_bar"></label>
+                      <div id="search-input"><input type="text" name="q" placeholder="Search..." id="search_bar"></div>
+                      <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
+                  </form>
+              </div>
+          </div><hr>
       </div>
       <div class="page-content">
 
