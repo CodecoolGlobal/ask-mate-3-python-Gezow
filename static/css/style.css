@@ -1,7 +1,7 @@
 body {
     font-family: Source Sans Pro,sans-serif;
     background-color: whitesmoke;
-    color: black;
+    color: #171616;
 }
 
 .header img {
@@ -69,3 +69,29 @@ table.a {
     color: black;
 }
 
+.bubble {
+    margin-left: 0px;
+    width: 700px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: #52c6d2;
+    padding: 20px;
+    text-align: left;
+    font-weight: 900;
+    color: #fff;
+    font-family: arial;
+    position:relative;
+}
+
+.bubble:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid #52c6d2;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #52c6d2;
+    border-bottom: 10px solid transparent;
+    left: 20px;
+    bottom: -20px;
+}

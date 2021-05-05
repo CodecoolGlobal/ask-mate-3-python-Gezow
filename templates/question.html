@@ -1,8 +1,11 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
-{% block heading %}{{question['title']}}{% endblock heading %}
+{% block heading %}{% endblock heading %}
 {% block page_content %}
-    <p style="border:1px; border-style:solid; padding: 10px;">{{question['message']}}</p>
+<h2>{{question['title']}}</h2>
+<div class="bubble">
+    {{question['message']}}
+</div>
     {% if question["image"] %}
         <p><img src="{{ url_for("static", filename="/images/question/" + question["image"]) }}" alt="User image." width="450"></p>
     {% endif %}
