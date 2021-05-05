@@ -9,6 +9,16 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
+    last_five_question = reversed(data_manager.get_questions()[:5])
+    return render_template("searched_list.html",
+                           questions=last_five_question,
+                           if_reversed='asc',
+                           question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                             for header in data_manager.QUESTION_HEADER])
+
+
+@app.route("/list")
+def display_list():
     if request.args.get("order_by") and request.args.get("order_direction") == "desc":
         sorted_questions = data_manager.get_ordered_questions_desc(request.args.get("order_by"))
         order = "asc"
