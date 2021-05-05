@@ -2,6 +2,7 @@
 {% block title %}Ask Mate - Ask a question!{% endblock title %}
 {% block heading %}{% endblock heading %}
 {% block page_content %}
+<div class="centered">
 {% block page_title %}<h2 class="page_title"><hr>What's Your question?</h2>{% endblock %}
     <form {% block action %}action="/add-question"{% endblock action %} method="post" enctype="multipart/form-data">
         <p><label for="title-input">Title:</label></p>
@@ -12,4 +13,5 @@
         <p><label for="image-input" >Upload a picture: </label></p>
             <input type="file" id="image-input" name="image">
     </form>
+</div>
 {% endblock %}

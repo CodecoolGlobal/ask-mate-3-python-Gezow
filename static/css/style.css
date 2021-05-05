@@ -4,6 +4,10 @@ body {
     color: #171616;
 }
 
+.centered {
+    margin: auto;
+    text-align: center;
+}
 .header img {
     float: left;
     width: 120px;
@@ -71,7 +75,7 @@ table.a {
 #question-list th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: left;
+  text-align: center;
   background-color: #52c6d2;
   color: white;
 }
@@ -80,10 +84,13 @@ table.a {
     background-color: #F68A07FF;
 }
 
-#question-list #black-link {
-    color: black;
+#question-list #blue-link {
+    color: #52c6d2;
 }
 
+#question-list #blue-link:hover {
+    color: #F68A07FF;
+}
 .bubble {
     margin-left: 0px;
     width: 700px;
