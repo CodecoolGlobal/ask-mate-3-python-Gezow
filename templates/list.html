@@ -25,7 +25,7 @@
       </div>
       <div class="page-content">
 
-      <h2>{% block heading %}All question{% endblock heading %}</h2>
+      <h1 class="page-title">{% block heading %}All question{% endblock heading %}</h1>
       <p><br></p>
       {% block page_content %}
       {% block page_title %}{% endblock %}
@@ -37,7 +37,7 @@
                     {% if header == 'Id' or header == 'Image' %}
                         <th align="center"> {{header}}</th>
                     {% else %}
-                        <th align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                        <th id="hover-hd" align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
                     {% endif %}
                   {% endfor %}
               </tr>

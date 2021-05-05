@@ -69,9 +69,12 @@ body {
     padding-top: 150px;
 }
 
-h2 {
-    text-align: center;
+.page-title {
     color: #F68A07FF;
+    text-align: center;
+}
+h2 {
+    color: #52c6d2;
 }
 .header img {
     float: left;
@@ -161,7 +164,7 @@ table.a {
   color: white;
 }
 
-#question-list th:hover {
+#hover-hd:hover {
     background-color: #F68A07FF;
 }
 

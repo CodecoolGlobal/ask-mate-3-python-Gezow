@@ -3,7 +3,7 @@
 {% block heading %}{% endblock heading %}
 {% block page_content %}
 <div class="centered">
-{% block page_title %}<h2 class="page_title">Answer the question!</h2>{% endblock %}
+{% block page_title %}<h1 class="page-title">Answer the question!</h1>{% endblock %}
     <form {% block form_action %} action="/question/{{ question_id }}/new_answer" {% endblock %} method="post" enctype="multipart/form-data">
         <p><label for="message-input">Your answer:</label></p>
             <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"

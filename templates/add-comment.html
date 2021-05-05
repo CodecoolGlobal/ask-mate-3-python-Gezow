@@ -2,7 +2,7 @@
 {% block title %}Ask Mate - Add comment!{% endblock title %}
 {% block page_content %}
 <div class="centered">
-{% block page_title %}<h2 class="page_title">Add comment!</h2>{% endblock %}
+{% block page_title %}<h1 class="page-title">Add comment!</h1>{% endblock %}
     <form {% block comment_action %}action="/question/{{ question_id }}/new_comment"{% endblock %} method="post">
         <p><label for="message-input">Your comment:</label></p>
             <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"></textarea>

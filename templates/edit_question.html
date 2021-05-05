@@ -1,5 +1,5 @@
 {% extends "add-question.html" %}
-{% block page_title %}<h2 class="page_title">Edit the question!</h2>{% endblock %}
+{% block page_title %}<h1 class="page-title">Edit the question!</h1>{% endblock %}
 {% block action %}action="/question/{{question['id']}}/edit_question"{% endblock action %}
 {% block bodytitle %}value="{{ question['title']}}"{% endblock bodytitle %}
 {% block question %}{{ question['message']}}{% endblock question %}
