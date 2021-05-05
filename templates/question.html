@@ -1,8 +1,9 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
-{% block heading %}{% endblock heading %}
+
 {% block page_content %}
-<h2>{{question['title']}}</h2>
+{% block heading %}{% endblock heading %}
+<h2><hr>{{question['title']}}</h2>
 <div class="bubble">
     {{question['message']}}
 </div>
@@ -24,7 +25,7 @@
         <button onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
         <button onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </p>
-    <h4><strong>comments:</strong></h4>
+    <h3><hr><strong>comments:</strong></h3>
     <p>
     {% if question_comments %}
         {% for comment in question_comments %}
@@ -38,7 +39,7 @@
     {% endif %}
     </p>
     <br/>
-    <h3><strong>Answers:</strong></h3>
+    <h3><hr><strong>Answers:</strong></h3>
       {% for answer in answers %}
         <p>{{answer['message']}}</p>
         <p>
@@ -66,5 +67,5 @@
         </p>
         <hr>
       {% endfor %}
-    <p><a href="/">Back to questions...</a></p>
+    <p><a class="button" href="/">Back to questions...</a></p>
 {% endblock page_content %}
