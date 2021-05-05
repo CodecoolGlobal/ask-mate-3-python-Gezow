@@ -1,11 +1,12 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - Answer a question!{% endblock title %}
-{% block heading %}Answer a question!{% endblock heading %}
+{% block heading %}{% endblock heading %}
 {% block page_content %}
+{% block page_title %}<h2 class="page_title"><hr>Answer the question!</h2>{% endblock %}
     <form action="/question/{{ question_id }}/new_answer" method="post" enctype="multipart/form-data">
         <p><label for="message-input">Your answer:</label></p>
             <textarea id="message-input" name="message" minlength="5" rows="6" cols="30"></textarea>
-        <p><button type="submit">Post answer!</button></p>
+        <p><button class="post-button" type="submit"><strong>Post answer!</strong></button></p>
         <p><label for="image-input" >Upload a picture: </label></p>
         <input type="file" id="image-input" name="image">
     </form>
