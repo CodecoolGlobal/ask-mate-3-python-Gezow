@@ -3,7 +3,7 @@
 {% block heading %}{% endblock heading %}
 {% block page_content %}
 <div class="centered">
-{% block page_title %}<h1 class="page-title">What's Your question?</h1>{% endblock %}
+    {% block page_title %}<h1 class="page-title">What's Your question?</h1>{% endblock %}
     <form {% block action %}action="/add-question"{% endblock action %} method="post" enctype="multipart/form-data">
         <p><label for="title-input"><h3>Title:</h3></label></p>
             <input id="title-input" name="title" minlength="3" size="105"{% block bodytitle %}{% endblock bodytitle %}>
