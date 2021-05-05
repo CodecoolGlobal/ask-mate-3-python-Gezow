@@ -34,7 +34,8 @@
             <small>
                 Submission time: {{comment['submission_time']}}<br>
                 Edited: {{comment['edited_count']}} &nbsp;&nbsp;
-                <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>
+                <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
+                <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';">Delete</button>
                 <br><br>
             </small>
             {% endfor %}
@@ -66,7 +67,8 @@
                         {{ comment["message"] }}<br><br>
                         <small>Submission time: {{comment['submission_time']}}<br>
                         Edited: {{comment['edited_count']}} &nbsp;&nbsp;
-                        <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>
+                        <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
+                        <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';">Delete</button>
                         <br><br>
                     {% endfor %}
                 {% else %}
