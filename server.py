@@ -39,7 +39,7 @@ def display_question(question_id):
                            question_id=question_id,
                            IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH,
                            question_comments=data_manager.look_for_comments('comment', 'question_id', question_id),
-                           answer_comments=data_manager.look_for_comments('comment', 'answer_id', question_id)
+                           data_manager=data_manager
                            )
 
 
