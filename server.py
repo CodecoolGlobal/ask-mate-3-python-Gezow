@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, request, url_for
-import connection
 import data_manager
 import util
 from datetime import datetime
@@ -39,7 +38,8 @@ def display_question(question_id):
                            answer_headers=data_manager.ANSWER_HEADER,
                            question_id=question_id,
                            IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH,
-                           question_comments=data_manager.look_for_comments('comment', 'question_id', question_id)
+                           question_comments=data_manager.look_for_comments('comment', 'question_id', question_id),
+                           answer_comments=data_manager.look_for_comments('comment', 'answer_id', question_id)
                            )
 
 

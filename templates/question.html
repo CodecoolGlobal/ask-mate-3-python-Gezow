@@ -49,6 +49,17 @@
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
             <button onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
         </p>
+          <h5><strong>comments:</strong></h5>
+        <p>
+            {% for comment in answer_comments %}
+                {% if comment["answer_id"] == answer['id'] %}
+                {{comment['message']}}<br>
+                <small>
+                    Submission time: {{comment['submission_time']}}<br><br>
+                </small>
+                {% endif %}
+            {% endfor %}
+        </p>
         <hr>
       {% endfor %}
     <p><a href="/">Back to questions...</a></p>
