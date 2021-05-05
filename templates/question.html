@@ -30,9 +30,12 @@
         <p>
         {% if question_comments %}
             {% for comment in question_comments %}
-            {{comment['message']}}<br>
+            {{comment['message']}}<br><br>
             <small>
-                Submission time: {{comment['submission_time']}}<br><br>
+                Submission time: {{comment['submission_time']}}<br>
+                Edited: {{comment['edited_count']}} &nbsp;&nbsp;
+                <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>
+                <br><br>
             </small>
             {% endfor %}
         {% else %}
@@ -60,8 +63,11 @@
             <p>
                 {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                     {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
-                        {{ comment["message"] }}<br>
-                        <small>Submission time: {{ comment["submission_time"] }}</small><br><br>
+                        {{ comment["message"] }}<br><br>
+                        <small>Submission time: {{comment['submission_time']}}<br>
+                        Edited: {{comment['edited_count']}} &nbsp;&nbsp;
+                        <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>
+                        <br><br>
                     {% endfor %}
                 {% else %}
                     No comments yet...
