@@ -69,6 +69,10 @@ body {
     padding-top: 150px;
 }
 
+h2 {
+    text-align: center;
+    color: #F68A07FF;
+}
 .header img {
     float: left;
     width: 120px;
@@ -128,9 +132,9 @@ table.a {
 }
 
 #question-list {
-
-  border-collapse: collapse;
-  width: 100%;
+    margin: auto;
+    border-collapse: collapse;
+    width: 80%;
 }
 
 #question-list a {
