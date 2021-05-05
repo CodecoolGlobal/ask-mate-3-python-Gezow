@@ -175,7 +175,6 @@ def add_comment_to_answer(answer_id):
 def search_in_questions():
     if request.args.get("q"):
         relevant_questions = data_manager.filter_questions(request.args.get("q"))
-        print(relevant_questions)
         return render_template("searched_list.html",
                                questions=relevant_questions,
                                if_reversed="asc",
