@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request
 import data_manager
 import util
 from datetime import datetime
@@ -165,7 +165,8 @@ def delete_answer(answer_id):
 def new_comment_to_question(question_id):
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager.add_comment(question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
+        data_manager.add_comment(
+            question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
         return redirect("/question/" + question_id + "?voted=True")
     return render_template('add-comment.html', question_id=question_id)
 
@@ -242,7 +243,7 @@ def add_tag(question_id):
             target_tag = data_manager.find_tag_id(request.form['message'].replace("'", "`"))['id']
         else:
             target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
-        data_manager.choose_tag(question_id,target_tag)
+        data_manager.choose_tag(question_id, target_tag)
         return redirect("/question/" + question_id + "?voted=True")
     all_tags = data_manager.all_tags()
     return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)

@@ -44,7 +44,7 @@
             No comments yet...
         {% endif %}</div>
         <h2><strong>Answers:</strong></h2>
-          {% for answer in answers %}
+          {% for answer in reversed(answers) %}
             <p>{{answer['message']}}</p>
             <p>
                 {% if answer["image"] %}
