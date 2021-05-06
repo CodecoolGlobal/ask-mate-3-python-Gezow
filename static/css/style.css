@@ -22,31 +22,39 @@ body {
 }
 
 #header-container {
-    width: 100%px;
+    width: 100%;
+    margin: 0 auto;
     height: 130px;
 }
 
 #hd-left {
     float: left;
     height: 120px;
-    width: 120px;
-    padding-left: 100px;
+    width: 15%;
+    padding-left: 0px;
 }
 
-#hd-middle {
+#hd-middle-l {
     float: left;
     height: 120px;
-    width: 380px;
+    width: 28%;
     padding-top: 0px;
     padding-left: 0px;
+}
 
+#hd-middle-r {
+    float: left;
+    height: 120px;
+    width: 30%;
+    padding-top: 0px;
+    padding-left: 0px;
 }
 
 #hd-right {
     float: left;
     height: 120px;
-    width: 300px;
-    padding-left: 350px;
+    width: 27%;
+    padding-left: 0px;
 }
 
 #search_bar {
