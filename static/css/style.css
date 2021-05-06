@@ -178,7 +178,7 @@ table.a {
     color: white;
 }
 
-#trash-button {
+.trash-button {
     height: 25px;
     margin-top: 10px;
     background-color: #F68A07FF;
@@ -191,7 +191,7 @@ table.a {
     font-size: smaller;
 }
 
-#trash-button:hover {
+.trash-button:hover {
      background: #52c6d2;
 }
 

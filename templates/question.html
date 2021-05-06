@@ -39,7 +39,7 @@
                 Edited: {{comment['edited_count']}} &nbsp;&nbsp;</p>
                 <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button id="trash-button" class="btn"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
+                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
                 </p>
             {% endfor %}
         {% else %}
@@ -71,7 +71,7 @@
                         <small>Submission time: {{comment['submission_time']}}<br>
                         Edited: {{comment['edited_count']}} &nbsp;&nbsp;
                         <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                        <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';">Delete</button>
+                        <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
                         <br><br>
                     {% endfor %}
                 {% else %}
