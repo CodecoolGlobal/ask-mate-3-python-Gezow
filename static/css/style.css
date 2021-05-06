@@ -24,20 +24,21 @@ body {
 #header-container {
     width: 100%;
     margin: 0 auto;
-    height: 130px;
+    height: 120px;
 }
 
 #hd-left {
     float: left;
     height: 120px;
-    width: 15%;
-    padding-left: 0px;
+    width: 120px;
+    padding: auto;
+    vertical-align: center;
 }
 
 #hd-middle-l {
     float: left;
     height: 120px;
-    width: 28%;
+    width: 300px;
     padding-top: 0px;
     padding-left: 0px;
 }
@@ -45,7 +46,7 @@ body {
 #hd-middle-r {
     float: left;
     height: 120px;
-    width: 30%;
+    width: 300px;
     padding-top: 0px;
     padding-left: 0px;
 }
@@ -53,7 +54,7 @@ body {
 #hd-right {
     float: left;
     height: 120px;
-    width: 27%;
+    width: 300px;
     padding-left: 0px;
 }
 
@@ -115,6 +116,10 @@ h4 {
     padding-inline: 10px;
     padding-bottom: 0px;
 }
+
+.header-button {
+    margin-top: 58px;
+}
 .header img {
     float: left;
     width: 120px;
@@ -123,14 +128,16 @@ h4 {
 }
 
 .button {
-    margin-top: 30px;
-    margin-left: 50px;
+    margin-top: 70px;
+    height: 41px;
+    width: 263px;
     background-color: #F68A07FF;
     color: white;
-    padding: 14px 25px;
     text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+
     text-decoration: none;
-    display: inline-block;
 }
 
 .button:hover {
@@ -219,14 +226,11 @@ table.a {
 
 .tag-button {
     height: 100%;
-
     background-color: lightgray;
     border: none;
     color: #F68A07FF;
-
     text-align: center;
     text-decoration: none;
-
     font-size: small;
 }
 #question-list {
