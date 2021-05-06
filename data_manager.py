@@ -267,3 +267,14 @@ def update_edited_count(cursor, comment_id):
             SET edited_count = CASE WHEN edited_count IS null THEN 1 ELSE edited_count + 1 END
             WHERE id = '%s'""" % (comment_id)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_relevant_tags(cursor, question_id):
+    query = """
+            SELECT tag.name FROM tag
+            FULL OUTER JOIN question_tag ON tag.id = question_tag.tag_id
+            WHERE question_tag.question_id = '%s';
+            """ % question_id
+    cursor.execute(query)
+    return cursor.fetchall()
