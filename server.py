@@ -42,6 +42,8 @@ def display_question(question_id):
         data_manager.update_view_number(question_id)
     target_question = data_manager.find_target_question(question_id)[0]
     target_answers = data_manager.find_answers_to_question(question_id)
+    relevant_tags = data_manager.find_relevant_tags(question_id)[0]
+    print(relevant_tags)
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
@@ -49,7 +51,8 @@ def display_question(question_id):
                            question_id=question_id,
                            IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH,
                            question_comments=data_manager.look_for_comments('comment', 'question_id', question_id),
-                           data_manager=data_manager
+                           data_manager=data_manager,
+                           tags=relevant_tags['name']
                            )
 
 

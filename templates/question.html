@@ -16,6 +16,7 @@
                 Submission time: {{question['submission_time']}}&nbsp;&nbsp;
                 Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
                 Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
+                Tags: {% for tag in tags %}{{ tag }}{% endfor %}
             </small>
         </p>
     </div>
