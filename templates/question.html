@@ -37,7 +37,7 @@
                 Edited: {{comment['edited_count']}} &nbsp;&nbsp;</p>
                 <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';">Delete</button>
+                <button id="trash-button" class="btn"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
                 </p>
             {% endfor %}
         {% else %}

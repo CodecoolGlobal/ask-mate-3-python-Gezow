@@ -79,6 +79,7 @@ body {
     background-color: #F68A07FF;
 }
 
+
 .page-content {
     padding-top: 130px;
 }
@@ -157,12 +158,13 @@ h4 {
 }
 
 .smaller-button {
+    height: 25px;
     border: none;
     margin-top: 10px;
     margin-left: 0px;
     background-color: #F68A07FF;
     color: white;
-    padding: 5px 7px;
+    padding: 6px 8px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -174,6 +176,23 @@ h4 {
 }
 table.a {
     color: white;
+}
+
+#trash-button {
+    height: 25px;
+    margin-top: 10px;
+    background-color: #F68A07FF;
+    border: none;
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: smaller;
+}
+
+#trash-button:hover {
+     background: #52c6d2;
 }
 
 #question-list {
