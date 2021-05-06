@@ -207,6 +207,28 @@ table.a {
      background: #52c6d2;
 }
 
+.tag {
+    height: 15px;
+    width: 70px;
+    margin-right: 0px;
+    padding: 0px;
+    background-color: lightgray;
+    border: none;
+    text-align: center;
+}
+
+.tag-button {
+    height: 100%;
+
+    background-color: lightgray;
+    border: none;
+    color: #F68A07FF;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-size: small;
+}
 #question-list {
     margin: auto;
     border-collapse: collapse;
