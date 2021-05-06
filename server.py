@@ -41,7 +41,7 @@ def display_question(question_id):
     if request.args.get("voted") != "True":
         data_manager.update_view_number(question_id)
     target_question = data_manager.find_target(question_id, 'question')[0]
-    target_answers = data_manager.find_answers_to_question(question_id)
+    target_answers = reversed(data_manager.find_answers_to_question(question_id))
     relevant_tags = data_manager.find_relevant_tags(question_id)
     return render_template("question.html",
                            question=target_question,
