@@ -4,8 +4,8 @@
 {% block page_content %}
 <div class="centered">
 {% block page_title %}<h1 class="page-title">Answer the question!</h1>{% endblock %}
-    <form {% block form_action %} action="/question/{{ question_id }}/new_answer" {% endblock %} method="post" enctype="multipart/form-data">
-        <p><label for="message-input"><h3>Your answer:</h3></label></p>
+    <form {% block form_action %}action="/question/{{ question_id }}/new_answer"{% endblock %} method="post" enctype="multipart/form-data">
+        <p><label for="message-input"><h3>{% block page_label %}Your answer:{% endblock %}</h3></label></p>
             <textarea id="message-input" name="message" minlength="5" rows="20" cols="100"
                       >{% block textarea_values %}{% endblock %}</textarea>
         <p><button class="post-button" type="submit"><strong>{% block button_text %}Post answer!{% endblock %}</strong></button></p>

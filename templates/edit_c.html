@@ -2,9 +2,10 @@
 
 {% block title %}Ask Mate - Update{% endblock title %}
 
-{% block form_action %}
-action = "edit"
-{% endblock %}
+{% block page_title %}Update comment:{% endblock %}
+{% block page_label %}Your comment:{% endblock %}
+
+{% block form_action %}action="edit"{% endblock %}
 
 {% block textarea_values %}
 {{a_or_c["message"]}}

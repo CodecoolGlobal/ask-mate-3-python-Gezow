@@ -203,7 +203,7 @@ def edit_answer(answer_id):
         message = request.form['message']
         data_manager.edit_answer(answer_id, message, filename)
         return redirect("/question/" + str(target_answer['question_id']))
-    return render_template("edit_ac.html", a_or_c=target_answer, comment=False)
+    return render_template("edit_a.html", a_or_c=target_answer)
 
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
@@ -218,7 +218,7 @@ def edit_comment(comment_id):
         if target_comment['answer_id']:
             target_question = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
             return redirect("/question/" + str(target_question))
-    return render_template("edit_ac.html", a_or_c=target_comment, comment=True)
+    return render_template("edit_c.html", a_or_c=target_comment)
 
 
 @app.route("/comment/<comment_id>/delete")
