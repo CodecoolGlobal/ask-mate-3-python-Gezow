@@ -226,7 +226,7 @@ def update_edited_count(cursor, comment_id):
     query = """
             UPDATE comment
             SET edited_count = CASE WHEN edited_count IS null THEN 1 ELSE edited_count + 1 END
-            WHERE id = '%s'""" % (comment_id)
+            WHERE id = '%s'""" % comment_id
     cursor.execute(query)
 
 

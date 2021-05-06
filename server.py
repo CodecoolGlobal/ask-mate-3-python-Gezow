@@ -1,5 +1,4 @@
 import psycopg2
-from psycopg2 import errors
 from flask import Flask, render_template, redirect, request
 import data_manager
 import util

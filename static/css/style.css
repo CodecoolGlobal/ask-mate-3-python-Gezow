@@ -47,7 +47,7 @@ body {
     float: left;
     height: 120px;
     width: 300px;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 #search_bar {
@@ -233,6 +233,7 @@ table.a {
 #question-list a:hover {
     color: #F68A07FF;
 }
+
 #question-list td, #question-list th {
   border: 1px solid #ddd;
   padding: 8px;
