@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    last_five_question = reversed(data_manager.get_ordered_questions("submission_time", 'ASC')[:5])
+    last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')[:5]
     return render_template("searched_list.html",
                            questions=last_five_question,
                            if_reversed='asc',
@@ -27,7 +27,7 @@ def display_list():
         order = "desc"
     else:
         order = "asc"
-        sorted_questions = data_manager.get_ordered_questions("submission_time", 'ASC')
+        sorted_questions = data_manager.get_ordered_questions("submission_time", 'DESC')
     return render_template("list.html",
                            questions=sorted_questions,
                            if_reversed=order,
@@ -61,7 +61,7 @@ def add_question():
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
         title = request.form['title']
-        message = request.form['message']
+        message = request.form['message'].replace("'", "`")
         data_manager.add_new_question(submission_time=submission_time,
                                       view_number=0,
                                       vote_number=0,
@@ -87,7 +87,7 @@ def edit_question(question_id):
         else:
             filename = target_question['image']
         title = request.form['title']
-        message = request.form['message']
+        message = request.form['message'].replace("'", "`")
         data_manager.edit_question(question_id, title, message, filename)
         return redirect("/question/" + str(target_question['id']))
     return render_template("edit_question.html", question=target_question)
@@ -123,7 +123,7 @@ def vote_down_answer(answer_id):
 def add_answer(question_id):
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
-        message = request.form['message']
+        message = request.form['message'].replace("'", "`")
         data_manager.add_new_answer(submission_time=submission_time,
                                     vote_number=0,
                                     question_id=question_id,
@@ -166,7 +166,7 @@ def delete_answer(answer_id):
 def new_comment_to_question(question_id):
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager.add_comment(question_id, 'null', request.form['message'], submission_time, 'null')
+        data_manager.add_comment(question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
         return redirect("/question/" + question_id)
     return render_template('add-comment.html', question_id=question_id)
 
@@ -176,7 +176,7 @@ def add_comment_to_answer(answer_id):
     q_id = data_manager.find_question_id_from_answer_id(answer_id)['question_id']
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager.add_comment('null', answer_id, request.form["message"], submission_time, 'null')
+        data_manager.add_comment('null', answer_id, request.form["message"].replace("'", "`"), submission_time, 'null')
         return redirect("/question/" + str(q_id))
     return render_template('add-comment-answer.html',
                            answer_id=answer_id,
@@ -203,7 +203,7 @@ def edit_answer(answer_id):
             filename = util.save_images(request.files, answer_id, data_manager.A_IMAGE_DIR_PATH)
         else:
             filename = target_answer['image']
-        message = request.form['message']
+        message = request.form['message'].replace("'", "`")
         data_manager.edit_answer(answer_id, message, filename)
         return redirect("/question/" + str(target_answer['question_id']))
     return render_template("edit_a.html", a_or_c=target_answer)
@@ -214,7 +214,7 @@ def edit_comment(comment_id):
     target_comment = data_manager.find_comment(comment_id)[0]
     if request.method == "POST":
         data_manager.update_edited_count(comment_id)
-        message = request.form['message']
+        message = request.form['message'].replace("'", "`")
         data_manager.edit_comment(comment_id, message)
         if target_comment['question_id']:
             return redirect("/question/" + str(target_comment['question_id']))
@@ -239,8 +239,8 @@ def delete_comment(comment_id):
 def add_tag(question_id):
     if request.method == "POST":
         if request.form['message']:
-            data_manager.add_new_tag(request.form['message'])
-            target_tag = data_manager.find_tag_id(request.form['message'])['id']
+            data_manager.add_new_tag(request.form['message'].replace("'", "`"))
+            target_tag = data_manager.find_tag_id(request.form['message'].replace("'", "`"))['id']
         else:
             target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
         data_manager.choose_tag(question_id,target_tag)
