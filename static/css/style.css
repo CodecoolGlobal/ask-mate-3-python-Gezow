@@ -35,20 +35,12 @@ body {
     vertical-align: center;
 }
 
-#hd-middle-l {
+#hd-middle-l, #hd-middle-r {
     float: left;
     height: 120px;
     width: 300px;
-    padding-top: 0px;
-    padding-left: 0px;
-}
-
-#hd-middle-r {
-    float: left;
-    height: 120px;
-    width: 300px;
-    padding-top: 0px;
-    padding-left: 0px;
+    padding-top: 0;
+    padding-left: 0;
 }
 
 #hd-right {
@@ -97,24 +89,16 @@ body {
     color: #F68A07FF;
     text-align: center;
 }
-h2 {
-    color: #52c6d2;
-}
-
-h3 {
-    color: #52c6d2;
-}
-
-h4 {
+h2, h3, h4 {
     color: #52c6d2;
 }
 
 .comment {
     font-size: small;
     background-color: lightgray;
-    padding-top: 0px;
+    padding-top: 0;
     padding-inline: 10px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 
 .header-button {
@@ -147,7 +131,7 @@ h4 {
 .post-button {
     border: none;
     margin-top: 30px;
-    margin-left: 0px;
+    margin-left: 0;
     background-color: #F68A07FF;
     color: white;
     padding: 14px 25px;
@@ -163,7 +147,7 @@ h4 {
 .small-button {
     border: none;
     margin-top: 15px;
-    margin-left: 0px;
+    margin-left: 0;
     background-color: #F68A07FF;
     color: white;
     padding: 8px 12px;
@@ -180,7 +164,7 @@ h4 {
     height: 25px;
     border: none;
     margin-top: 10px;
-    margin-left: 0px;
+    margin-left: 0;
     background-color: #F68A07FF;
     color: white;
     padding: 6px 8px;
@@ -217,8 +201,8 @@ table.a {
 .tag {
     height: 15px;
     width: 70px;
-    margin-right: 0px;
-    padding: 0px;
+    margin-right: 0;
+    padding: 0;
     background-color: lightgray;
     border: none;
     text-align: center;
@@ -244,7 +228,7 @@ table.a {
 }
 
 #question-list a:hover {
-    color #F68A07FF;
+    color: #F68A07FF;
 }
 #question-list td, #question-list th {
   border: 1px solid #ddd;
@@ -276,7 +260,7 @@ table.a {
 }
 .bubble {
     z-index: -1;
-    margin-left: 0px;
+    margin-left: 0;
     width: 700px;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -285,14 +269,14 @@ table.a {
     text-align: left;
     font-weight: 900;
     color: #fff;
-    font-family: arial;
+    font-family: arial, serif;
     position:relative;
 }
 
 .bubble:before {
     content: "";
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
     position: absolute;
     border-left: 10px solid #52c6d2;
     border-right: 10px solid transparent;

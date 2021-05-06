@@ -1,3 +1,5 @@
+import psycopg2
+from psycopg2 import errors
 from flask import Flask, render_template, redirect, request
 import data_manager
 import util
@@ -9,7 +11,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')[:5]
+    last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')
+    print(last_five_question)
     return render_template("searched_list.html",
                            questions=last_five_question,
                            if_reversed='asc',
@@ -238,13 +241,16 @@ def delete_comment(comment_id):
 @app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
 def add_tag(question_id):
     if request.method == "POST":
-        if request.form['message']:
-            data_manager.add_new_tag(request.form['message'].replace("'", "`"))
-            target_tag = data_manager.find_tag_id(request.form['message'].replace("'", "`"))['id']
-        else:
-            target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
-        data_manager.choose_tag(question_id, target_tag)
-        return redirect("/question/" + question_id + "?voted=True")
+        try:
+            if request.form['message']:
+                data_manager.add_new_tag(request.form['message'].replace("'", "`"))
+                target_tag = data_manager.find_tag_id(request.form['message'].replace("'", "`"))['id']
+            else:
+                target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
+            data_manager.choose_tag(question_id, target_tag)
+            return redirect("/question/" + question_id + "?voted=True")
+        except psycopg2.Error as error:
+            return render_template("error.html", error_code=error.pgcode)
     all_tags = data_manager.all_tags()
     return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
 
