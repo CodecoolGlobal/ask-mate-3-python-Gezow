@@ -33,9 +33,9 @@
         {% if question_comments %}
             {% for comment in question_comments %}
                 <p class="comment">{{comment['message']}}</p>
-                <p class="comment">
+                <p class="comment"><small>
                 Submission time: {{comment['submission_time']}}
-                Edited: {{comment['edited_count']}} &nbsp;&nbsp;</p>
+                    Edited: {{comment['edited_count']}} &nbsp;&nbsp;</small></p>
                 <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
@@ -59,7 +59,6 @@
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
     </div>
-
     <div class="comment">
     <hr><h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
@@ -75,6 +74,5 @@
         {% endif %}</div>
           {% endfor %}
         <p><a class="post-button" href="/list">Back to questions...</a></p>
-
 {% endblock page_content %}
 </div>

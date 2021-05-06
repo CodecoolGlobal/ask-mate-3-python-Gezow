@@ -168,14 +168,11 @@ def delete_answers_by_question_id(cursor, question_id):
 
 @database_common.connection_handler
 def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
-    print('q_id: ', question_id)
-    print('a_id: ', answer_id)
     query = """
             INSERT INTO comment
             (question_id, answer_id, message, submission_time, edited_count)
             VALUES (%s, %s, '%s','%s',%s);
             """ % (question_id, answer_id, message, submission_time, edited_count)
-    print(query)
     cursor.execute(query)
 
 

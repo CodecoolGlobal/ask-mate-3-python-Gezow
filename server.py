@@ -43,7 +43,6 @@ def display_question(question_id):
     target_question = data_manager.find_target(question_id, 'question')[0]
     target_answers = data_manager.find_answers_to_question(question_id)
     relevant_tags = data_manager.find_relevant_tags(question_id)
-    print(relevant_tags)
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
