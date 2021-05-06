@@ -111,6 +111,9 @@ h4 {
 .comment {
     font-size: small;
     background-color: lightgray;
+    padding-top: 0px;
+    padding-inline: 10px;
+    padding-bottom: 0px;
 }
 .header img {
     float: left;
