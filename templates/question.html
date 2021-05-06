@@ -11,7 +11,6 @@
         {% if question["image"] %}
             <p><img src="{{ url_for("static", filename="/images/question/" + question["image"]) }}" alt="User image." width="450"></p>
         {% endif %}
-        <p>
             <small>
                 Submission time: {{question['submission_time']}}&nbsp;&nbsp;
                 Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
@@ -19,7 +18,6 @@
                 Tags:
         {% for tag in tags %}<div class="tag">{{ tag['name'] }}&nbsp;<a href="./{{ question["id"] }}/tag/{{ tag["id"] }}/delete">x</a></div>&nbsp;&nbsp;{% endfor %}
             </small>
-        </p>
     </div>
     <div class="buttons">
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
@@ -31,7 +29,7 @@
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </div>
         <div class="comment">
-        <h4><hr><strong>Comments:</strong></h4>
+        <hr><h4><strong>Comments:</strong></h4>
         {% if question_comments %}
             {% for comment in question_comments %}
                 <p class="comment">{{comment['message']}}</p>
@@ -41,12 +39,10 @@
                 <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
-
         {% endfor %}
         {% else %}
             No comments yet...
         {% endif %}</div>
-        </p>
         <h2><strong>Answers:</strong></h2>
           {% for answer in answers %}
             <p>{{answer['message']}}</p>
@@ -65,21 +61,20 @@
     </div>
 
     <div class="comment">
-    <h4><hr><strong></hr>Comments:</strong></h4>
+    <hr><h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
             {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                 {{ comment["message"] }}<br><br>
                 <small>Submission time: {{comment['submission_time']}}<br>
-                Edited: {{comment['edited_count']}} &nbsp;&nbsp;
+                    Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
-                <br><br>
+                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
             {% endfor %}
         {% else %}
             No comments yet...
-        {% endif %}<hr></div>
+        {% endif %}</div>
           {% endfor %}
-
         <p><a class="post-button" href="/list">Back to questions...</a></p>
 
 {% endblock page_content %}
+</div>
