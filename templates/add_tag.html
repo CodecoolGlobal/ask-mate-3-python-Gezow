@@ -4,3 +4,11 @@
 {% block message_label %}Your tag:{% endblock %}
 {% block button_label %}Make tag!{% endblock %}
 {% block text_area_details %} minlength="1" rows="1" cols="20" {% endblock %}
+{% block comment_action %}action="/question/{{ question_id }}/new_tag"{% endblock %}
+{% block select %}
+    <label for="tag-name">Choose from existing tags:</label>
+        <select id="tag-name" name="tag-name">
+            {% for tag in all_tags %}
+            <option value="{{tag['name']}}">{{tag['name']}}</option>
+            {% endfor %}
+        </select>{% endblock select %}
