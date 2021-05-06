@@ -63,6 +63,7 @@ body {
 #search_bar:hover {
     background-color: white;
 }
+
 #search_button {
     margin-top: 58px;
     float: left;
@@ -80,7 +81,6 @@ body {
     background-color: #F68A07FF;
 }
 
-
 .page-content {
     padding-top: 130px;
 }
@@ -89,6 +89,7 @@ body {
     color: #F68A07FF;
     text-align: center;
 }
+
 h2, h3, h4 {
     color: #52c6d2;
 }
@@ -177,6 +178,7 @@ h2, h3, h4 {
 .smaller-button:hover {
   background-color: #52c6d2;
 }
+
 table.a {
     color: white;
 }
@@ -217,6 +219,7 @@ table.a {
     text-decoration: none;
     font-size: small;
 }
+
 #question-list {
     margin: auto;
     border-collapse: collapse;
