@@ -287,3 +287,29 @@ def all_tags(cursor):
             """
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def add_new_tag(cursor, tag):
+    query = """
+            INSERT INTO tag
+            (name) VALUES ('%s')
+            """ % tag
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def choose_tag(cursor, question_id, tag):
+    query = """
+            INSERT INTO question_tag
+            (question_id, tag_id) VALUES ('%s','%s')
+            """ % (question_id, tag)
+    cursor.execute(query)
+
+@database_common.connection_handler
+def find_tag_id(cursor, tag_name):
+    query = """
+            SELECT id FROM tag
+            WHERE name = '%s'
+            """ % tag_name
+    cursor.execute(query)
+    return cursor.fetchone()

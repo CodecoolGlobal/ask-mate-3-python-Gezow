@@ -42,7 +42,7 @@ def display_question(question_id):
         data_manager.update_view_number(question_id)
     target_question = data_manager.find_target_question(question_id)[0]
     target_answers = data_manager.find_answers_to_question(question_id)
-    relevant_tags = data_manager.find_relevant_tags(question_id)[0]
+    relevant_tags = data_manager.find_relevant_tags(question_id)
     print(relevant_tags)
     return render_template("question.html",
                            question=target_question,
@@ -52,7 +52,7 @@ def display_question(question_id):
                            IMAGE_DIR_PATH=data_manager.Q_IMAGE_DIR_PATH,
                            question_comments=data_manager.look_for_comments('comment', 'question_id', question_id),
                            data_manager=data_manager,
-                           tags=relevant_tags['name']
+                           tags=relevant_tags
                            )
 
 
@@ -238,9 +238,15 @@ def delete_comment(comment_id):
 @app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
 def add_tag(question_id):
     if request.method == "POST":
-        data_manager.add_tag
+        if request.form['message']:
+            data_manager.add_new_tag(request.form['message'])
+            target_tag = data_manager.find_tag_id(request.form['message'])['id']
+        else:
+            target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
+        data_manager.choose_tag(question_id,target_tag)
+        return redirect("/question/" + question_id)
     all_tags = data_manager.all_tags()
-    return render_template("add_tag.html", all_tags=all_tags)
+    return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
 
 
 if __name__ == "__main__":
