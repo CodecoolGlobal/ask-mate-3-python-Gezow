@@ -10,8 +10,8 @@ body {
 }
 
 .left-aligned {
-    margin-left: 150px;
-    margin-right: 150px;
+    margin-left: 300px;
+    margin-right: 300px;
 }
 
 .header {
@@ -29,23 +29,24 @@ body {
 #hd-left {
     float: left;
     height: 120px;
-    width: 380px;
-    padding-top: 0px;
-    padding-left: 220px;
+    width: 120px;
+    padding-left: 100px;
 }
 
 #hd-middle {
     float: left;
     height: 120px;
-    width: 120px;
+    width: 380px;
+    padding-top: 0px;
     padding-left: 0px;
+
 }
 
 #hd-right {
     float: left;
     height: 120px;
     width: 300px;
-    padding-left: 80px;
+    padding-left: 350px;
 }
 
 #search_bar {
