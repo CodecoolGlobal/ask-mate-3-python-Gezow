@@ -73,7 +73,7 @@ def add_question():
         else:
             filename = ""
         data_manager.update_image(filename, new_question["id"], 'question')
-        return redirect("/question/" + str(new_question["id"]))
+        return redirect("/question/" + str(new_question["id"]) + "?voted=True")
     return render_template("add-question.html")
 
 
@@ -88,7 +88,7 @@ def edit_question(question_id):
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
         data_manager.edit_question(question_id, title, message, filename)
-        return redirect("/question/" + str(target_question['id']))
+        return redirect("/question/" + str(target_question['id']) + "?voted=True")
     return render_template("edit_question.html", question=target_question)
 
 
@@ -134,7 +134,7 @@ def add_answer(question_id):
         else:
             filename = ""
         data_manager.update_image(filename, new_answer["id"], 'answer')
-        return redirect("/question/" + question_id)
+        return redirect("/question/" + question_id + "?voted=True")
     return render_template("add-answer.html", question_id=question_id)
 
 
@@ -149,7 +149,7 @@ def delete_question(question_id):
     if target_question['image']:
         os.remove(data_manager.Q_IMAGE_DIR_PATH + "/" + target_question['image'])
     data_manager.delete_from_db(question_id, 'question')
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route('/answer/<answer_id>/delete_answer')
@@ -158,7 +158,7 @@ def delete_answer(answer_id):
     if target_answer['image']:
         os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
     data_manager.delete_from_db(answer_id, 'answer')
-    return redirect("/question/" + str(target_answer['question_id']))
+    return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
 
 
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
@@ -166,7 +166,7 @@ def new_comment_to_question(question_id):
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
         data_manager.add_comment(question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
-        return redirect("/question/" + question_id)
+        return redirect("/question/" + question_id + "?voted=True")
     return render_template('add-comment.html', question_id=question_id)
 
 
@@ -176,7 +176,7 @@ def add_comment_to_answer(answer_id):
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
         data_manager.add_comment('null', answer_id, request.form["message"].replace("'", "`"), submission_time, 'null')
-        return redirect("/question/" + str(q_id))
+        return redirect("/question/" + str(q_id) + "?voted=True")
     return render_template('add-comment-answer.html',
                            answer_id=answer_id,
                            question_id=q_id
@@ -204,7 +204,7 @@ def edit_answer(answer_id):
             filename = target_answer['image']
         message = request.form['message'].replace("'", "`")
         data_manager.edit_answer(answer_id, message, filename)
-        return redirect("/question/" + str(target_answer['question_id']))
+        return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
     return render_template("edit_a.html", a_or_c=target_answer)
 
 
@@ -216,10 +216,10 @@ def edit_comment(comment_id):
         message = request.form['message'].replace("'", "`")
         data_manager.edit_comment(comment_id, message)
         if target_comment['question_id']:
-            return redirect("/question/" + str(target_comment['question_id']))
+            return redirect("/question/" + str(target_comment['question_id']) + "?voted=True")
         if target_comment['answer_id']:
             target_question = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
-            return redirect("/question/" + str(target_question))
+            return redirect("/question/" + str(target_question) + "?voted=True")
     return render_template("edit_c.html", a_or_c=target_comment)
 
 
@@ -228,10 +228,10 @@ def delete_comment(comment_id):
     target_comment = data_manager.find_comment(comment_id)[0]
     data_manager.delete_from_db(comment_id, 'comment')
     if target_comment['question_id']:
-        return redirect("/question/" + str(target_comment['question_id']))
+        return redirect("/question/" + str(target_comment['question_id']) + "?voted=True")
     if target_comment['answer_id']:
         target_question = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
-        return redirect("/question/" + str(target_question))
+        return redirect("/question/" + str(target_question) + "?voted=True")
 
 
 @app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
@@ -243,7 +243,7 @@ def add_tag(question_id):
         else:
             target_tag = data_manager.find_tag_id(request.form['tag-name'])['id']
         data_manager.choose_tag(question_id,target_tag)
-        return redirect("/question/" + question_id)
+        return redirect("/question/" + question_id + "?voted=True")
     all_tags = data_manager.all_tags()
     return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
 
@@ -251,7 +251,7 @@ def add_tag(question_id):
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
 def delete_tag(question_id, tag_id):
     data_manager.delete_tag(question_id, tag_id)
-    return redirect("/question/" + question_id)
+    return redirect("/question/" + question_id + "?voted=True")
 
 
 if __name__ == "__main__":
