@@ -235,6 +235,14 @@ def delete_comment(comment_id):
         return redirect("/question/" + str(target_question))
 
 
+@app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
+def add_tag(question_id):
+    if request.method == "POST":
+        data_manager.add_tag
+    all_tags = data_manager.all_tags()
+    return render_template("add_tag.html", all_tags=all_tags)
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

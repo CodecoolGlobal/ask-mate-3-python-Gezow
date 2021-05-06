@@ -278,3 +278,12 @@ def find_relevant_tags(cursor, question_id):
             """ % question_id
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def all_tags(cursor):
+    query = """
+            SELECT tag.name FROM tag
+            """
+    cursor.execute(query)
+    return cursor.fetchall()
