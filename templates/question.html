@@ -29,8 +29,8 @@
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_tag';">Add tag</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </div>
+        <div class="comment">
         <h4><hr><strong>Comments:</strong></h4>
-        <p>
         {% if question_comments %}
             {% for comment in question_comments %}
                 <p class="comment">{{comment['message']}}</p>
@@ -40,8 +40,8 @@
                 <p class="comment">
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
-                </p>
-            {% endfor %}
+        </div>
+        {% endfor %}
         {% else %}
             No comments yet...
         {% endif %}

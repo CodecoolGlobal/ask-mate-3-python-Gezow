@@ -110,6 +110,7 @@ h4 {
 
 .comment {
     font-size: small;
+    background-color: lightgray;
 }
 .header img {
     float: left;
