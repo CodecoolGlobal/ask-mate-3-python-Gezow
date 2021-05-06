@@ -218,8 +218,8 @@ def add_comment(cursor, question_id, answer_id, message, submission_time, edited
 @database_common.connection_handler
 def filter_questions(cursor, search_field_text):
     query = """
-            SELECT question.id, question.submission_time, view_number, question.vote_number, question.title, question.message,
-            question.image
+            SELECT question.id, question.submission_time, view_number, question.vote_number, question.title,
+            question.message, question.image
             FROM question
             FULL OUTER JOIN answer ON question.id = answer.question_id
             WHERE question.message ILIKE '%s'
@@ -273,7 +273,7 @@ def update_edited_count(cursor, comment_id):
 def find_relevant_tags(cursor, question_id):
     query = """
             SELECT tag.name FROM tag
-            FULL OUTER JOIN question_tag ON tag.id = question_tag.tag_id
+            JOIN question_tag ON tag.id = question_tag.tag_id
             WHERE question_tag.question_id = '%s';
             """ % question_id
     cursor.execute(query)
@@ -287,6 +287,7 @@ def all_tags(cursor):
             """
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def add_new_tag(cursor, tag):
@@ -304,6 +305,7 @@ def choose_tag(cursor, question_id, tag):
             (question_id, tag_id) VALUES ('%s','%s')
             """ % (question_id, tag)
     cursor.execute(query)
+
 
 @database_common.connection_handler
 def find_tag_id(cursor, tag_name):

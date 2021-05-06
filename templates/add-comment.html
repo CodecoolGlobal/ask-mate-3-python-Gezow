@@ -6,8 +6,8 @@
     <form {% block comment_action %}action="/question/{{ question_id }}/new_comment"{% endblock %} method="post">
         <p><label for="message-input"><h3> {% block message_label %} Your comment: {% endblock %}</h3></label></p>
             <textarea id="message-input" name="message" {% block text_area_details %} minlength="5" rows="20" cols="100" {% endblock %}></textarea>
+    {% block select %}{% endblock select %}
         <p><button class="post-button" type="submit">{% block button_label %}Post comment!{% endblock %}</button></p>
-        {% block select %}{% endblock select %}
     </form>
 </div>
 {% endblock %}
