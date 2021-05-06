@@ -16,7 +16,8 @@
                 Submission time: {{question['submission_time']}}&nbsp;&nbsp;
                 Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
                 Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
-                Tags: {% for tag in tags %}{{ tag['name'] }} {% endfor %}
+                Tags:
+        {% for tag in tags %}<div class="tag">{{ tag['name'] }}&nbsp;<a href="./{{ question["id"] }}/tag/{{ tag["id"] }}/delete">x</a></div>&nbsp;&nbsp;{% endfor %}
             </small>
         </p>
     </div>

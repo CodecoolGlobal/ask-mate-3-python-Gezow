@@ -249,6 +249,12 @@ def add_tag(question_id):
     return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
 
 
+@app.route("/question/<question_id>/tag/<tag_id>/delete")
+def delete_tag(question_id, tag_id):
+    data_manager.delete_tag(question_id, tag_id)
+    return redirect("/question/" + question_id)
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

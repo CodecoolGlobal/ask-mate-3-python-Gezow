@@ -272,7 +272,7 @@ def update_edited_count(cursor, comment_id):
 @database_common.connection_handler
 def find_relevant_tags(cursor, question_id):
     query = """
-            SELECT tag.name FROM tag
+            SELECT * FROM tag
             JOIN question_tag ON tag.id = question_tag.tag_id
             WHERE question_tag.question_id = '%s';
             """ % question_id
@@ -315,3 +315,13 @@ def find_tag_id(cursor, tag_name):
             """ % tag_name
     cursor.execute(query)
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def delete_tag(cursor, question_id, tag_id):
+    query = """
+            DELETE FROM question_tag
+            WHERE question_id = '%s' 
+            AND tag_id = '%s'
+            """ % (question_id, tag_id)
+    cursor.execute(query)
