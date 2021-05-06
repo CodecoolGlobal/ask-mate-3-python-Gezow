@@ -2,51 +2,26 @@ import os
 import database_common
 
 
-QUESTION_FILE_PATH = os.getenv(
-    'QUESTION_FILE_PATH') if 'QUESTION_FILE_PATH' in os.environ else './sample_data/question.csv'
 Q_IMAGE_DIR_PATH = os.getenv('Q_IMAGE_DIR_PATH') if 'Q_IMAGE_DIR_PATH' in os.environ else './static/images/question'
 A_IMAGE_DIR_PATH = os.getenv('A_IMAGE_DIR_PATH') if 'A_IMAGE_DIR_PATH' in os.environ else './static/images/answer'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
-ANSWER_FILE_PATH = os.getenv('ANSWER_FILE_PATH') if 'ANSWER_FILE_PATH' in os.environ else './sample_data/answer.csv'
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
-# from typing import List, Dict
-# from psycopg2 import sql
-
-
 @database_common.connection_handler
-def get_questions(cursor):
+def get_ordered_questions(cursor, filter_type, order):
     query = """
             SELECT * FROM question
-            ORDER BY submission_time;"""
+            ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def get_ordered_questions_desc(cursor, filter_type):
+def find_target(cursor, question_id, db):
     query = """
-            SELECT * FROM question
-            ORDER BY %s DESC;""" % filter_type
-    cursor.execute(query)
-    return cursor.fetchall()
-
-
-@database_common.connection_handler
-def get_ordered_questions_asc(cursor, filter_type):
-    query = """
-            SELECT * FROM question
-            ORDER BY %s;""" % filter_type
-    cursor.execute(query)
-    return cursor.fetchall()
-
-
-@database_common.connection_handler
-def find_target_question(cursor, question_id):
-    query = """
-            SELECT * FROM question
-            WHERE id = '%s';""" % question_id
+            SELECT * FROM %s
+            WHERE id = '%s';""" % (db, question_id)
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -71,8 +46,7 @@ def find_answers_to_question(cursor, question_id):
 
 
 @database_common.connection_handler
-def add_new_question(
-        cursor, submission_time, view_number, vote_number, title, message):
+def add_new_question(cursor, submission_time, view_number, vote_number, title, message):
     query = """
             INSERT INTO question
             (submission_time, view_number, vote_number, title, message)
@@ -160,16 +134,6 @@ def delete_from_db(cursor, unique_id, db):
             WHERE id = '%s';
             """ % (db, unique_id)
     cursor.execute(query)
-
-
-@database_common.connection_handler
-def find_answer(cursor, answer_id):
-    query = """
-            SELECT * FROM answer
-            WHERE id = '%s'
-            """ % answer_id
-    cursor.execute(query)
-    return cursor.fetchall()
 
 
 @database_common.connection_handler

@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    last_five_question = reversed(data_manager.get_questions()[:5])
+    last_five_question = reversed(data_manager.get_ordered_questions("submission_time", 'ASC')[:5])
     return render_template("searched_list.html",
                            questions=last_five_question,
                            if_reversed='asc',
@@ -20,14 +20,14 @@ def main():
 @app.route("/list")
 def display_list():
     if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-        sorted_questions = data_manager.get_ordered_questions_desc(request.args.get("order_by"))
+        sorted_questions = data_manager.get_ordered_questions(request.args.get("order_by"), 'DESC')
         order = "asc"
     elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-        sorted_questions = data_manager.get_ordered_questions_asc(request.args.get("order_by"))
+        sorted_questions = data_manager.get_ordered_questions(request.args.get("order_by"), 'ASC')
         order = "desc"
     else:
         order = "asc"
-        sorted_questions = data_manager.get_questions()
+        sorted_questions = data_manager.get_ordered_questions("submission_time", 'ASC')
     return render_template("list.html",
                            questions=sorted_questions,
                            if_reversed=order,
@@ -40,7 +40,7 @@ def display_list():
 def display_question(question_id):
     if request.args.get("voted") != "True":
         data_manager.update_view_number(question_id)
-    target_question = data_manager.find_target_question(question_id)[0]
+    target_question = data_manager.find_target(question_id, 'question')[0]
     target_answers = data_manager.find_answers_to_question(question_id)
     relevant_tags = data_manager.find_relevant_tags(question_id)
     print(relevant_tags)
@@ -80,7 +80,7 @@ def add_question():
 
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
 def edit_question(question_id):
-    target_question = data_manager.find_target_question(question_id)[0]
+    target_question = data_manager.find_target(question_id, 'question')[0]
     if request.method == "POST":
         if request.files['image']:
             filename = util.save_images(request.files, question_id, data_manager.Q_IMAGE_DIR_PATH)
@@ -142,7 +142,7 @@ def add_answer(question_id):
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
     target_answers = data_manager.find_answer_by_question_id(question_id)
-    target_question = data_manager.find_target_question(question_id)[0]
+    target_question = data_manager.find_target(question_id, 'question')[0]
     for answer in target_answers:
         if answer['image']:
             os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + answer['image'])
@@ -155,7 +155,7 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
-    target_answer = data_manager.find_answer(answer_id)[0]
+    target_answer = data_manager.find_target(answer_id, 'answer')[0]
     if target_answer['image']:
         os.remove(data_manager.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
     data_manager.delete_from_db(answer_id, 'answer')
@@ -197,7 +197,7 @@ def search_in_questions():
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
 def edit_answer(answer_id):
-    target_answer = data_manager.find_answer(answer_id)[0]
+    target_answer = data_manager.find_target(answer_id, 'answer')[0]
     if request.method == "POST":
         if request.files['image']:
             filename = util.save_images(request.files, answer_id, data_manager.A_IMAGE_DIR_PATH)
