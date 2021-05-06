@@ -16,7 +16,7 @@
                 Vote(s): {{question['vote_number']}}&nbsp;&nbsp;
                 Viewed: {{ question['view_number'] }}&nbsp;&nbsp;
                 Tags:
-        {% for tag in tags %}<div class="tag">{{ tag['name'] }}&nbsp;<a href="./{{ question["id"] }}/tag/{{ tag["id"] }}/delete">x</a></div>&nbsp;&nbsp;{% endfor %}
+                {% for tag in tags %}<span class="tag">{{ tag['name'] }}</span><a class="tag-button" href="./{{ question["id"] }}/tag/{{ tag["id"] }}/delete"><i class="fa fa-close"></i></a>&nbsp;&nbsp;{% endfor %}
             </small>
     </div>
     <div class="buttons">
