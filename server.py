@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')
+    last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')[:5]
     return render_template("searched_list.html",
                            questions=last_five_question,
                            if_reversed='asc',
