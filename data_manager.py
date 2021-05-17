@@ -4,8 +4,11 @@ import database_common
 
 Q_IMAGE_DIR_PATH = os.getenv('Q_IMAGE_DIR_PATH') if 'Q_IMAGE_DIR_PATH' in os.environ else './static/images/question'
 A_IMAGE_DIR_PATH = os.getenv('A_IMAGE_DIR_PATH') if 'A_IMAGE_DIR_PATH' in os.environ else './static/images/answer'
+PROFILE_PICTURE_IMAGE_DIR_PATH = os.getenv('PROFILE_PICTURE_IMAGE_DIR_PATH') \
+    if 'PROFILE_PICTURE_IMAGE_DIR_PATH' in os.environ else './static/images/profile'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+USER_HEADER = ['id', 'email', 'password', 'user_name', 'reputation', 'profile_picture']
 
 
 @database_common.connection_handler
@@ -168,7 +171,7 @@ def delete_answers_by_question_id(cursor, question_id):
 
 @database_common.connection_handler
 def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
-    query = """
+    query = """         
             INSERT INTO comment
             (question_id, answer_id, message, submission_time, edited_count)
             VALUES (%s, %s, '%s','%s',%s);
