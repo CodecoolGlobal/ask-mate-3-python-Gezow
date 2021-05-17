@@ -1,0 +1,291 @@
+body {
+    font-family: Source Sans Pro,sans-serif;
+    background-color: whitesmoke;
+    color: #171616;
+}
+
+.centered {
+    margin: auto;
+    text-align: center;
+}
+
+.left-aligned {
+    margin-left: 300px;
+    margin-right: 300px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: whitesmoke;
+}
+
+#header-container {
+    width: 100%;
+    margin: 0 auto;
+    height: 120px;
+}
+
+#hd-left {
+    float: left;
+    height: 120px;
+    width: 120px;
+    padding: auto;
+    vertical-align: center;
+}
+
+#hd-middle-l, #hd-middle-r {
+    float: left;
+    height: 120px;
+    width: 300px;
+    padding-top: 0;
+    padding-left: 0;
+}
+
+#hd-right {
+    float: left;
+    height: 120px;
+    width: 300px;
+    padding-left: 0;
+}
+
+#search_bar {
+    margin-top: 58px;
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 200px;
+    background: #f1f1f1;
+}
+
+#search_bar:hover {
+    background-color: white;
+}
+
+#search_button {
+    margin-top: 58px;
+    float: left;
+    width: 40px;
+    padding: 10px;
+    background: #52c6d2;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+#search_button:hover {
+    background-color: #F68A07FF;
+}
+
+.page-content {
+    padding-top: 130px;
+}
+
+.page-title {
+    color: #F68A07FF;
+    text-align: center;
+}
+
+h2, h3, h4 {
+    color: #52c6d2;
+}
+
+.comment {
+    font-size: small;
+    background-color: lightgray;
+    padding-top: 0;
+    padding-inline: 10px;
+    padding-bottom: 0;
+}
+
+.header-button {
+    margin-top: 58px;
+}
+.header img {
+    float: left;
+    width: 120px;
+    height: 120px;
+    background: whitesmoke;
+}
+
+.button {
+    margin-top: 70px;
+    height: 41px;
+    width: 263px;
+    background-color: #F68A07FF;
+    color: white;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+
+    text-decoration: none;
+}
+
+.button:hover {
+  background-color: #52c6d2;
+}
+
+.post-button {
+    border: none;
+    margin-top: 30px;
+    margin-left: 0;
+    background-color: #F68A07FF;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.post-button:hover {
+  background-color: #52c6d2;
+}
+
+.small-button {
+    border: none;
+    margin-top: 15px;
+    margin-left: 0;
+    background-color: #F68A07FF;
+    color: white;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.small-button:hover {
+  background-color: #52c6d2;
+}
+
+.smaller-button {
+    height: 25px;
+    border: none;
+    margin-top: 10px;
+    margin-left: 0;
+    background-color: #F68A07FF;
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: smaller;
+}
+
+.smaller-button:hover {
+  background-color: #52c6d2;
+}
+
+table.a {
+    color: white;
+}
+
+.trash-button {
+    height: 25px;
+    margin-top: 10px;
+    background-color: #F68A07FF;
+    border: none;
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: smaller;
+}
+
+.trash-button:hover {
+     background: #52c6d2;
+}
+
+.tag {
+    height: 15px;
+    width: 70px;
+    margin-right: 0;
+    padding: 0;
+    background-color: lightgray;
+    border: none;
+    text-align: center;
+}
+
+.tag-button {
+    height: 100%;
+    background-color: lightgray;
+    border: none;
+    color: #F68A07FF;
+    text-align: center;
+    text-decoration: none;
+    font-size: small;
+}
+
+#question-list {
+    margin: auto;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+#question-list a {
+    color: white;
+}
+
+#question-list a:hover {
+    color: #F68A07FF;
+}
+
+#question-list td, #question-list th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#question-list tr:nth-child(even){background-color: #f2f2f2;}
+
+#question-list tr:hover {background-color: #ddd;}
+
+#question-list th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #52c6d2;
+  color: white;
+}
+
+#hover-hd:hover {
+    background-color: #F68A07FF;
+}
+
+#question-list #blue-link {
+    color: #52c6d2;
+}
+
+#question-list #blue-link:hover {
+    color: #F68A07FF;
+}
+.bubble {
+    z-index: -1;
+    margin-left: 0;
+    width: 700px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: #52c6d2;
+    padding: 20px;
+    text-align: left;
+    font-weight: 900;
+    color: #fff;
+    font-family: arial, serif;
+    position:relative;
+}
+
+.bubble:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 10px solid #52c6d2;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #52c6d2;
+    border-bottom: 10px solid transparent;
+    left: 20px;
+    bottom: -20px;
+}

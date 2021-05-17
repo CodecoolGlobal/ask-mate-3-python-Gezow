@@ -1,0 +1,12 @@
+{% extends "list.html" %}
+{% block page_title %}<h1 class="page-title">Recent questions</h1>{% endblock %}
+{% block table_header %}
+      <tr>
+          {% for header in question_headers %}
+                <th align="center"> {{header}}</th>
+          {% endfor %}
+      </tr>
+{% endblock table_header %}
+{% block home_button %}
+
+{% endblock home_button %}

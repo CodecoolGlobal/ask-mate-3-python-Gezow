@@ -1,0 +1,15 @@
+{% extends "add-comment.html" %}
+{% block title %}Ask Mate - Add tag!{% endblock title %}
+{% block page_title %}<h1 class="page-title">Add tag!</h1>{% endblock %}
+{% block message_label %}Create tag:{% endblock %}
+{% block button_label %}Submit{% endblock %}
+{% block text_area_details %} minlength="1" rows="1" cols="20" {% endblock %}
+{% block comment_action %}action="/question/{{ question_id }}/new_tag"{% endblock %}
+{% block select %}
+    <br><br><label for="tag-name">Or choose from existing tags:</label>
+        <select id="tag-name" name="tag-name">
+            {% for tag in all_tags %}
+            <option value="{{tag['name']}}">{{tag['name']}}</option>
+            {% endfor %}
+        </select>
+{% endblock select %}

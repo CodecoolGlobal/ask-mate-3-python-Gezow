@@ -1,0 +1,12 @@
+{% extends "add-answer.html" %}
+
+{% block title %}Ask Mate - Update{% endblock title %}
+{% block page_title %}Update answer{% endblock %}
+
+{% block form_action %}action="edit"{% endblock %}
+
+{% block textarea_values %}
+{{a_or_c["message"]}}
+{% endblock %}
+
+{% block button_text %}Submit{% endblock %}
