@@ -220,7 +220,7 @@ table.a {
     font-size: small;
 }
 
-#question-list {
+#question-list, #user-list {
     margin: auto;
     border-collapse: collapse;
     width: 80%;
