@@ -42,3 +42,10 @@ def find_user_password(cursor, email):
             WHERE email = '%s';""" % email
     cursor.execute(query)
     return cursor.fetchone()
+
+def find_user_name(cursor, email):
+    query = """
+            SELECT username FROM users
+            WHERE email = '%s';""" % email
+    cursor.execute(query)
+    return cursor.fetchone()
