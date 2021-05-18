@@ -315,6 +315,9 @@ def users():
                                              for header in data_manager_universal.USER_HEADER]
                            )
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(
