@@ -4,11 +4,11 @@
 {% block page_content %}
     <div class="centered">
     {% block page_title %}<h1 class="page-title">Please log in!</h1>{% endblock %}
-    <form {% block action %}action="//login"{% endblock action %} method="post" enctype="multipart/form-data">
+    <form {% block action %}action="/login"{% endblock action %} method="post" enctype="multipart/form-data">
         <p><label for="email-input"><h3>E-mail:</h3></label></p>
-            <input id="email-input" name="email" minlength="6" size="30"{% block bodytitle %}{% endblock bodytitle %}>
+            <input id="email-input" name="username" minlength="6" size="30"{% block bodytitle %}{% endblock bodytitle %}>
         <p><label for="password-input"><h3>Password:</h3></label></p>
-            <input id="password-input" name="password" minlength="6" size="30">
+            <input id="password-input" name="password" minlength="3" size="30">
         <p><button class="post-button" type="submit">{% block button %}<strong>Submit</strong>{% endblock button %}</button></p>
         {%  if invalid_password %}
             <h2>Invalid e-mail or password. Try again!</h2>

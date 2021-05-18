@@ -34,3 +34,11 @@ def get_ordered_users(cursor, filter_type, order):
             ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+def find_user_password(cursor, email):
+    query = """
+            SELECT password FROM users
+            WHERE email = '%s';""" % email
+    cursor.execute(query)
+    return cursor.fetchone()
