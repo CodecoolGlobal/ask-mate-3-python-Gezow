@@ -8,8 +8,8 @@ ANSWER_IMG_DIR_PATH = os.getenv('ANSWER_IMG_DIR_PATH') \
     if 'ANSWER_IMG_DIR_PATH' in os.environ else './static/images/answer'
 PROFILE_IMG_DIR_PATH = os.getenv('PROFILE_IMG_DIR_PATH') \
     if 'PROFILE_IMG_DIR_PATH' in os.environ else './static/images/profile'
-QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
-ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image', 'user_id']
+ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image', 'user_id']
 USER_HEADER = ['id', 'username', 'email', 'reputation', 'image', 'registration_date']
 
 

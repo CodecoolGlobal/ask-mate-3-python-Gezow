@@ -220,30 +220,30 @@ table.a {
     font-size: small;
 }
 
-#question-list, #user-list {
+#display-list, #user-list {
     margin: auto;
     border-collapse: collapse;
     width: 80%;
 }
 
-#question-list a {
+#display-list a {
     color: white;
 }
 
-#question-list a:hover {
+#display-list a:hover {
     color: #F68A07FF;
 }
 
-#question-list td, #question-list th {
+#display-list td, #display-list th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#question-list tr:nth-child(even){background-color: #f2f2f2;}
+#display-list tr:nth-child(even){background-color: #f2f2f2;}
 
-#question-list tr:hover {background-color: #ddd;}
+#display-list tr:hover {background-color: #ddd;}
 
-#question-list th {
+#display-list th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -255,11 +255,11 @@ table.a {
     background-color: #F68A07FF;
 }
 
-#question-list #blue-link {
+#display-list #blue-link {
     color: #52c6d2;
 }
 
-#question-list #blue-link:hover {
+#display-list #blue-link:hover {
     color: #F68A07FF;
 }
 .bubble {
@@ -288,4 +288,26 @@ table.a {
     border-bottom: 10px solid transparent;
     left: 20px;
     bottom: -20px;
+}
+
+.profile-picture {
+    border: solid #52c6d2;
+    border-radius: 10px;
+    width: 300px;
+}
+
+.profile-picture:hover {
+    border: solid #F68A07FF;
+}
+
+#details.centered {
+    align-items: center;
+    align-content: center;
+    border-radius: 10px;
+    border: solid #52c6d2;
+    width: 300px;
+}
+
+#details.centered:hover {
+    border: solid #F68A07FF;
 }
