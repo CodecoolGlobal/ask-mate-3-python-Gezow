@@ -279,7 +279,7 @@ def registration():
                 if request.form['email'] not in user_emails and request.form['user_name'] not in user_names:
                     data_manager.add_new_user({'email': request.form["email"],
                                                'password': request.form["password"],
-                                               'user_name': request.form["user_name"],
+                                               'username': request.form["username"],
                                                'reputation': 0,
                                                'image': None})
                     new_profile = data_manager.find_profile_id(request.form["email"], 'email')

@@ -289,3 +289,22 @@ def delete_tag(cursor, question_id, tag_id):
             AND tag_id = '%s'
             """ % (question_id, tag_id)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def get_user_emails(cursor):
+    cursor.execute("SELECT email FROM users;")
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def add_new_user(cursor, parameters):
+    query = """INSERT
+    INTO users(email, password, username, reputation, image)
+    VALUES(%s, %s, %s, %s, %s);""" % (parameters["email"],
+                                      parameters["password"],
+                                      parameters["username"],
+                                      parameters["reputation"],
+                                      parameters["image"]
+                                      )
+    cursor.execute(query)
