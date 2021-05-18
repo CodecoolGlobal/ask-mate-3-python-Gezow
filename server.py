@@ -70,11 +70,10 @@ def add_question():
                                       message=message
                                       )
         new_question = data_manager.find_question_id(submission_time, title)
-        if request.files['image']:
-            filename = util.save_images(request.files, str(new_question["id"]), data_manager.Q_IMAGE_DIR_PATH)
-        else:
-            filename = ""
-        data_manager.update_image(filename, new_question["id"], 'question')
+        util.handle_images({"request_files": request.files,
+                            "new_id": str(new_question["id"]),
+                            "directory": data_manager.Q_IMAGE_DIR_PATH,
+                            "else_filename": ""}, 'question')
         return redirect("/question/" + str(new_question["id"]) + "?voted=True")
     return render_template("add-question.html")
 
@@ -83,13 +82,13 @@ def add_question():
 def edit_question(question_id):
     target_question = data_manager.find_target(question_id, 'question')[0]
     if request.method == "POST":
-        if request.files['image']:
-            filename = util.save_images(request.files, question_id, data_manager.Q_IMAGE_DIR_PATH)
-        else:
-            filename = target_question['image']
+        util.handle_images({"request_files": request.files,
+                            "new_id": question_id,
+                            "directory": data_manager.Q_IMAGE_DIR_PATH,
+                            "else_filename": target_question['image']}, 'question')
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
-        data_manager.edit_question(question_id, title, message, filename)
+        data_manager.edit_question(question_id, title, message)
         return redirect("/question/" + str(target_question['id']) + "?voted=True")
     return render_template("edit_question.html", question=target_question)
 

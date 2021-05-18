@@ -79,11 +79,11 @@ def update_image(cursor, filename, unique_id, db):
 
 
 @database_common.connection_handler
-def edit_question(cursor, question_id, title, message, image):
+def edit_question(cursor, question_id, title, message):
     query = """
             UPDATE question 
-            SET title = '%s', message = '%s', image = '%s'
-            WHERE id = '%s'""" % (title, message, image, question_id)
+            SET title = '%s', message = '%s'
+            WHERE id = '%s'""" % (title, message, question_id)
     cursor.execute(query)
 
 
