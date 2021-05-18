@@ -288,13 +288,15 @@ def registration():
 def profile_page(user_id):
     logged_in = True if "username" in session else False
     target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
-    user_comments = []
     return render_template("profile-page.html",
                            user=target_profile,
                            logged_in=logged_in,
                            answer_count=data_manager_universal.execute_count('answer', 'user_id', user_id)['count'],
                            answer_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                            for header in data_manager_universal.ANSWER_HEADER],
+                           comment_count=data_manager_universal.execute_count('comment', 'user_id', user_id)['count'],
+                           comment_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                            for header in data_manager_universal.COMMENT_HEADER],
                            question_count=data_manager_universal.execute_count('question', 'user_id', user_id)['count'],
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in data_manager_universal.QUESTION_HEADER],
@@ -302,7 +304,8 @@ def profile_page(user_id):
                                user_id, 'user_id', 'question')],
                            user_answers=[answer for answer in data_manager_universal.find_target(
                                user_id, 'user_id', 'answer')],
-                           user_comments=user_comments
+                           user_comments=[comment for comment in data_manager_universal.find_target(
+                               user_id, 'user_id', 'comment')]
                            )
 
 

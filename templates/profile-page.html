@@ -19,6 +19,7 @@
             <small>User ID: {{ user["id"] }}</small>&nbsp;&nbsp;
             <br><small>Questions: {{ question_count }}</small>&nbsp;&nbsp;
             <small>Answers: {{ answer_count }}</small>&nbsp;&nbsp;
+            <small>Comments: {{ answer_count }}</small>
         </div>
         <h2>Reputation: {{ user["reputation"] }}</h2>&nbsp;&nbsp;
     </div>
@@ -44,7 +45,7 @@
                 {% endfor %}
             </table>
         {% else %}
-            No questions yet...
+            No answers yet...
         {% endif %}
     </div>
     <div class="centered">
@@ -70,6 +71,29 @@
             </table>
         {% else %}
             No questions yet...
+        {% endif %}
+    </div>
+    <div class="centered">
+        <h3>{{ user["username"] }}'s comments:</h3>
+        {% if user_comments %}
+            <table id="display-list">
+                {% for header in comment_headers %}
+                    <th align="center">{{ header }}</th>
+                {% endfor %}
+                {% for comment in user_comments %}
+                    <tr>
+                    {% for key in comment.keys() %}
+                        {% if key == 'id' %}
+                            <td align="center"><a id="blue-link" href="/question/{{ comment['question_id'] }}">{{comment['id']}}</a></td>
+                        {% else %}
+                            <td>{{ comment[key] }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            No comments yet...
         {% endif %}
     </div>
 {% endblock %}
