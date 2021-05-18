@@ -8,9 +8,14 @@ def save_images(form, id_type, dir_path):
     return filename
 
 
-def handle_images(request_files, new_profile_id):
-    if request_files['image']:
-        filename = save_images(request_files, new_profile_id,  data_manager.PROFILE_PICTURE_IMAGE_DIR_PATH)
+def handle_images(update_info, data_table):
+    if update_info["request_files"]['image']:
+        filename = save_images(update_info["request_files"],
+                               update_info["new_id"],
+                               update_info["directory"]
+                               )
     else:
-        filename = ""
-    return filename
+        filename = update_info["else_filename"]
+    data_manager_universal.update_image(filename,
+                                        update_info["new_id"],
+                                        data_table)

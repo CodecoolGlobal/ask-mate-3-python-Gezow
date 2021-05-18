@@ -9,11 +9,6 @@ import os
 app = Flask(__name__)
 
 
-########################################################################################################################
-# Second sprint's routes:
-########################################################################################################################
-
-
 @app.route("/")
 def main():
     last_five_question = data_manager.get_ordered_questions("submission_time", 'DESC')[:5]
@@ -265,17 +260,12 @@ def delete_tag(question_id, tag_id):
     return redirect("/question/" + question_id + "?voted=True")
 
 
-########################################################################################################################
-# Third sprint's routes
-########################################################################################################################
-
-
 @app.route("/sign-up", methods=["GET", "POST"])
 def registration():
     if 'email' not in session and 'password' not in session:
         if request.method == "POST":
             try:
-                user_emails, user_names = data_manager.get_user_emails(), data_manager.get_user_names()
+                user_emails, user_names = data_manager.get_user_info('email'), data_manager.get_user_info('username')
                 if request.form['email'] not in user_emails and request.form['user_name'] not in user_names:
                     data_manager.add_new_user({'email': request.form["email"],
                                                'password': request.form["password"],
@@ -283,9 +273,10 @@ def registration():
                                                'reputation': 0,
                                                'image': None})
                     new_profile = data_manager.find_profile_id(request.form["email"], 'email')
-                    data_manager.update_image(util.handle_images(request.files, new_profile["id"]),
-                                              new_profile["id"],
-                                              'user')
+                    util.handle_images({"request_files": request.files,
+                                        "new_id": str(new_profile["id"]),
+                                        "directory": data_manager.PROFILE_IMG_DIR_PATH,
+                                        "else_filename": ""}, 'users')
                     return redirect(url_for('login'))
                 return render_template(
                     "error.html",

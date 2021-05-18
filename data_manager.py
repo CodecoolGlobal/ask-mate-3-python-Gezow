@@ -4,8 +4,8 @@ import database_common
 
 Q_IMAGE_DIR_PATH = os.getenv('Q_IMAGE_DIR_PATH') if 'Q_IMAGE_DIR_PATH' in os.environ else './static/images/question'
 A_IMAGE_DIR_PATH = os.getenv('A_IMAGE_DIR_PATH') if 'A_IMAGE_DIR_PATH' in os.environ else './static/images/answer'
-PROFILE_PICTURE_IMAGE_DIR_PATH = os.getenv('PROFILE_PICTURE_IMAGE_DIR_PATH') \
-    if 'PROFILE_PICTURE_IMAGE_DIR_PATH' in os.environ else './static/images/profile'
+PROFILE_IMG_DIR_PATH = os.getenv('PROFILE_IMG_DIR_PATH') \
+    if 'PROFILE_IMG_DIR_PATH' in os.environ else './static/images/profile'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 USER_HEADER = ['id', 'email', 'password', 'user_name', 'reputation', 'profile_picture']
@@ -292,8 +292,8 @@ def delete_tag(cursor, question_id, tag_id):
 
 
 @database_common.connection_handler
-def get_user_emails(cursor):
-    cursor.execute("SELECT email FROM users;")
+def get_user_info(cursor, aspect):
+    cursor.execute("SELECT %s FROM users;" % aspect)
     return cursor.fetchall()
 
 
@@ -308,3 +308,11 @@ def add_new_user(cursor, parameters):
                                       parameters["image"]
                                       )
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_profile_id(cursor, search_parameter, parameter_type):
+    query = """SELECT id FROM users
+            WHERE %s = %s;""" % (parameter_type, search_parameter)
+    cursor.execute(query)
+    return cursor.fetchone()
