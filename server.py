@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request, session, url_for
+from flask import Flask, render_template, redirect, request, session
 from datetime import datetime
 import os
 
@@ -8,7 +8,7 @@ import data_manager_question
 import data_manager_answer
 import data_manager_tag
 import data_manager_comment
-import data_manager_user
+import data_manager_users
 import util
 
 
@@ -263,27 +263,22 @@ def delete_tag(question_id, tag_id):
 def registration():
     if 'email' not in session and 'password' not in session:
         if request.method == "POST":
-            try:
-                user_emails, user_names = data_manager_user.get_user_info('email'), \
-                                          data_manager_user.get_user_info('username')
-                if request.form['email'] not in user_emails and request.form['username'] not in user_names:
-                    data_manager_user.add_new_user({'email': request.form["email"],
-                                                    'password': request.form["password"],
-                                                    'username': request.form["username"],
-                                                    'reputation': 0,
-                                                    'image': None})
-                    new_profile = data_manager_user.find_profile_id(request.form["email"], 'email')
-                    util.handle_images({"request_files": request.files,
-                                        "new_id": str(new_profile["id"]),
-                                        "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
-                                        "else_filename": ""}, 'users')
-                    return redirect(url_for('login'))
-                return render_template(
-                    "error.html",
-                    error_code='Email address or user name already in use!' + '(user_name or email_address in use)')
-            except psycopg2.Error as error:
-                return render_template(
-                    "error.html", error_code=str(error.pgcode) + '(user_name or email_address in use)')
+            user_emails, user_names = [email["email"] for email in data_manager_users.get_user_info('email')], \
+                                [username["username"] for username in data_manager_users.get_user_info('username')]
+            if request.form['email'] not in user_emails and request.form['username'] not in user_names:
+                data_manager_users.add_new_user({'email': request.form["email"].replace("'", "`"),
+                                                 'password': util.hash_password(request.form["password"]),
+                                                 'username': request.form["username"].replace("'", "`"),
+                                                 'reputation': 0,
+                                                 'image': 'null'}
+                                                )
+                new_profile = data_manager_users.find_profile_id(request.form["email"], 'email')
+                util.handle_images({"request_files": request.files,
+                                    "new_id": str(new_profile["id"]),
+                                    "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
+                                    "else_filename": ""}, 'users')
+                return redirect("/")
+            return render_template("error.html", error_code='Email address or user name already in use!')
         return render_template("sign-up.html")
     return render_template("error.html", error_code='You are already signed up and logged in!')
 

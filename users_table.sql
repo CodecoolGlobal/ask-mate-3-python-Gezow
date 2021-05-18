@@ -1,12 +1,15 @@
 DROP TABLE IF EXISTS public.users;
-CREATE TABLE IF NOT EXISTS users (
-    id serial NOT NULL,
-    email TEXT NOT NULL,
-    password TEXT NOT NULL,
-    username TEXT NOT NULL,
-    reputation INTEGER,
-    image TEXT
- );
+create table users
+(
+    id         serial not null
+        constraint users_pk
+            primary key,
+    email      text   not null,
+    password   text   not null,
+    username   text   not null,
+    reputation integer,
+    image      text
+);
 
  INSERT INTO users (email, password, username, reputation, image) VALUES('example@user.co.uk',
                                                                          'XYZ',
