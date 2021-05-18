@@ -308,3 +308,7 @@ table.a {
     width: 300px;
     height: 70px;
 }
+
+#details.centered:hover {
+    background-color: #ddd;
+}
