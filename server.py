@@ -261,7 +261,7 @@ def delete_tag(question_id, tag_id):
 
 @app.route("/sign-up", methods=["GET", "POST"])
 def registration():
-    if 'email' not in session and 'password' not in session:
+    if 'username' not in session:
         if request.method == "POST":
             user_emails, user_names = [email["email"] for email in data_manager_users.get_user_info('email')], \
                                 [username["username"] for username in data_manager_users.get_user_info('username')]
@@ -270,17 +270,25 @@ def registration():
                                                  'password': util.hash_password(request.form["password"]),
                                                  'username': request.form["username"].replace("'", "`"),
                                                  'reputation': 0,
-                                                 'image': 'null'}
+                                                 'image': 'null',
+                                                 'registration_date': str(datetime.now()).split(".")[0]}
                                                 )
                 new_profile = data_manager_users.find_profile_id(request.form["email"], 'email')
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_profile["id"]),
                                     "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
                                     "else_filename": ""}, 'users')
-                return redirect("/")
+                return redirect("/user/" + str(new_profile["id"]))
             return render_template("error.html", error_code='Email address or user name already in use!')
         return render_template("sign-up.html")
     return render_template("error.html", error_code='You are already signed up and logged in!')
+
+
+@app.route("/user/<user_id>")
+def profile_page(user_id):
+    logged_in = True if "username" in session else False
+    target_profile = data_manager_universal.find_target(user_id, "users")[0]
+    return render_template("profile-page.html", user=target_profile, logged_in=logged_in)
 
 
 @app.route("/users")
@@ -298,7 +306,7 @@ def users():
                            users=sorted_users,
                            if_reversed=order,
                            user_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                             for header in data_manager_universal.USER_HEADER]
+                                         for header in data_manager_universal.USER_HEADER]
                            )
 
 

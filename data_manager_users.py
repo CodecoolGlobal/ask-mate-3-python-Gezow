@@ -9,13 +9,14 @@ def get_user_info(cursor, aspect):
 
 @database_common.connection_handler
 def add_new_user(cursor, parameters):
-    query = """INSERT INTO users (email, password, username, reputation, image)
-            VALUES('%s', '%s', '%s', %s, '%s');""" % (parameters["email"],
-                                                      parameters["password"],
-                                                      parameters["username"],
-                                                      parameters["reputation"],
-                                                      parameters["image"]
-                                                      )
+    query = """INSERT INTO users (email, password, username, reputation, image, registration_date)
+            VALUES('%s', '%s', '%s', %s, '%s', %s);""" % (parameters["email"],
+                                                          parameters["password"],
+                                                          parameters["username"],
+                                                          parameters["reputation"],
+                                                          parameters["image"],
+                                                          parameters["registration_date"]
+                                                          )
     cursor.execute(query)
 
 

@@ -14,10 +14,10 @@ USER_HEADER = ['id', 'username', 'email', 'reputation', 'image']
 
 
 @database_common.connection_handler
-def find_target(cursor, question_id, db):
+def find_target(cursor, unique_id, db):
     query = """
             SELECT * FROM %s
-            WHERE id = '%s';""" % (db, question_id)
+            WHERE id = '%s';""" % (db, unique_id)
     cursor.execute(query)
     return cursor.fetchall()
 
