@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session, url_for
 from datetime import datetime
 import os
 
@@ -256,6 +256,34 @@ def add_tag(question_id):
 def delete_tag(question_id, tag_id):
     data_manager_tag.delete_tag(question_id, tag_id)
     return redirect("/question/" + question_id + "?voted=True")
+
+
+@app.route("/sign-up", methods=["GET", "POST"])
+def registration():
+    if 'email' not in session and 'password' not in session:
+        if request.method == "POST":
+            try:
+                user_emails, user_names = data_manager.get_user_info('email'), data_manager.get_user_info('username')
+                if request.form['email'] not in user_emails and request.form['user_name'] not in user_names:
+                    data_manager.add_new_user({'email': request.form["email"],
+                                               'password': request.form["password"],
+                                               'username': request.form["username"],
+                                               'reputation': 0,
+                                               'image': None})
+                    new_profile = data_manager.find_profile_id(request.form["email"], 'email')
+                    util.handle_images({"request_files": request.files,
+                                        "new_id": str(new_profile["id"]),
+                                        "directory": data_manager.PROFILE_IMG_DIR_PATH,
+                                        "else_filename": ""}, 'users')
+                    return redirect(url_for('login'))
+                return render_template(
+                    "error.html",
+                    error_code='Email address or user name already in use!' + '(user_name or email_address in use)')
+            except psycopg2.Error as error:
+                return render_template(
+                    "error.html", error_code=str(error.pgcode) + '(user_name or email_address in use)')
+        return render_template("sign-up.html")
+    return render_template("error.html", error_code='You are already signed up and logged in!')
 
 
 if __name__ == "__main__":
