@@ -58,7 +58,7 @@
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
     </div>
-    <hr><h4><strong>Comments:</strong></h4>
+    <h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
             {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                 <div class="comment">
@@ -72,6 +72,7 @@
         {% else %}
             No comments yet...
         {% endif %}
+              <hr>
           {% endfor %}
         <p><a class="post-button" href="/list">Back to questions...</a></p>
 {% endblock page_content %}
