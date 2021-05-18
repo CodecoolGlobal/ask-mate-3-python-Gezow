@@ -32,13 +32,12 @@
         <hr><h4><strong>Comments:</strong></h4>
         {% if question_comments %}
             {% for comment in question_comments %}
-                <p class="comment">{{comment['message']}}</p>
-                <p class="comment"><small>
-                Submission time: {{comment['submission_time']}}
-                    Edited: {{comment['edited_count']}} &nbsp;&nbsp;</small></p>
-                <p class="comment">
+                <p>{{comment['message']}}</p>
+                <p><small>Submission time: {{comment['submission_time']}}<br>
+                    Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
+                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button></p>
+                <hr>
         {% endfor %}
         {% else %}
             No comments yet...
