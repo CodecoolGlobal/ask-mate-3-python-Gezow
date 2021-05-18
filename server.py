@@ -48,7 +48,7 @@ def display_list():
 def display_question(question_id):
     if request.args.get("voted") != "True":
         data_manager_question.update_view_number(question_id)
-    target_question = data_manager_universal.find_target(question_id, 'question')[0]
+    target_question = data_manager_universal.find_target(question_id, 'id', 'question')[0]
     target_answers = reversed(data_manager_answer.find_answers_to_question(question_id))
     relevant_tags = data_manager_tag.find_relevant_tags(question_id)
     return render_template("question.html",
@@ -87,7 +87,7 @@ def add_question():
 
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
 def edit_question(question_id):
-    target_question = data_manager_universal.find_target(question_id, 'question')[0]
+    target_question = data_manager_universal.find_target(question_id, 'id', 'question')[0]
     if request.method == "POST":
         util.handle_images({"request_files": request.files,
                             "new_id": question_id,
@@ -148,7 +148,7 @@ def add_answer(question_id):
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
     target_answers = data_manager_answer.find_answer_by_question_id(question_id)
-    target_question = data_manager_universal.find_target(question_id, 'question')[0]
+    target_question = data_manager_universal.find_target(question_id, 'id', 'question')[0]
     for answer in target_answers:
         if answer['image']:
             os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
@@ -161,7 +161,7 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
-    target_answer = data_manager_universal.find_target(answer_id, 'answer')[0]
+    target_answer = data_manager_universal.find_target(answer_id, 'id', 'answer')[0]
     if target_answer['image']:
         os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
     data_manager_universal.delete_from_db(answer_id, 'answer')
@@ -206,7 +206,7 @@ def search_in_questions():
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
 def edit_answer(answer_id):
-    target_answer = data_manager_universal.find_target(answer_id, 'answer')[0]
+    target_answer = data_manager_universal.find_target(answer_id, 'id', 'answer')[0]
     if request.method == "POST":
         util.handle_images({"request_files": request.files,
                             "new_id": str(target_answer["id"]),
@@ -287,8 +287,21 @@ def registration():
 @app.route("/user/<user_id>")
 def profile_page(user_id):
     logged_in = True if "username" in session else False
-    target_profile = data_manager_universal.find_target(user_id, "users")[0]
-    return render_template("profile-page.html", user=target_profile, logged_in=logged_in)
+    target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
+    user_questions = [question for question in data_manager_universal.find_target(user_id, 'id', 'question')]
+    user_answers = []
+    user_comments = []
+    return render_template("profile-page.html",
+                           user=target_profile,
+                           logged_in=logged_in,
+                           answer_count=data_manager_universal.execute_count('answer', 'user_id', user_id)['count'],
+                           question_count=data_manager_universal.execute_count('question', 'user_id', user_id)['count'],
+                           question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                             for header in data_manager_universal.QUESTION_HEADER],
+                           user_questions=user_questions,
+                           user_answers=user_answers,
+                           user_comments=user_comments
+                           )
 
 
 @app.route("/users")

@@ -14,10 +14,10 @@ USER_HEADER = ['id', 'username', 'email', 'reputation', 'image', 'registration_d
 
 
 @database_common.connection_handler
-def find_target(cursor, unique_id, db):
+def find_target(cursor, unique_id, search_aspect, db):
     query = """
             SELECT * FROM %s
-            WHERE id = '%s';""" % (db, unique_id)
+            WHERE %s = '%s';""" % (db, search_aspect, unique_id)
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -59,3 +59,11 @@ def look_for_comments(cursor, db, id_type, unique_id):
             """ % (db, id_type, unique_id)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def execute_count(cursor, table, search_aspect, search_text):
+    query = """SELECT COUNT(*) FROM %s
+            WHERE %s = '%s'""" % (table, search_aspect, search_text)
+    cursor.execute(query)
+    return cursor.fetchone()

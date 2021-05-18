@@ -22,4 +22,16 @@
         </div>
         <h2>Reputation: {{ user["reputation"] }}</h2>&nbsp;&nbsp;
     </div>
+    <div class="centered">
+    <h3>{{ user["username"] }}'s questions:</h3>
+    {% if user_questions %}
+        <table id="display-list">
+            {% for header in question_headers %}
+                <th align="center">{{header}}</th>
+            {% endfor %}
+        </table>
+    {% else %}
+        No questions yet...
+    {% endif %}
+    </div>
 {% endblock %}

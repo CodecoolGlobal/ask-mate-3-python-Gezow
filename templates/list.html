@@ -53,6 +53,8 @@
                     {% else %}
                         <td align="center">No pic added...</td>
                     {% endif %}
+                {% elif key == 'user_id' %}
+                    <td align="center"><a id="blue-link" href="/user/{{ question['user_id'] }}">{{question['user_id']}}</a></td>
                 {% else %}
                     <td align="center">{{question[key]}}</td>
                 {% endif %}
