@@ -8,6 +8,7 @@ import data_manager_question
 import data_manager_answer
 import data_manager_tag
 import data_manager_comment
+import data_manager_user
 import util
 
 
@@ -263,17 +264,18 @@ def registration():
     if 'email' not in session and 'password' not in session:
         if request.method == "POST":
             try:
-                user_emails, user_names = data_manager.get_user_info('email'), data_manager.get_user_info('username')
-                if request.form['email'] not in user_emails and request.form['user_name'] not in user_names:
-                    data_manager.add_new_user({'email': request.form["email"],
-                                               'password': request.form["password"],
-                                               'username': request.form["username"],
-                                               'reputation': 0,
-                                               'image': None})
-                    new_profile = data_manager.find_profile_id(request.form["email"], 'email')
+                user_emails, user_names = data_manager_user.get_user_info('email'), \
+                                          data_manager_user.get_user_info('username')
+                if request.form['email'] not in user_emails and request.form['username'] not in user_names:
+                    data_manager_user.add_new_user({'email': request.form["email"],
+                                                    'password': request.form["password"],
+                                                    'username': request.form["username"],
+                                                    'reputation': 0,
+                                                    'image': None})
+                    new_profile = data_manager_user.find_profile_id(request.form["email"], 'email')
                     util.handle_images({"request_files": request.files,
                                         "new_id": str(new_profile["id"]),
-                                        "directory": data_manager.PROFILE_IMG_DIR_PATH,
+                                        "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
                                         "else_filename": ""}, 'users')
                     return redirect(url_for('login'))
                 return render_template(
