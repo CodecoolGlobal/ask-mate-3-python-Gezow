@@ -23,6 +23,14 @@
                       <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
                   </form>
               </div>
+              <div id="hd-last">
+                      {% if username %}
+                          <h3 class="login-name">{{ username }}</h3>
+                          <div id="hd-middle-r"><h2 class="button"><a class="button" href="/logout">Log out</a></h2></div>
+                      {% else %}
+                          <div id="hd-middle-r"><h2 class="button"><a class="button" href="/login">Login</a></h2></div>
+                      {% endif %}
+                  </div>
           </div><hr>
       </div>
       <div class="page-content">
