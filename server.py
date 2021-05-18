@@ -258,6 +258,11 @@ def delete_tag(question_id, tag_id):
     return redirect("/question/" + question_id + "?voted=True")
 
 
+@app.route("/users")
+def users():
+    return render_template("users_list.html")
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',
