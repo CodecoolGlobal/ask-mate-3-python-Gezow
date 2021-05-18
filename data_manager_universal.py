@@ -8,7 +8,7 @@ ANSWER_IMG_DIR_PATH = os.getenv('ANSWER_IMG_DIR_PATH') \
     if 'ANSWER_IMG_DIR_PATH' in os.environ else './static/images/answer'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-USER_HEADER = ['id', 'email', 'password', 'username', 'reputation', 'image']
+USER_HEADER = ['id', 'username', 'email', 'reputation', 'image']
 
 
 @database_common.connection_handler
