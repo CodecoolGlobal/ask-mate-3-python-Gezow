@@ -22,7 +22,7 @@
                     <td align="center"><a id="blue-link" href="/user/{{ user['id'] }}">{{user['id']}}</a></td>
                 {% elif key == 'image' %}
                     {% if user["image"] %}
-                        <td align="center"><img src="{{ url_for("static", filename="/images/user/" + user[key]) }}" alt="User image." width="100"></td>
+                        <td align="center"><img src="{{ url_for("static", filename="/images/profile/" + user[key]) }}" alt="User image." width="100"></td>
                     {% else %}
                         <td align="center">No pic added...</td>
                     {% endif %}
