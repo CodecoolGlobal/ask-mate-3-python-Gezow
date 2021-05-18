@@ -194,11 +194,11 @@ def filter_questions(cursor, search_field_text):
 
 
 @database_common.connection_handler
-def edit_answer(cursor, answer_id, message, image):
+def edit_answer(cursor, answer_id, message):
     query = """
             UPDATE answer 
-            SET message = '%s', image = '%s'
-            WHERE id = '%s'""" % (message, image, answer_id)
+            SET message = '%s'
+            WHERE id = '%s'""" % (message, answer_id)
     cursor.execute(query)
 
 

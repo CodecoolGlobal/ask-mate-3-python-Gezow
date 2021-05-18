@@ -130,11 +130,10 @@ def add_answer(question_id):
                                     message=message
                                     )
         new_answer = data_manager.find_answer_id(submission_time, message)
-        if request.files['image']:
-            filename = util.save_images(request.files, str(new_answer["id"]), data_manager.A_IMAGE_DIR_PATH)
-        else:
-            filename = ""
-        data_manager.update_image(filename, new_answer["id"], 'answer')
+        util.handle_images({"request_files": request.files,
+                            "new_id": str(new_answer["id"]),
+                            "directory": data_manager.A_IMAGE_DIR_PATH,
+                            "else_filename": ""}, 'answer')
         return redirect("/question/" + question_id + "?voted=True")
     return render_template("add-answer.html", question_id=question_id)
 
@@ -193,19 +192,20 @@ def search_in_questions():
                                questions=relevant_questions,
                                if_reversed="asc",
                                question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                                 for header in data_manager.QUESTION_HEADER])
+                                                 for header in data_manager.QUESTION_HEADER]
+                               )
 
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
 def edit_answer(answer_id):
     target_answer = data_manager.find_target(answer_id, 'answer')[0]
     if request.method == "POST":
-        if request.files['image']:
-            filename = util.save_images(request.files, answer_id, data_manager.A_IMAGE_DIR_PATH)
-        else:
-            filename = target_answer['image']
+        util.handle_images({"request_files": request.files,
+                            "new_id": str(target_answer["id"]),
+                            "directory": data_manager.A_IMAGE_DIR_PATH,
+                            "else_filename": target_answer["image"]}, 'answer')
         message = request.form['message'].replace("'", "`")
-        data_manager.edit_answer(answer_id, message, filename)
+        data_manager.edit_answer(answer_id, message)
         return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
     return render_template("edit_a.html", a_or_c=target_answer)
 
