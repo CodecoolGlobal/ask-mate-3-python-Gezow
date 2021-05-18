@@ -1,9 +1,12 @@
 import psycopg2
 from flask import Flask, render_template, redirect, request
-import data_manager_universal
-import util
 from datetime import datetime
 import os
+
+import data_manager_universal
+import data_manager_tag
+import data_manager_comment
+import util
 
 
 app = Flask(__name__)
@@ -44,14 +47,15 @@ def display_question(question_id):
         data_manager_universal.update_view_number(question_id)
     target_question = data_manager_universal.find_target(question_id, 'question')[0]
     target_answers = reversed(data_manager_universal.find_answers_to_question(question_id))
-    relevant_tags = data_manager_universal.find_relevant_tags(question_id)
+    relevant_tags = data_manager_tag.find_relevant_tags(question_id)
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
                            answer_headers=data_manager_universal.ANSWER_HEADER,
                            question_id=question_id,
                            IMAGE_DIR_PATH=data_manager_universal.Q_IMAGE_DIR_PATH,
-                           question_comments=data_manager_universal.look_for_comments('comment', 'question_id', question_id),
+                           question_comments=data_manager_universal.look_for_comments('comment', 'question_id',
+                                                                                      question_id),
                            data_manager=data_manager_universal,
                            tags=relevant_tags
                            )
@@ -176,7 +180,8 @@ def add_comment_to_answer(answer_id):
     q_id = data_manager_universal.find_question_id_from_answer_id(answer_id)['question_id']
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager_universal.add_comment('null', answer_id, request.form["message"].replace("'", "`"), submission_time, 'null')
+        data_manager_universal.add_comment('null', answer_id, request.form["message"].replace("'", "`"),
+                                           submission_time, 'null')
         return redirect("/question/" + str(q_id) + "?voted=True")
     return render_template('add-comment-answer.html',
                            answer_id=answer_id,
@@ -212,18 +217,18 @@ def edit_answer(answer_id):
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
 def edit_comment(comment_id):
-    target_comment = data_manager_universal.find_comment(comment_id)[0]
+    target_comment = data_manager_comment.find_comment(comment_id)[0]
     if request.method == "POST":
-        data_manager_universal.update_edited_count(comment_id)
+        data_manager_comment.update_edited_count(comment_id)
         message = request.form['message'].replace("'", "`")
-        data_manager_universal.edit_comment(comment_id, message)
+        data_manager_comment.edit_comment(comment_id, message)
         return util.redirect_after_comment_action(target_comment)
     return render_template("edit_c.html", a_or_c=target_comment)
 
 
 @app.route("/comment/<comment_id>/delete")
 def delete_comment(comment_id):
-    target_comment = data_manager_universal.find_comment(comment_id)[0]
+    target_comment = data_manager_comment.find_comment(comment_id)[0]
     data_manager_universal.delete_from_db(comment_id, 'comment')
     return util.redirect_after_comment_action(target_comment)
 
@@ -233,21 +238,21 @@ def add_tag(question_id):
     if request.method == "POST":
         try:
             if request.form['message']:
-                data_manager_universal.add_new_tag(request.form['message'].replace("'", "`"))
-                target_tag = data_manager_universal.find_tag_id(request.form['message'].replace("'", "`"))['id']
+                data_manager_tag.add_new_tag(request.form['message'].replace("'", "`"))
+                target_tag = data_manager_tag.find_tag_id(request.form['message'].replace("'", "`"))['id']
             else:
-                target_tag = data_manager_universal.find_tag_id(request.form['tag-name'])['id']
-            data_manager_universal.choose_tag(question_id, target_tag)
+                target_tag = data_manager_tag.find_tag_id(request.form['tag-name'])['id']
+            data_manager_tag.choose_tag(question_id, target_tag)
             return redirect("/question/" + question_id + "?voted=True")
         except psycopg2.Error as error:
             return render_template("error.html", error_code=error.pgcode)
-    all_tags = data_manager_universal.all_tags()
+    all_tags = data_manager_tag.all_tags()
     return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
 
 
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
 def delete_tag(question_id, tag_id):
-    data_manager_universal.delete_tag(question_id, tag_id)
+    data_manager_tag.delete_tag(question_id, tag_id)
     return redirect("/question/" + question_id + "?voted=True")
 
 
