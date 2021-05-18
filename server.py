@@ -288,7 +288,7 @@ def registration():
 def profile_page(user_id):
     logged_in = True if "username" in session else False
     target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
-    user_questions = [question for question in data_manager_universal.find_target(user_id, 'id', 'question')]
+    user_questions = [question for question in data_manager_universal.find_target(user_id, 'user_id', 'question')]
     user_answers = []
     user_comments = []
     return render_template("profile-page.html",
