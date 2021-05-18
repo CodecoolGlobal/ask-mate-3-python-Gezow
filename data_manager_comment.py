@@ -2,6 +2,16 @@ import database_common
 
 
 @database_common.connection_handler
+def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
+    query = """
+            INSERT INTO comment
+            (question_id, answer_id, message, submission_time, edited_count)
+            VALUES (%s, %s, '%s','%s',%s);
+            """ % (question_id, answer_id, message, submission_time, edited_count)
+    cursor.execute(query)
+
+
+@database_common.connection_handler
 def find_comment(cursor, comment_id):
     query = """
             SELECT * FROM comment

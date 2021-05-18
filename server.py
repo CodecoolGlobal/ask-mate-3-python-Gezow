@@ -4,6 +4,8 @@ from datetime import datetime
 import os
 
 import data_manager_universal
+import data_manager_question
+import data_manager_answer
 import data_manager_tag
 import data_manager_comment
 import util
@@ -14,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    last_five_question = data_manager_universal.get_ordered_questions("submission_time", 'DESC')[:5]
+    last_five_question = data_manager_question.get_ordered_questions("submission_time", 'DESC')[:5]
     return render_template("searched_list.html",
                            questions=last_five_question,
                            if_reversed='asc',
@@ -25,14 +27,14 @@ def main():
 @app.route("/list")
 def display_list():
     if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-        sorted_questions = data_manager_universal.get_ordered_questions(request.args.get("order_by"), 'DESC')
+        sorted_questions = data_manager_question.get_ordered_questions(request.args.get("order_by"), 'DESC')
         order = "asc"
     elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-        sorted_questions = data_manager_universal.get_ordered_questions(request.args.get("order_by"), 'ASC')
+        sorted_questions = data_manager_question.get_ordered_questions(request.args.get("order_by"), 'ASC')
         order = "desc"
     else:
         order = "asc"
-        sorted_questions = data_manager_universal.get_ordered_questions("submission_time", 'DESC')
+        sorted_questions = data_manager_question.get_ordered_questions("submission_time", 'DESC')
     return render_template("list.html",
                            questions=sorted_questions,
                            if_reversed=order,
@@ -44,16 +46,16 @@ def display_list():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     if request.args.get("voted") != "True":
-        data_manager_universal.update_view_number(question_id)
+        data_manager_question.update_view_number(question_id)
     target_question = data_manager_universal.find_target(question_id, 'question')[0]
-    target_answers = reversed(data_manager_universal.find_answers_to_question(question_id))
+    target_answers = reversed(data_manager_answer.find_answers_to_question(question_id))
     relevant_tags = data_manager_tag.find_relevant_tags(question_id)
     return render_template("question.html",
                            question=target_question,
                            answers=target_answers,
                            answer_headers=data_manager_universal.ANSWER_HEADER,
                            question_id=question_id,
-                           IMAGE_DIR_PATH=data_manager_universal.Q_IMAGE_DIR_PATH,
+                           IMAGE_DIR_PATH=data_manager_universal.QUESTION_IMG_DIR_PATH,
                            question_comments=data_manager_universal.look_for_comments('comment', 'question_id',
                                                                                       question_id),
                            data_manager=data_manager_universal,
@@ -67,16 +69,16 @@ def add_question():
         submission_time = str(datetime.now()).split(".")[0]
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
-        data_manager_universal.add_new_question(submission_time=submission_time,
-                                                view_number=0,
-                                                vote_number=0,
-                                                title=title,
-                                                message=message
-                                                )
-        new_question = data_manager_universal.find_question_id(submission_time, title)
+        data_manager_question.add_new_question(submission_time=submission_time,
+                                               view_number=0,
+                                               vote_number=0,
+                                               title=title,
+                                               message=message
+                                               )
+        new_question = data_manager_question.find_question_id(submission_time, title)
         util.handle_images({"request_files": request.files,
                             "new_id": str(new_question["id"]),
-                            "directory": data_manager_universal.Q_IMAGE_DIR_PATH,
+                            "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
                             "else_filename": ""}, 'question')
         return redirect("/question/" + str(new_question["id"]) + "?voted=True")
     return render_template("add-question.html")
@@ -88,11 +90,11 @@ def edit_question(question_id):
     if request.method == "POST":
         util.handle_images({"request_files": request.files,
                             "new_id": question_id,
-                            "directory": data_manager_universal.Q_IMAGE_DIR_PATH,
+                            "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
                             "else_filename": target_question['image']}, 'question')
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
-        data_manager_universal.edit_question(question_id, title, message)
+        data_manager_question.edit_question(question_id, title, message)
         return redirect("/question/" + str(target_question['id']) + "?voted=True")
     return render_template("edit_question.html", question=target_question)
 
@@ -112,14 +114,14 @@ def vote_down_question(question_id):
 @app.route("/answer/<answer_id>/vote_up")
 def vote_up_answer(answer_id):
     data_manager_universal.vote(answer_id, 'answer', 1)
-    question_id = data_manager_universal.find_question_id_from_answer_id(answer_id)['question_id']
+    question_id = data_manager_answer.find_question_id_from_answer_id(answer_id)['question_id']
     return redirect("/question/" + str(question_id) + "?voted=True")
 
 
 @app.route("/answer/<answer_id>/vote_down")
 def vote_down_answer(answer_id):
     data_manager_universal.vote(answer_id, 'answer', -1)
-    question_id = data_manager_universal.find_question_id_from_answer_id(answer_id)['question_id']
+    question_id = data_manager_answer.find_question_id_from_answer_id(answer_id)['question_id']
     return redirect("/question/" + str(question_id) + "?voted=True")
 
 
@@ -128,15 +130,15 @@ def add_answer(question_id):
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
         message = request.form['message'].replace("'", "`")
-        data_manager_universal.add_new_answer(submission_time=submission_time,
-                                              vote_number=0,
-                                              question_id=question_id,
-                                              message=message
-                                              )
-        new_answer = data_manager_universal.find_answer_id(submission_time, message)
+        data_manager_answer.add_new_answer(submission_time=submission_time,
+                                           vote_number=0,
+                                           question_id=question_id,
+                                           message=message
+                                           )
+        new_answer = data_manager_answer.find_answer_id(submission_time, message)
         util.handle_images({"request_files": request.files,
                             "new_id": str(new_answer["id"]),
-                            "directory": data_manager_universal.A_IMAGE_DIR_PATH,
+                            "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
                             "else_filename": ""}, 'answer')
         return redirect("/question/" + question_id + "?voted=True")
     return render_template("add-answer.html", question_id=question_id)
@@ -144,14 +146,14 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
-    target_answers = data_manager_universal.find_answer_by_question_id(question_id)
+    target_answers = data_manager_answer.find_answer_by_question_id(question_id)
     target_question = data_manager_universal.find_target(question_id, 'question')[0]
     for answer in target_answers:
         if answer['image']:
-            os.remove(data_manager_universal.A_IMAGE_DIR_PATH + "/" + answer['image'])
-    data_manager_universal.delete_answers_by_question_id(question_id)
+            os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
+    data_manager_answer.delete_answers_by_question_id(question_id)
     if target_question['image']:
-        os.remove(data_manager_universal.Q_IMAGE_DIR_PATH + "/" + target_question['image'])
+        os.remove(data_manager_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
     data_manager_universal.delete_from_db(question_id, 'question')
     return redirect("/list")
 
@@ -160,7 +162,7 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     target_answer = data_manager_universal.find_target(answer_id, 'answer')[0]
     if target_answer['image']:
-        os.remove(data_manager_universal.A_IMAGE_DIR_PATH + "/" + target_answer['image'])
+        os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
     data_manager_universal.delete_from_db(answer_id, 'answer')
     return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
 
@@ -169,7 +171,7 @@ def delete_answer(answer_id):
 def new_comment_to_question(question_id):
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager_universal.add_comment(
+        data_manager_comment.add_comment(
             question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
         return redirect("/question/" + question_id + "?voted=True")
     return render_template('add-comment.html', question_id=question_id)
@@ -177,11 +179,11 @@ def new_comment_to_question(question_id):
 
 @app.route("/answer/<answer_id>/new_comment", methods=["GET", "POST"])
 def add_comment_to_answer(answer_id):
-    q_id = data_manager_universal.find_question_id_from_answer_id(answer_id)['question_id']
+    q_id = data_manager_answer.find_question_id_from_answer_id(answer_id)['question_id']
     if request.method == 'POST':
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager_universal.add_comment('null', answer_id, request.form["message"].replace("'", "`"),
-                                           submission_time, 'null')
+        data_manager_comment.add_comment('null', answer_id, request.form["message"].replace("'", "`"),
+                                         submission_time, 'null')
         return redirect("/question/" + str(q_id) + "?voted=True")
     return render_template('add-comment-answer.html',
                            answer_id=answer_id,
@@ -192,7 +194,7 @@ def add_comment_to_answer(answer_id):
 @app.route("/search")
 def search_in_questions():
     if request.args.get("q"):
-        relevant_questions = data_manager_universal.filter_questions(request.args.get("q"))
+        relevant_questions = data_manager_question.filter_questions(request.args.get("q"))
         return render_template("searched_list.html",
                                questions=relevant_questions,
                                if_reversed="asc",
@@ -207,10 +209,10 @@ def edit_answer(answer_id):
     if request.method == "POST":
         util.handle_images({"request_files": request.files,
                             "new_id": str(target_answer["id"]),
-                            "directory": data_manager_universal.A_IMAGE_DIR_PATH,
+                            "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
                             "else_filename": target_answer["image"]}, 'answer')
         message = request.form['message'].replace("'", "`")
-        data_manager_universal.edit_answer(answer_id, message)
+        data_manager_answer.edit_answer(answer_id, message)
         return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
     return render_template("edit_a.html", a_or_c=target_answer)
 
