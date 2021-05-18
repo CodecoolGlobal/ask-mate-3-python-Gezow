@@ -1,6 +1,6 @@
 from flask import redirect
 import os
-import data_manager
+import data_manager_universal
 
 
 def save_images(form, id_type, dir_path):
@@ -18,14 +18,14 @@ def handle_images(update_info, data_table):
                                )
     else:
         filename = update_info["else_filename"]
-    data_manager.update_image(filename,
-                              update_info["new_id"],
-                              data_table)
+    data_manager_universal.update_image(filename,
+                                        update_info["new_id"],
+                                        data_table)
 
 
 def redirect_after_comment_action(target_comment):
     if target_comment['question_id']:
         return redirect(f"/question/{str(target_comment['question_id'])}?voted=True")
     if target_comment['answer_id']:
-        target_question_id = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
+        target_question_id = data_manager_universal.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
         return redirect(f"/question/{str(target_question_id)}?voted=True")
