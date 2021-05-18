@@ -2,12 +2,12 @@ import database_common
 
 
 @database_common.connection_handler
-def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count):
+def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count, active_user_id):
     query = """
             INSERT INTO comment
-            (question_id, answer_id, message, submission_time, edited_count)
+            (question_id, answer_id, message, submission_time, edited_count, user_id)
             VALUES (%s, %s, '%s','%s',%s);
-            """ % (question_id, answer_id, message, submission_time, edited_count)
+            """ % (question_id, answer_id, message, submission_time, edited_count, active_user_id)
     cursor.execute(query)
 
 

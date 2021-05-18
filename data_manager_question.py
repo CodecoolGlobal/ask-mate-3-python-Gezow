@@ -20,16 +20,12 @@ def update_view_number(cursor, question_id):
 
 
 @database_common.connection_handler
-def add_new_question(cursor, submission_time, view_number, vote_number, title, message):
+def add_new_question(cursor, submission_time, view_number, vote_number, title, message, active_user_id):
     query = """
             INSERT INTO question
-            (submission_time, view_number, vote_number, title, message)
-            VALUES ('%s', %s, %s, '%s', '%s');""" % (submission_time,
-                                                     view_number,
-                                                     vote_number,
-                                                     title,
-                                                     message
-                                                     )
+            (submission_time, view_number, vote_number, title, message, user_id)
+            VALUES ('%s', %s, %s, '%s', '%s', '%s');""" % (submission_time, view_number,
+                                                           vote_number, title, message, active_user_id)
     cursor.execute(query)
 
 

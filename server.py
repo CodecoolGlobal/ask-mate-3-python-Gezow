@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, escape
 from datetime import datetime
 import os
 
@@ -70,11 +70,13 @@ def add_question():
         submission_time = str(datetime.now()).split(".")[0]
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         data_manager_question.add_new_question(submission_time=submission_time,
                                                view_number=0,
                                                vote_number=0,
                                                title=title,
-                                               message=message
+                                               message=message,
+                                               active_user_id=active_user_id
                                                )
         new_question = data_manager_question.find_question_id(submission_time, title)
         util.handle_images({"request_files": request.files,
@@ -131,10 +133,12 @@ def add_answer(question_id):
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
         message = request.form['message'].replace("'", "`")
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         data_manager_answer.add_new_answer(submission_time=submission_time,
                                            vote_number=0,
                                            question_id=question_id,
-                                           message=message
+                                           message=message,
+                                           active_user_id=active_user_id,
                                            )
         new_answer = data_manager_answer.find_answer_id(submission_time, message)
         util.handle_images({"request_files": request.files,
@@ -171,9 +175,14 @@ def delete_answer(answer_id):
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
 def new_comment_to_question(question_id):
     if request.method == 'POST':
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager_comment.add_comment(
-            question_id, 'null', request.form['message'].replace("'", "`"), submission_time, 'null')
+        data_manager_comment.add_comment(question_id=question_id,
+                                         answer_id='null',
+                                         message=request.form['message'].replace("'", "`"),
+                                         submission_time=submission_time,
+                                         edited_count='null',
+                                         active_user_id=active_user_id)
         return redirect("/question/" + question_id + "?voted=True")
     return render_template('add-comment.html', question_id=question_id)
 
@@ -182,9 +191,14 @@ def new_comment_to_question(question_id):
 def add_comment_to_answer(answer_id):
     q_id = data_manager_answer.find_question_id_from_answer_id(answer_id)['question_id']
     if request.method == 'POST':
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         submission_time = str(datetime.now()).split(".")[0]
-        data_manager_comment.add_comment('null', answer_id, request.form["message"].replace("'", "`"),
-                                         submission_time, 'null')
+        data_manager_comment.add_comment(question_id='null',
+                                         answer_id=answer_id,
+                                         message=request.form["message"].replace("'", "`"),
+                                         submission_time=submission_time,
+                                         edited_count='null',
+                                         active_user_id=active_user_id)
         return redirect("/question/" + str(q_id) + "?voted=True")
     return render_template('add-comment-answer.html',
                            answer_id=answer_id,
