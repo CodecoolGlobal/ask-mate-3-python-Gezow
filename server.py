@@ -286,14 +286,14 @@ def registration():
 @app.route("/users")
 def users():
     if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-        sorted_users = data_manager_user.get_ordered_users(request.args.get("order_by"), 'DESC')
+        sorted_users = data_manager_users.get_ordered_users(request.args.get("order_by"), 'DESC')
         order = "asc"
     elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-        sorted_users = data_manager_user.get_ordered_users(request.args.get("order_by"), 'ASC')
+        sorted_users = data_manager_users.get_ordered_users(request.args.get("order_by"), 'ASC')
         order = "desc"
     else:
         order = "asc"
-        sorted_users = data_manager_user.get_ordered_users("username", 'DESC')
+        sorted_users = data_manager_users.get_ordered_users("username", 'DESC')
     return render_template("users_list.html",
                            users=sorted_users,
                            if_reversed=order,
