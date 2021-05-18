@@ -306,8 +306,5 @@ table.a {
     border-radius: 10px;
     border: solid #52c6d2;
     width: 300px;
-}
-
-#details.centered:hover {
-    border: solid #F68A07FF;
+    height: 70px;
 }
