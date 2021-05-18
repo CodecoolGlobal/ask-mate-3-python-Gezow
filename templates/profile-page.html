@@ -6,15 +6,18 @@
         <h1 class="page-title">{{ user["username"] }}</h1>
     {% endblock %}
     {% if user["image"] %}
-        <img src="{{ url_for("static", filename="/images/answer/" + user["image"]) }}"
+        <img src="{{ url_for("static", filename="/images/profile/" + user["image"]) }}"
              alt="profile picture"
-             class="profile-picture">
+             class="profile-picture"
+             width="300">
     {% else %}
         <img src="{{ url_for("static", filename="/images/" + "default.jpg") }}"
              alt="default picture"
-             class="profile-picture">
+             class="profile-picture"
+             width="300">
     {% endif %}
-    <br><small>Reputation: {{ user["reputation"] }}</small>&nbsp;&nbsp;
+    <br><small>Member since: {{ user["registration_date"] }}</small>&nbsp;&nbsp;
     <small>User ID: {{ user["id"] }}</small>
+    <h2>Reputation: {{ user["reputation"] }}</h2>
     </div>
 {% endblock %}

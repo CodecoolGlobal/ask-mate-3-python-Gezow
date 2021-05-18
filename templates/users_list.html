@@ -1,16 +1,18 @@
 {% extends "list.html" %}
 {% block title %}Ask Mate - Users list{% endblock title %}
 {% block page_content %}
-    {% block page_title %}<h1 class="page-title">Users list</h1>{% endblock %}
+    {% block page_title %}<h1 class="page-title">All users</h1>{% endblock %}
     <div class="table">
-          <table id="user-list">
+          <table id="question-list">
               {% block table_header %}
               <tr>
                   {% for header in user_headers %}
                     {% if header == 'Id' or header == 'Image' %}
                         <th align="center"> {{header}}</th>
                     {% else %}
-                        <th id="hover-hd" align="center"><a href="/users?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                        <th id="hover-hd" align="center">
+                            <a href="/users?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a>
+                        </th>
                     {% endif %}
                   {% endfor %}
               </tr>
@@ -24,7 +26,7 @@
                     {% if user["image"] %}
                         <td align="center"><img src="{{ url_for("static", filename="/images/profile/" + user[key]) }}" alt="User image." width="100"></td>
                     {% else %}
-                        <td align="center">No pic added...</td>
+                        <td align="center"><img src="{{ url_for("static", filename="/images/default.jpg") }}" alt="User image." height="70"></td>
                     {% endif %}
                 {% else %}
                     <td align="center">{{user[key]}}</td>

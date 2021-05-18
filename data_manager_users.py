@@ -10,13 +10,13 @@ def get_user_info(cursor, aspect):
 @database_common.connection_handler
 def add_new_user(cursor, parameters):
     query = """INSERT INTO users (email, password, username, reputation, image, registration_date)
-            VALUES('%s', '%s', '%s', %s, '%s', %s);""" % (parameters["email"],
-                                                          parameters["password"],
-                                                          parameters["username"],
-                                                          parameters["reputation"],
-                                                          parameters["image"],
-                                                          parameters["registration_date"]
-                                                          )
+            VALUES('%s', '%s', '%s', %s, '%s', '%s');""" % (parameters["email"],
+                                                            parameters["password"],
+                                                            parameters["username"],
+                                                            parameters["reputation"],
+                                                            parameters["image"],
+                                                            parameters["registration_date"]
+                                                            )
     cursor.execute(query)
 
 
@@ -31,7 +31,7 @@ def find_profile_id(cursor, search_parameter, parameter_type):
 @database_common.connection_handler
 def get_ordered_users(cursor, filter_type, order):
     query = """
-            SELECT id, username, email, reputation, image FROM users
+            SELECT id, username, email, reputation, image, registration_date FROM users
             ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
