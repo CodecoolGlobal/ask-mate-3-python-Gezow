@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from datetime import datetime
 import os
 
@@ -8,7 +8,7 @@ import data_manager_question
 import data_manager_answer
 import data_manager_tag
 import data_manager_comment
-import data_manager_user
+import data_manager_users
 import util
 
 
@@ -257,6 +257,30 @@ def add_tag(question_id):
 def delete_tag(question_id, tag_id):
     data_manager_tag.delete_tag(question_id, tag_id)
     return redirect("/question/" + question_id + "?voted=True")
+
+
+@app.route("/sign-up", methods=["GET", "POST"])
+def registration():
+    if 'email' not in session and 'password' not in session:
+        if request.method == "POST":
+            user_emails, user_names = [email["email"] for email in data_manager_users.get_user_info('email')], \
+                                [username["username"] for username in data_manager_users.get_user_info('username')]
+            if request.form['email'] not in user_emails and request.form['username'] not in user_names:
+                data_manager_users.add_new_user({'email': request.form["email"].replace("'", "`"),
+                                                 'password': util.hash_password(request.form["password"]),
+                                                 'username': request.form["username"].replace("'", "`"),
+                                                 'reputation': 0,
+                                                 'image': 'null'}
+                                                )
+                new_profile = data_manager_users.find_profile_id(request.form["email"], 'email')
+                util.handle_images({"request_files": request.files,
+                                    "new_id": str(new_profile["id"]),
+                                    "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
+                                    "else_filename": ""}, 'users')
+                return redirect("/")
+            return render_template("error.html", error_code='Email address or user name already in use!')
+        return render_template("sign-up.html")
+    return render_template("error.html", error_code='You are already signed up and logged in!')
 
 
 @app.route("/users")

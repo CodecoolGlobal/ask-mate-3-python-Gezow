@@ -36,6 +36,7 @@ share/python-wheels/
 MANIFEST
 static/images/question/
 static/images/answer/
+static/images/profile/
 
 # PyInstaller
 #  Usually these files are written by a python script from a templates
