@@ -8,6 +8,7 @@ import data_manager_question
 import data_manager_answer
 import data_manager_tag
 import data_manager_comment
+import data_manager_user
 import util
 
 
@@ -260,7 +261,21 @@ def delete_tag(question_id, tag_id):
 
 @app.route("/users")
 def users():
-    return render_template("users_list.html")
+    if request.args.get("order_by") and request.args.get("order_direction") == "desc":
+        sorted_users = data_manager_user.get_ordered_users(request.args.get("order_by"), 'DESC')
+        order = "asc"
+    elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
+        sorted_users = data_manager_user.get_ordered_users(request.args.get("order_by"), 'ASC')
+        order = "desc"
+    else:
+        order = "asc"
+        sorted_users = data_manager_user.get_ordered_users("username", 'DESC')
+    return render_template("users_list.html",
+                           users=sorted_users,
+                           if_reversed=order,
+                           user_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                             for header in data_manager_universal.USER_HEADER]
+                           )
 
 
 if __name__ == "__main__":
