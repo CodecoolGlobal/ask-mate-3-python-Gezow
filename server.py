@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, escape
 from datetime import datetime
 import os
 
@@ -70,11 +70,13 @@ def add_question():
         submission_time = str(datetime.now()).split(".")[0]
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         data_manager_question.add_new_question(submission_time=submission_time,
                                                view_number=0,
                                                vote_number=0,
                                                title=title,
-                                               message=message
+                                               message=message,
+                                               active_user_id=active_user_id
                                                )
         new_question = data_manager_question.find_question_id(submission_time, title)
         util.handle_images({"request_files": request.files,
