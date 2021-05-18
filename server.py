@@ -133,10 +133,12 @@ def add_answer(question_id):
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
         message = request.form['message'].replace("'", "`")
+        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
         data_manager_answer.add_new_answer(submission_time=submission_time,
                                            vote_number=0,
                                            question_id=question_id,
-                                           message=message
+                                           message=message,
+                                           active_user_id=active_user_id,
                                            )
         new_answer = data_manager_answer.find_answer_id(submission_time, message)
         util.handle_images({"request_files": request.files,
