@@ -9,13 +9,12 @@
   </head>
   <body>
   <div class="content-wrapper">
-
       <div class="header">
           <div id="header-container">
-
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
               <div id="hd-middle-l"><h2 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h2></div>
-              <div id="hd-middle-r"><h2 class="header-button"><a class="button" href="/list">Go to questions...</a></h2></div>
+              <div id="hd-middle-r"><h2 class="header-button"><a class="button" href="/list">Go to questions!</a></h2></div>
+              <div id="hd-right"><h2 class="header-button"><a class="button" href="/users">List users!</a></h2></div>
               <div id="hd-right">
                   <form action="/search">
                       <label for="search_bar"></label>
@@ -26,16 +25,15 @@
           </div><hr>
       </div>
       <div class="page-content">
-
       {% block page_content %}
       {% block page_title %}<h1 class="page-title">All questions</h1>{% endblock %}
       <div class="table">
-          <table id="question-list">
+          <table id="display-list">
               {% block table_header %}
               <tr>
                   {% for header in question_headers %}
                     {% if header == 'Id' or header == 'Image' %}
-                        <th align="center"> {{header}}</th>
+                        <th align="center">{{header}}</th>
                     {% else %}
                         <th id="hover-hd" align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
                     {% endif %}
@@ -53,6 +51,8 @@
                     {% else %}
                         <td align="center">No pic added...</td>
                     {% endif %}
+                {% elif key == 'user_id' %}
+                    <td align="center"><a id="blue-link" href="/user/{{ question['user_id'] }}">{{question['user_id']}}</a></td>
                 {% else %}
                     <td align="center">{{question[key]}}</td>
                 {% endif %}
@@ -62,7 +62,6 @@
           </table>
           </div>
       </div>
-
   </div>
   {% block home_button %}
   {% endblock home_button %}

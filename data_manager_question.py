@@ -51,15 +51,21 @@ def edit_question(cursor, question_id, title, message):
 @database_common.connection_handler
 def filter_questions(cursor, search_field_text):
     query = """
-            SELECT question.id, question.submission_time, view_number, question.vote_number, question.title,
-            question.message, question.image
+            SELECT question.id,
+                   question.submission_time,
+                   question.view_number,
+                   question.vote_number,
+                   question.title,
+                   question.message,
+                   question.user_id
             FROM question
-            FULL OUTER JOIN answer ON question.id = answer.question_id
+            JOIN answer ON question.id = answer.question_id
             WHERE question.message ILIKE '%s'
             OR question.title ILIKE '%s'
-            OR answer.message ILIKE '%s';""" % ('%' + search_field_text + '%',
-                                                '%' + search_field_text + '%',
-                                                '%' + search_field_text + '%'
-                                                )
+            OR answer.message ILIKE '%s'
+            GROUP BY question.id;""" % ('%' + search_field_text + '%',
+                                        '%' + search_field_text + '%',
+                                        '%' + search_field_text + '%'
+                                        )
     cursor.execute(query)
     return cursor.fetchall()
