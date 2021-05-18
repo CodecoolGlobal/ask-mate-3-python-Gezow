@@ -217,11 +217,7 @@ def edit_comment(comment_id):
         data_manager.update_edited_count(comment_id)
         message = request.form['message'].replace("'", "`")
         data_manager.edit_comment(comment_id, message)
-        if target_comment['question_id']:
-            return redirect("/question/" + str(target_comment['question_id']) + "?voted=True")
-        if target_comment['answer_id']:
-            target_question = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
-            return redirect("/question/" + str(target_question) + "?voted=True")
+        return util.redirect_after_comment_action(target_comment)
     return render_template("edit_c.html", a_or_c=target_comment)
 
 
@@ -229,11 +225,7 @@ def edit_comment(comment_id):
 def delete_comment(comment_id):
     target_comment = data_manager.find_comment(comment_id)[0]
     data_manager.delete_from_db(comment_id, 'comment')
-    if target_comment['question_id']:
-        return redirect("/question/" + str(target_comment['question_id']) + "?voted=True")
-    if target_comment['answer_id']:
-        target_question = data_manager.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
-        return redirect("/question/" + str(target_question) + "?voted=True")
+    return util.redirect_after_comment_action(target_comment)
 
 
 @app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
