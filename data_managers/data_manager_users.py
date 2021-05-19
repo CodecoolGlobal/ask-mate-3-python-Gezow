@@ -1,6 +1,9 @@
 import database_common
 
 
+REPUTATION_CHANGE = {"q_vote_up": 5, "a_vote_up": 10, "a_accepted": 15, "q_vote_down": -2, "a_vote_down": -2}
+
+
 @database_common.connection_handler
 def get_user_info(cursor, aspect):
     cursor.execute("SELECT %s FROM users;" % aspect)
@@ -53,3 +56,22 @@ def find_user_name(cursor, email):
             WHERE email = '%s';""" % email
     cursor.execute(query)
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def change_user_reputation(cursor, selected_user, number):
+    query = """
+            UPDATE users
+            SET reputation = reputation + '%d'
+            WHERE id = '%s';""" % (number, selected_user)
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def find_connected_user(cursor, object_id, target_table):
+    query = """
+            SELECT user_id FROM %s
+            WHERE id = '%s';""" % (target_table, object_id)
+    cursor.execute(query)
+    return cursor.fetchone()
+
