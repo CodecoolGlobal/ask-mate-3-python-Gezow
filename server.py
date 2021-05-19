@@ -273,13 +273,17 @@ def add_comment_to_answer(answer_id):
 
 @app.route("/search")
 def search_in_questions():
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else None
     if request.args.get("q"):
         relevant_questions = data_manager_question.filter_questions(request.args.get("q"))
         return render_template("searched_list.html",
                                questions=relevant_questions,
                                if_reversed="asc",
                                question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                                 for header in data_manager_universal.QUESTION_HEADER]
+                                                 for header in data_manager_universal.QUESTION_HEADER],
+                               logged_in=logged_in,
+                               username=username
                                )
 
 
