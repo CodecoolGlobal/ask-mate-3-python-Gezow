@@ -28,21 +28,20 @@
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_tag';">Add tag</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
     </div>
-        <div class="comment">
-        <hr><h4><strong>Comments:</strong></h4>
+        <h3><strong>Comments:</strong></h3>
         {% if question_comments %}
             {% for comment in question_comments %}
-                <p class="comment">{{comment['message']}}</p>
-                <p class="comment"><small>
-                Submission time: {{comment['submission_time']}}
-                    Edited: {{comment['edited_count']}} &nbsp;&nbsp;</small></p>
-                <p class="comment">
+                <div class="comment">
+                <p>{{comment['message']}}</p>
+                <p><small>Submission time: {{comment['submission_time']}}<br>
+                    Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
+                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button></p>
+                </div>
         {% endfor %}
         {% else %}
             No comments yet...
-        {% endif %}</div>
+        {% endif %}
         <h2><strong>Answers:</strong></h2>
           {% for answer in answers %}
             <p>{{answer['message']}}</p>
@@ -59,19 +58,21 @@
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
     </div>
-    <div class="comment">
-    <hr><h4><strong>Comments:</strong></h4>
+    <h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
             {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
-                {{ comment["message"] }}<br><br>
+                <div class="comment">
+                <br>{{ comment["message"] }}<br><br>
                 <small>Submission time: {{comment['submission_time']}}<br>
                     Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
-                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button><hr>
+                <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
+                </div>
             {% endfor %}
         {% else %}
             No comments yet...
-        {% endif %}</div>
+        {% endif %}
+              <hr>
           {% endfor %}
         <p><a class="post-button" href="/list">Back to questions...</a></p>
 {% endblock page_content %}

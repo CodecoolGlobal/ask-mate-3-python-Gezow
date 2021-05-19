@@ -1,6 +1,7 @@
 from flask import redirect
 import os
-import data_manager_universal
+from data_managers import data_manager_universal
+from data_managers import data_manager_answer
 import bcrypt
 
 
@@ -38,5 +39,6 @@ def redirect_after_comment_action(target_comment):
     if target_comment['question_id']:
         return redirect(f"/question/{str(target_comment['question_id'])}?voted=True")
     if target_comment['answer_id']:
-        target_question_id = data_manager_question.find_question_id_from_answer_id(target_comment['answer_id'])["question_id"]
+        target_question_id = data_manager_answer.find_question_id_from_answer_id(
+            target_comment['answer_id'])["question_id"]
         return redirect(f"/question/{str(target_question_id)}?voted=True")
