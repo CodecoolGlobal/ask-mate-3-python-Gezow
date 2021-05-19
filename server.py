@@ -273,13 +273,17 @@ def add_comment_to_answer(answer_id):
 
 @app.route("/search")
 def search_in_questions():
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else None
     if request.args.get("q"):
         relevant_questions = data_manager_question.filter_questions(request.args.get("q"))
         return render_template("searched_list.html",
                                questions=relevant_questions,
                                if_reversed="asc",
                                question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                                 for header in data_manager_universal.QUESTION_HEADER]
+                                                 for header in data_manager_universal.QUESTION_HEADER],
+                               logged_in=logged_in,
+                               username=username
                                )
 
 
@@ -386,6 +390,13 @@ def profile_page(user_id):
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else None
     target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
+    comments_of_user = [comment for comment in data_manager_universal.find_target(user_id, 'user_id', 'comment')]
+    user_comments = []
+    for comment in comments_of_user:
+        if comment["answer_id"]:
+            comment["question_id"] = data_manager_answer.find_question_id_from_answer_id(
+                comment["answer_id"])["question_id"]
+        user_comments.append(comment)
     return render_template("profile-page.html",
                            user=target_profile,
                            logged_in=logged_in,
@@ -402,8 +413,7 @@ def profile_page(user_id):
                                user_id, 'user_id', 'question')],
                            user_answers=[answer for answer in data_manager_universal.find_target(
                                user_id, 'user_id', 'answer')],
-                           user_comments=[comment for comment in data_manager_universal.find_target(
-                               user_id, 'user_id', 'comment')],
+                           user_comments=user_comments,
                            username=username
                            )
 
