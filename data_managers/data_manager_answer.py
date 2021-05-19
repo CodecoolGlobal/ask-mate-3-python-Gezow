@@ -37,7 +37,7 @@ def add_new_answer(
     query = """
             INSERT INTO answer
             (submission_time, vote_number, question_id, message, user_id)
-            VALUES ('%s', %s, %s, '%s');""" % (submission_time, vote_number, question_id, message, active_user_id)
+            VALUES ('%s', %s, %s, '%s', '%s');""" % (submission_time, vote_number, question_id, message, active_user_id)
     cursor.execute(query)
 
 

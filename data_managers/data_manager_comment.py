@@ -6,7 +6,7 @@ def add_comment(cursor, question_id, answer_id, message, submission_time, edited
     query = """
             INSERT INTO comment
             (question_id, answer_id, message, submission_time, edited_count, user_id)
-            VALUES (%s, %s, '%s','%s',%s);
+            VALUES (%s, %s, '%s','%s',%s, '%s');
             """ % (question_id, answer_id, message, submission_time, edited_count, active_user_id)
     cursor.execute(query)
 
