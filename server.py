@@ -87,7 +87,7 @@ def add_question():
         username = session["username"] if logged_in else None
         if request.method == "POST":
             submission_time = str(datetime.now()).split(".")[0]
-            title = request.form['title']
+            title = request.form['title'].replace("'", "`")
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
             data_manager_question.add_new_question(submission_time=submission_time,
@@ -121,7 +121,7 @@ def edit_question(question_id):
                                 "new_id": question_id,
                                 "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
                                 "else_filename": target_question['image']}, 'question')
-            title = request.form['title']
+            title = request.form['title'].replace("'", "`")
             message = request.form['message'].replace("'", "`")
             data_manager_question.edit_question(question_id, title, message)
             return redirect("/question/" + str(target_question['id']) + "?voted=True")
@@ -355,7 +355,7 @@ def registration():
                                                  'image': 'null',
                                                  'registration_date': str(datetime.now()).split(".")[0]}
                                                 )
-                new_profile = data_manager_users.find_profile_id(request.form["email"], 'email')
+                new_profile = data_manager_users.find_profile_id(request.form["email"].replace("'", "`"), 'email')
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_profile["id"]),
                                     "directory": data_manager_universal.PROFILE_IMG_DIR_PATH,
@@ -424,8 +424,8 @@ def login():
     logged_in = True if "username" in session else False
     if not logged_in:
         if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
+            email = request.form['email'].replace("'", "`")
+            password = request.form['password'].replace("'", "`")
             user_emails = [email["email"] for email in data_manager_users.get_user_info('email')]
             username = data_manager_users.find_user_name(email)['username']
             user_password = data_manager_users.find_user_password(email)['password']
