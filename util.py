@@ -42,3 +42,11 @@ def redirect_after_comment_action(target_comment):
         target_question_id = data_manager_answer.find_question_id_from_answer_id(
             target_comment['answer_id'])["question_id"]
         return redirect(f"/question/{str(target_question_id)}?voted=True")
+
+
+def find_error_code(error, pgcode):
+    if hasattr(error, str(pgcode)):
+        error_code = error.pgcode
+    else:
+        error_code = "Invalid ID!"
+    return error_code
