@@ -38,9 +38,9 @@ def get_ordered_users(cursor, filter_type, order):
                     username,
                     email,
                     reputation,
-                    (select count(*) from question where user_id=users.id) as question_count,
-                    (select count(*) from answer where user_id=users.id) as answer_count,
-                    (select count(*) from comment where user_id=users.id) as comment_count,
+                    (select count(*) from questions where user_id=users.id) as question_count,
+                    (select count(*) from answers where user_id=users.id) as answer_count,
+                    (select count(*) from comments where user_id=users.id) as comment_count,
                     image,
                     registration_date
             FROM users

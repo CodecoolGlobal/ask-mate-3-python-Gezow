@@ -4,7 +4,7 @@ import database_common
 @database_common.connection_handler
 def find_answers_to_question(cursor, question_id):
     query = """
-            SELECT * FROM answer
+            SELECT * FROM answers
             WHERE question_id = '%s'
             ORDER BY vote_number;""" % question_id
     cursor.execute(query)
@@ -14,7 +14,7 @@ def find_answers_to_question(cursor, question_id):
 @database_common.connection_handler
 def find_question_id_from_answer_id(cursor, answer_id):
     query = """
-            SELECT question_id FROM answer
+            SELECT question_id FROM answers
             WHERE id = '%s'
             """ % answer_id
     cursor.execute(query)
@@ -24,7 +24,7 @@ def find_question_id_from_answer_id(cursor, answer_id):
 @database_common.connection_handler
 def find_answer_id(cursor, submission_time, message):
     query = """
-            SELECT id FROM answer
+            SELECT id FROM answers
             WHERE submission_time = '%s'
             AND message = '%s'""" % (submission_time, message)
     cursor.execute(query)
@@ -35,7 +35,7 @@ def find_answer_id(cursor, submission_time, message):
 def add_new_answer(
         cursor, submission_time, vote_number, question_id, message, active_user_id):
     query = """
-            INSERT INTO answer
+            INSERT INTO answers
             (submission_time, vote_number, question_id, message, user_id)
             VALUES ('%s', %s, %s, '%s', '%s');""" % (submission_time, vote_number, question_id, message, active_user_id)
     cursor.execute(query)
@@ -44,7 +44,7 @@ def add_new_answer(
 @database_common.connection_handler
 def find_answer_by_question_id(cursor, question_id):
     query = """
-            SELECT * FROM answer
+            SELECT * FROM answers
             WHERE question_id = '%s';
             """ % question_id
     cursor.execute(query)
@@ -54,7 +54,7 @@ def find_answer_by_question_id(cursor, question_id):
 @database_common.connection_handler
 def delete_answers_by_question_id(cursor, question_id):
     query = """
-            DELETE FROM answer
+            DELETE FROM answers
             WHERE question_id = '%s';
             """ % question_id
     cursor.execute(query)
@@ -63,7 +63,7 @@ def delete_answers_by_question_id(cursor, question_id):
 @database_common.connection_handler
 def edit_answer(cursor, answer_id, message):
     query = """
-            UPDATE answer 
+            UPDATE answers 
             SET message = '%s'
             WHERE id = '%s'""" % (message, answer_id)
     cursor.execute(query)
@@ -72,7 +72,7 @@ def edit_answer(cursor, answer_id, message):
 @database_common.connection_handler
 def update_accept_answer(cursor, question_id, accepted):
     query = """
-            UPDATE answer 
+            UPDATE answers 
             SET accepted = '%s'
             WHERE question_id = '%s'""" % (accepted, question_id)
     cursor.execute(query)
