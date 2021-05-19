@@ -285,19 +285,29 @@ def edit_answer(answer_id):
             message = request.form['message'].replace("'", "`")
             data_manager_answer.edit_answer(answer_id, message)
             return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
-        return render_template("edit_a.html", a_or_c=target_answer)
+        return render_template("edit_a.html",
+                               a_or_c=target_answer,
+                               logged_in=logged_in,
+                               username=username)
     return redirect(url_for("login"))
 
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
 def edit_comment(comment_id):
-    target_comment = data_manager_comment.find_comment(comment_id)[0]
-    if request.method == "POST":
-        data_manager_comment.update_edited_count(comment_id)
-        message = request.form['message'].replace("'", "`")
-        data_manager_comment.edit_comment(comment_id, message)
-        return util.redirect_after_comment_action(target_comment)
-    return render_template("edit_c.html", a_or_c=target_comment)
+    logged_in = True if "username" in session else False
+    if logged_in:
+        username = session["username"] if logged_in else None
+        target_comment = data_manager_comment.find_comment(comment_id)[0]
+        if request.method == "POST":
+            data_manager_comment.update_edited_count(comment_id)
+            message = request.form['message'].replace("'", "`")
+            data_manager_comment.edit_comment(comment_id, message)
+            return util.redirect_after_comment_action(target_comment)
+        return render_template("edit_c.html",
+                               a_or_c=target_comment,
+                               logged_in=logged_in,
+                               username=username)
+    return redirect(url_for("login"))
 
 
 @app.route("/comment/<comment_id>/delete")
