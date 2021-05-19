@@ -260,7 +260,7 @@ table.a {
     color: #F68A07FF;
 }
 
-#display-list td, #display-list th {
+#display-list td, #display-list th, #display-list image {
   border: 1px solid #ddd;
   padding: 8px;
 }
