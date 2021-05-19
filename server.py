@@ -3,12 +3,8 @@ from flask import Flask, render_template, redirect, request, session, escape
 from datetime import datetime
 import os
 
-import data_manager_universal
-import data_manager_question
-import data_manager_answer
-import data_manager_tag
-import data_manager_comment
-import data_manager_users
+from data_managers import data_manager_universal, data_manager_question, data_manager_answer, data_manager_tag, \
+    data_manager_comment, data_manager_users
 import util
 
 
