@@ -277,7 +277,8 @@ def registration():
                                 [username["username"] for username in data_manager_users.get_user_info('username')]
             if request.form['email'] not in user_emails and request.form['username'] not in user_names:
                 data_manager_users.add_new_user({'email': request.form["email"].replace("'", "`"),
-                                                 'password': util.hash_password(request.form["password"]),
+                                                 'password': util.hash_password(
+                                                     request.form["password"].replace("'", "`")),
                                                  'username': request.form["username"].replace("'", "`"),
                                                  'reputation': 0,
                                                  'image': 'null',
