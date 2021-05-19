@@ -4,7 +4,7 @@ import database_common
 @database_common.connection_handler
 def get_ordered_questions(cursor, filter_type, order):
     query = """
-            SELECT * FROM question
+            SELECT * FROM questions
             ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
@@ -13,7 +13,7 @@ def get_ordered_questions(cursor, filter_type, order):
 @database_common.connection_handler
 def update_view_number(cursor, question_id):
     query = """
-            UPDATE question
+            UPDATE questions
             SET view_number = view_number + 1
             WHERE id = '%s';""" % question_id
     cursor.execute(query)
@@ -22,7 +22,7 @@ def update_view_number(cursor, question_id):
 @database_common.connection_handler
 def add_new_question(cursor, submission_time, view_number, vote_number, title, message, active_user_id):
     query = """
-            INSERT INTO question
+            INSERT INTO questions
             (submission_time, view_number, vote_number, title, message, user_id)
             VALUES ('%s', %s, %s, '%s', '%s', '%s');""" % (submission_time, view_number,
                                                            vote_number, title, message, active_user_id)
@@ -32,7 +32,7 @@ def add_new_question(cursor, submission_time, view_number, vote_number, title, m
 @database_common.connection_handler
 def find_question_id(cursor, submission_time, title):
     query = """
-            SELECT id FROM question
+            SELECT id FROM questions
             WHERE submission_time = '%s'
             AND title = '%s'""" % (submission_time, title)
     cursor.execute(query)
@@ -42,7 +42,7 @@ def find_question_id(cursor, submission_time, title):
 @database_common.connection_handler
 def edit_question(cursor, question_id, title, message):
     query = """
-            UPDATE question 
+            UPDATE questions 
             SET title = '%s', message = '%s'
             WHERE id = '%s'""" % (title, message, question_id)
     cursor.execute(query)
@@ -51,14 +51,14 @@ def edit_question(cursor, question_id, title, message):
 @database_common.connection_handler
 def filter_questions(cursor, search_field_text):
     query = """
-            SELECT question.id, question.submission_time, question.view_number, question.vote_number, question.title,
-            question.message, question.image, question.user_id
-            FROM question
-            JOIN answer ON question.id = answer.question_id
-            WHERE question.message ILIKE '%s'
-            OR question.title ILIKE '%s'
-            OR answer.message ILIKE '%s'
-            GROUP BY question.id;""" % ('%' + search_field_text + '%',
+            SELECT questions.id, questions.submission_time, questions.view_number, questions.vote_number, questions.title,
+            questions.message, questions.image, questions.user_id
+            FROM questions
+            JOIN answers ON questions.id = answers.question_id
+            WHERE questions.message ILIKE '%s'
+            OR questions.title ILIKE '%s'
+            OR answers.message ILIKE '%s'
+            GROUP BY questions.id;""" % ('%' + search_field_text + '%',
                                         '%' + search_field_text + '%',
                                         '%' + search_field_text + '%'
                                         )
