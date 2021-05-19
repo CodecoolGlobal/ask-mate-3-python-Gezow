@@ -37,3 +37,10 @@ def update_edited_count(cursor, comment_id):
             SET edited_count = CASE WHEN edited_count IS null THEN 1 ELSE edited_count + 1 END
             WHERE id = '%s'""" % comment_id
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def delete_comments(cursor, delete_by, equals_to):
+    query = """DELETE FROM comment
+            WHERE %s = '%s';""" % (delete_by, equals_to)
+    cursor.execute(query)

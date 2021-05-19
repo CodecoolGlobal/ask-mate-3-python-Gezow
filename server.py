@@ -205,7 +205,10 @@ def add_answer(question_id):
 def delete_question(question_id):
     target_answers = data_manager_answer.find_answer_by_question_id(question_id)
     target_question = data_manager_universal.find_target(question_id, 'id', 'question')[0]
+    data_manager_comment.delete_comments("question_id", question_id)
+    data_manager_tag.delete_tags(question_id)
     for answer in target_answers:
+        data_manager_comment.delete_comments("answer_id", answer["id"])
         if answer['image']:
             os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
     data_manager_answer.delete_answers_by_question_id(question_id)
