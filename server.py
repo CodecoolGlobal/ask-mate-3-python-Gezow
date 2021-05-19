@@ -66,7 +66,7 @@ def add_question():
         submission_time = str(datetime.now()).split(".")[0]
         title = request.form['title']
         message = request.form['message'].replace("'", "`")
-        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
+        active_user_id = escape(session['user_id'])
         data_manager_question.add_new_question(submission_time=submission_time,
                                                view_number=0,
                                                vote_number=0,
@@ -129,7 +129,7 @@ def add_answer(question_id):
     if request.method == "POST":
         submission_time = str(datetime.now()).split(".")[0]
         message = request.form['message'].replace("'", "`")
-        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
+        active_user_id = escape(session['user_id'])
         data_manager_answer.add_new_answer(submission_time=submission_time,
                                            vote_number=0,
                                            question_id=question_id,
@@ -171,7 +171,7 @@ def delete_answer(answer_id):
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
 def new_comment_to_question(question_id):
     if request.method == 'POST':
-        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
+        active_user_id = escape(session['user_id'])
         submission_time = str(datetime.now()).split(".")[0]
         data_manager_comment.add_comment(question_id=question_id,
                                          answer_id='null',
@@ -187,7 +187,7 @@ def new_comment_to_question(question_id):
 def add_comment_to_answer(answer_id):
     q_id = data_manager_answer.find_question_id_from_answer_id(answer_id)['question_id']
     if request.method == 'POST':
-        active_user_id = data_manager_users.find_profile_id(escape(session['username']), 'username')['id']
+        active_user_id = escape(session['user_id'])
         submission_time = str(datetime.now()).split(".")[0]
         data_manager_comment.add_comment(question_id='null',
                                          answer_id=answer_id,
