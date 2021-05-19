@@ -12,7 +12,11 @@
       <div class="header">
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-              <div id="hd-middle-l"><h2 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h2></div>
+              {% if logged_in %}
+                <div id="hd-middle-l"><h2 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h2></div>
+              {% else %}
+
+              {% endif %}
               <div id="hd-middle-r"><h2 class="header-button"><a class="button" href="/list">Go to questions!</a></h2></div>
               <div id="hd-right"><h2 class="header-button"><a class="button" href="/users">List users!</a></h2></div>
               <div id="hd-right">
@@ -22,8 +26,9 @@
                       <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
                   </form>
               </div>
+              {% block login_button %}
               <div>
-                      {% if username %}
+                      {% if logged_in %}
                           <div id="hd-last-name">
                           <h3>Logged in as: {{ username }}</h3>
                           <h2 class="button"><a class="button" href="/logout">Log out</a></h2></div>
@@ -32,6 +37,7 @@
                       {% endif %}
 
               </div>
+              {% endblock %}
 
           </div>
       </div>
