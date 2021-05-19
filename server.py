@@ -468,6 +468,30 @@ def login():
                            username=session["username"] if logged_in else None)
 
 
+@app.route('/tags')
+def tags():
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else None
+    if request.args.get("order_by") and request.args.get("order_direction") == "desc":
+        sorted_tags = data_manager_tag.get_ordered_tags(request.args.get("order_by"), 'DESC')
+        order = "asc"
+    elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
+        sorted_tags = data_manager_tag.get_ordered_tags(request.args.get("order_by"), 'ASC')
+        order = "desc"
+    else:
+        order = "asc"
+        sorted_tags = data_manager_tag.get_ordered_tags('used', 'DESC')
+    return render_template("tags_list.html",
+                           tags=sorted_tags,
+                           if_reversed=order,
+                           tag_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                        for header in data_manager_universal.TAG_HEADER],
+                           logged_in=logged_in,
+                           username=username
+                           )
+    pass
+
+
 @app.route('/logout')
 def logout():
     for credential in ["username", "user_id"]:

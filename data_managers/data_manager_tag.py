@@ -57,3 +57,14 @@ def delete_tag(cursor, question_id, tag_id):
             AND tag_id = '%s'
             """ % (question_id, tag_id)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def get_ordered_tags(cursor, filter_type, order):
+    query = """
+            SELECT name, (select count(*) from question_tag where tag.id = question_tag.tag_id) as used
+            FROM tag
+            ORDER BY %s %s;""" % (filter_type, order)
+    cursor.execute(query)
+    return cursor.fetchall()
+

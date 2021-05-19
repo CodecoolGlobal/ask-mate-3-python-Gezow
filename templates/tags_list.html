@@ -1,0 +1,29 @@
+{% extends "list.html" %}
+{% block title %}Ask Mate - Tags list{% endblock title %}
+{% block page_content %}
+    {% block page_title %}<h1 class="page-title">All tags</h1>{% endblock %}
+    <div class="table">
+          <table id="display-list">
+              {% block table_header %}
+              <tr>
+                  {% for header in tag_headers %}
+                    {% if header == 'Id' or header == 'Image' %}
+                        <th align="center"> {{header}}</th>
+                    {% else %}
+                        <th id="hover-hd" align="center">
+                            <a href="/tags?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a>
+                        </th>
+                    {% endif %}
+                  {% endfor %}
+              </tr>
+              {% endblock table_header %}
+            {% for tag in tags %}
+              <tr>
+                {% for key in tag.keys() %}
+                    <td align="center">{{tag[key]}}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </table>
+    </div>
+{% endblock page_content %}
