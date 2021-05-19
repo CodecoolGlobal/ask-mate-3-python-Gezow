@@ -58,8 +58,18 @@
             </p>
             <p><small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small></p>
         {% if logged_in %}
-          <div class="buttons">
-            <small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small><br><br>
+        <div class="buttons">
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>&nbsp;&nbsp;
+                {% if answer["user_id"] == user_id %}
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>
+                {% endif %}
+          </div>
+        {% endif %}
+        {% if question["user_id"] == user_id %}
+            <div class="buttons"></div>
             <form action="/question/{{ question_id }}/accept_answer" method="post">
             {% if answer["accepted"] %}
                 <input type="checkbox" id="accept" name="accept" value="rejected">
@@ -70,18 +80,7 @@
             {%  endif %}
                <input class="smaller-button" type="submit" value="Submit">
             </form>
-
-
-    <div class="buttons">
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>&nbsp;&nbsp;
-                {% if answer["user_id"] == user_id %}
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>
-                {% endif %}
-          </div>
-        {% endif %}
+            {% endif %}
     <h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
             {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
