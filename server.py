@@ -386,6 +386,13 @@ def profile_page(user_id):
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else None
     target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
+    comments_of_user = [comment for comment in data_manager_universal.find_target(user_id, 'user_id', 'comment')]
+    user_comments = []
+    for comment in comments_of_user:
+        if comment["answer_id"]:
+            comment["question_id"] = data_manager_answer.find_question_id_from_answer_id(
+                comment["answer_id"])["question_id"]
+        user_comments.append(comment)
     return render_template("profile-page.html",
                            user=target_profile,
                            logged_in=logged_in,
@@ -402,8 +409,7 @@ def profile_page(user_id):
                                user_id, 'user_id', 'question')],
                            user_answers=[answer for answer in data_manager_universal.find_target(
                                user_id, 'user_id', 'answer')],
-                           user_comments=[comment for comment in data_manager_universal.find_target(
-                               user_id, 'user_id', 'comment')],
+                           user_comments=user_comments,
                            username=username
                            )
 
