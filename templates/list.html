@@ -12,9 +12,14 @@
       <div class="header">
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-              <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
+              {% if logged_in %}
+                <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
+              {% else %}
+
+              {% endif %}
               <div id="hd-middle-r"><h3 class="header-button"><a class="button" href="/list">Go to questions!</a></h3></div>
               <div id="hd-right"><h3 class="header-button"><a class="button" href="/users">List users!</a></h3></div>
+              <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
               <div id="hd-right">
                   <form action="/search">
                       <label for="search_bar"></label>
@@ -22,16 +27,18 @@
                       <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
                   </form>
               </div>
+              {% block login_button %}
               <div>
-                      {% if username %}
+                      {% if logged_in %}
                           <div id="hd-last-name">
-                          <h3>{{ username }}</h3>
+                          <h3>Logged in as: {{ username }}</h3>
                           <h3 class="button"><a class="button" href="/logout">Log out</a></h3></div>
                       {% else %}
                           <div id="hd-last"><h3 class="button"><a class="button" href="/login">Login</a></h3></div>
                       {% endif %}
 
               </div>
+              {% endblock %}
 
           </div>
       </div>
@@ -67,7 +74,7 @@
                 {% else %}
                     <td align="center">{{question[key]}}</td>
                 {% endif %}
-                {% endfor %}
+            {% endfor %}
               </tr>
             {% endfor %}
           </table>
