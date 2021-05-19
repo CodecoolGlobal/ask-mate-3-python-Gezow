@@ -107,7 +107,7 @@ def add_question():
                                logged_in=logged_in,
                                username=username
                                )
-    return redirect("login")
+    return redirect(url_for("login"))
 
 
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
@@ -130,7 +130,7 @@ def edit_question(question_id):
                                logged_in=logged_in,
                                username=username
                                )
-    return redirect("login")
+    return redirect(url_for("login"))
 
 
 @app.route("/question/<question_id>/vote_up")
@@ -185,7 +185,7 @@ def add_answer(question_id):
                                logged_in=logged_in,
                                username=username
                                )
-    return redirect("login")
+    return redirect(url_for("login"))
 
 
 @app.route('/question/<question_id>/delete_question')
@@ -231,7 +231,7 @@ def new_comment_to_question(question_id):
                                logged_in=logged_in,
                                username=username
                                )
-    return redirect("/login")
+    return redirect(url_for("login"))
 
 
 @app.route("/answer/<answer_id>/new_comment", methods=["GET", "POST"])
@@ -256,7 +256,7 @@ def add_comment_to_answer(answer_id):
                                logged_in=logged_in,
                                username=username
                                )
-    return redirect("login")
+    return redirect(url_for("login"))
 
 
 @app.route("/search")
@@ -273,16 +273,20 @@ def search_in_questions():
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
 def edit_answer(answer_id):
-    target_answer = data_manager_universal.find_target(answer_id, 'id', 'answer')[0]
-    if request.method == "POST":
-        util.handle_images({"request_files": request.files,
-                            "new_id": str(target_answer["id"]),
-                            "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
-                            "else_filename": target_answer["image"]}, 'answer')
-        message = request.form['message'].replace("'", "`")
-        data_manager_answer.edit_answer(answer_id, message)
-        return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
-    return render_template("edit_a.html", a_or_c=target_answer)
+    logged_in = True if "username" in session else False
+    if logged_in:
+        username = session["username"] if logged_in else None
+        target_answer = data_manager_universal.find_target(answer_id, 'id', 'answer')[0]
+        if request.method == "POST":
+            util.handle_images({"request_files": request.files,
+                                "new_id": str(target_answer["id"]),
+                                "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
+                                "else_filename": target_answer["image"]}, 'answer')
+            message = request.form['message'].replace("'", "`")
+            data_manager_answer.edit_answer(answer_id, message)
+            return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
+        return render_template("edit_a.html", a_or_c=target_answer)
+    return redirect(url_for("login"))
 
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
@@ -349,12 +353,16 @@ def registration():
                 return redirect("/user/" + str(new_profile["id"]))
             return render_template("error.html", error_code='Email address or user name already in use!')
         return render_template("sign-up.html")
-    return render_template("error.html", error_code='You are already signed up and logged in!')
+    return render_template("error.html",
+                           error_code='You are already signed up and logged in!',
+                           logged_in=True,
+                           username=session["username"])
 
 
 @app.route("/user/<user_id>")
 def profile_page(user_id):
     logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else None
     target_profile = data_manager_universal.find_target(user_id, "id", "users")[0]
     return render_template("profile-page.html",
                            user=target_profile,
@@ -373,7 +381,8 @@ def profile_page(user_id):
                            user_answers=[answer for answer in data_manager_universal.find_target(
                                user_id, 'user_id', 'answer')],
                            user_comments=[comment for comment in data_manager_universal.find_target(
-                               user_id, 'user_id', 'comment')]
+                               user_id, 'user_id', 'comment')],
+                           username=username
                            )
 
 
@@ -402,20 +411,28 @@ def users():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user_emails = [email["email"] for email in data_manager_users.get_user_info('email')]
-        username = data_manager_users.find_user_name(email)['username']
-        user_password = data_manager_users.find_user_password(email)['password']
-        verified = util.verify_password(password, user_password)
-        if email not in user_emails or not verified:
-            return render_template('login.html', verified=verified)
-        else:
-            session['username'] = username
-            session['user_id'] = data_manager_users.find_profile_id(email, 'email')['id']
-            return redirect("/")
-    return render_template("login.html", verified=True)
+    logged_in = True if "username" in session else False
+    if not logged_in:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
+            user_emails = [email["email"] for email in data_manager_users.get_user_info('email')]
+            username = data_manager_users.find_user_name(email)['username']
+            user_password = data_manager_users.find_user_password(email)['password']
+            verified = util.verify_password(password, user_password)
+            if email not in user_emails or not verified:
+                return render_template('login.html', verified=verified)
+            else:
+                session['username'] = username
+                session['user_id'] = data_manager_users.find_profile_id(email, 'email')['id']
+                return redirect("/")
+        return render_template("login.html",
+                               verified=True,
+                               logged_in=logged_in)
+    return render_template("error.html",
+                           error_code='You are already signed up and logged in!',
+                           logged_in=logged_in,
+                           username=session["username"] if logged_in else None)
 
 
 @app.route('/logout')
