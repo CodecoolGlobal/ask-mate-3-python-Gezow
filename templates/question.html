@@ -50,7 +50,11 @@
         {% endif %}
         <h2><strong>Answers:</strong></h2>
           {% for answer in answers %}
-            <p>{{answer['message']}}</p>
+            <p>
+                {% if answer["accepted"] %}
+                <span>&#10003;</span>
+                {%  endif %}
+                {{answer['message']}}</p>
             <p>
                 {% if answer["image"] %}
                     <img src="{{ url_for("static", filename="/images/answer/" + answer["image"]) }}" alt="User image." width="290">
@@ -78,7 +82,8 @@
                 <input type="checkbox" id="accept" name="accept" value="accepted">
                 <label for="accept"> Accept answer</label>
             {%  endif %}
-               <input class="smaller-button" type="submit" value="Submit">
+                <input type="hidden" name="answer-id" value="{{ answer['id'] }}">
+                <input class="smaller-button" type="submit" value="Submit">
             </form>
             {% endif %}
     <h4><strong>Comments:</strong></h4>
