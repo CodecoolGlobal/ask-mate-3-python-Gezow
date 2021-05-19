@@ -24,10 +24,12 @@
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>&nbsp;&nbsp;
+            {% if question["user_id"] == user_id %}
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_tag';">Add tag</button>&nbsp;&nbsp;
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>
+            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_tag';">Add tag</button>
+            {% endif %}
     </div>
     {% endif %}
         <h3><strong>Comments:</strong></h3>
@@ -37,7 +39,7 @@
                 <p>{{comment['message']}}</p>
                 <p><small>Submission time: {{comment['submission_time']}}<br>
                     Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
-                {% if logged_in %}
+                {% if logged_in and comment["user_id"] == user_id %}
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button></p>
                 {% endif %}
@@ -59,9 +61,11 @@
           <div class="buttons">
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>&nbsp;&nbsp;
+                {% if answer["user_id"] == user_id %}
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>&nbsp;&nbsp;
-                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/new_comment';">New comment</button>
+                <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/edit';">Edit answer</button>
+                {% endif %}
           </div>
         {% endif %}
     <h4><strong>Comments:</strong></h4>
@@ -71,16 +75,17 @@
                 <br>{{ comment["message"] }}<br><br>
                 <small>Submission time: {{comment['submission_time']}}<br>
                     Edited: {{comment['edited_count']}}</small>&nbsp;&nbsp;
-                {% if logged_in %}
+                {% if logged_in and comment["user_id"] == user_id %}
                 <button class="smaller-button" onclick="window.location.href='/comment/{{ comment['id'] }}/edit';">Edit comment</button>&nbsp;&nbsp;
                 <button class="trash-button"><i class="fa fa-trash" onclick="window.location.href='/comment/{{ comment['id'] }}/delete';"></i></button>
-                </div>
                 {% endif %}
+                </div>
             {% endfor %}
         {% else %}
             No comments yet...
         {% endif %}
-          {% endfor %}
+              <hr>
+      {% endfor %}
         <br><br><p><a class="post-button" href="/list">Back to questions...</a></p>
 {% endblock page_content %}
 </div>

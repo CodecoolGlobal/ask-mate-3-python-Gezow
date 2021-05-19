@@ -70,7 +70,8 @@ def display_question(question_id):
                                data_manager=data_manager_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username
+                               username=username,
+                               user_id=session["user_id"]
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
