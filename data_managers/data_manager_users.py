@@ -34,7 +34,16 @@ def find_profile_id(cursor, search_parameter, parameter_type):
 @database_common.connection_handler
 def get_ordered_users(cursor, filter_type, order):
     query = """
-            SELECT id, username, email, reputation, image, registration_date FROM users
+            SELECT  id,
+                    username,
+                    email,
+                    reputation,
+                    (select count(*) from question where user_id=users.id) as question_count,
+                    (select count(*) from answer where user_id=users.id) as answer_count,
+                    (select count(*) from comment where user_id=users.id) as comment_count,
+                    image,
+                    registration_date
+            FROM users
             ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
