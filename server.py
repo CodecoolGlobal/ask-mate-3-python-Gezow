@@ -318,23 +318,19 @@ def users():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
-        email = request.form['username']
+        email = request.form['email']
         password = request.form['password']
         user_emails = [email["email"] for email in data_manager_users.get_user_info('email')]
-        username = 'big_daddy'
-        #username = data_manager_users.find_user_name(email)
-        #print(username)
-        #user_password = data_manager_users.find_user_password(email)
-        hashed = util.hash_password('XYZ')
-        verified = util.verify_password(password, hashed)
-        #print(user_password)
+        username = data_manager_users.find_user_name(email)['username']
+        user_password = data_manager_users.find_user_password(email)['password']
+        verified = util.verify_password(password, user_password)
         if email not in user_emails or not verified:
-            not_verified = True
-            return redirect(url_for('login', not_verified=not_verified))
+            return render_template('login.html', verified=verified)
         else:
-            session['username'] = request.form['username']
+            session['username'] = username
+            session['user_id'] = data_manager_users.find_profile_id(email, 'email')['id']
             return render_template("list.html", username=username,)
-    return render_template("login.html")
+    return render_template("login.html", verified='first')
 
 
 @app.route('/logout')
