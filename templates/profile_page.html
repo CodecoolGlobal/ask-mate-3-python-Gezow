@@ -62,7 +62,19 @@
                             {% if key == 'id' %}
                                 <td align="center"><a id="blue-link" href="/question/{{ answer['question_id'] }}">{{answer['id']}}</a></td>
                             {% elif key == 'image' %}
-                                <td align="center"><img src="{{ url_for("static", filename="/images/answer/" + answer[key]) }}" alt="User image." width="100"></td>
+                                {% if answer["image"] %}
+                                    <td align="center"><img src="{{ url_for("static", filename="/images/answer/" + answer[key]) }}" alt="User image." width="100"></td>
+                                {% else %}
+                                    <td>No image added...</td>
+                                {% endif %}
+                            {% elif key == 'accepted' %}
+                                {% if answer['accepted'] == False %}
+                                    <td><img src="{{ url_for("static", filename="images/x_icon.png") }}"
+                                             height="50"></td>
+                                {% else %}
+                                    <td><img src="{{ url_for("static", filename="images/swoosh.png") }}"
+                                             height="50"></td>
+                                {% endif %}
                             {% else %}
                                 <td>{{ answer[key] }}</td>
                             {% endif %}
