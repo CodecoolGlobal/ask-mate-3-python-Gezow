@@ -67,3 +67,12 @@ def edit_answer(cursor, answer_id, message):
             SET message = '%s'
             WHERE id = '%s'""" % (message, answer_id)
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def update_accept_answer(cursor, question_id, accepted):
+    query = """
+            UPDATE answer 
+            SET accepted = '%s'
+            WHERE question_id = '%s'""" % (accepted, question_id)
+    cursor.execute(query)
