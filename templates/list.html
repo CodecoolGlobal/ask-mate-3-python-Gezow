@@ -12,9 +12,9 @@
       <div class="header">
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-              <div id="hd-middle-l"><h2 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h2></div>
-              <div id="hd-middle-r"><h2 class="header-button"><a class="button" href="/list">Go to questions!</a></h2></div>
-              <div id="hd-right"><h2 class="header-button"><a class="button" href="/users">List users!</a></h2></div>
+              <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
+              <div id="hd-middle-r"><h3 class="header-button"><a class="button" href="/list">Go to questions!</a></h3></div>
+              <div id="hd-right"><h3 class="header-button"><a class="button" href="/users">List users!</a></h3></div>
               <div id="hd-right">
                   <form action="/search">
                       <label for="search_bar"></label>
@@ -26,9 +26,9 @@
                       {% if username %}
                           <div id="hd-last-name">
                           <h3>{{ username }}</h3>
-                          <h2 class="button"><a class="button" href="/logout">Log out</a></h2></div>
+                          <h3 class="button"><a class="button" href="/logout">Log out</a></h3></div>
                       {% else %}
-                          <div id="hd-last"><h2 class="button"><a class="button" href="/login">Login</a></h2></div>
+                          <div id="hd-last"><h3 class="button"><a class="button" href="/login">Login</a></h3></div>
                       {% endif %}
 
               </div>
