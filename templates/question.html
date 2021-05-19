@@ -57,6 +57,20 @@
             <p><small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small></p>
         {% if logged_in %}
           <div class="buttons">
+            <small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small><br><br>
+            <form action="/question/{{ question_id }}/accept_answer" method="post">
+            {% if answer["accepted"] %}
+                <input type="checkbox" id="accept" name="accept" value="rejected">
+                <label for="accept"> Reject answer</label>
+            {%  else %}
+                <input type="checkbox" id="accept" name="accept" value="accepted">
+                <label for="accept"> Accept answer</label>
+            {%  endif %}
+               <input class="smaller-button" type="submit" value="Submit">
+            </form>
+
+
+    <div class="buttons">
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_up';">Vote up</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/vote_down';">Vote down</button>&nbsp;&nbsp;
                 <button class="small-button" onclick="window.location.href='/answer/{{ answer['id'] }}/delete_answer';">Delete this answer</button>&nbsp;&nbsp;
