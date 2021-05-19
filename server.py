@@ -11,14 +11,16 @@ import util
 app = Flask(__name__)
 app.secret_key = b'secretkey'
 
+
 @app.route("/")
 def main():
-    last_five_question = data_manager_question.get_ordered_questions("submission_time", 'DESC')[:5]
     return render_template("searched_list.html",
-                           questions=last_five_question,
+                           questions=data_manager_question.get_ordered_questions("submission_time", 'DESC')[:5],
                            if_reversed='asc',
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                             for header in data_manager_universal.QUESTION_HEADER])
+                                             for header in data_manager_universal.QUESTION_HEADER],
+                           logged_in=True if "username" in session else False
+                           )
 
 
 @app.route("/list")
@@ -335,8 +337,8 @@ def users():
                            users=sorted_users,
                            if_reversed=order,
                            user_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                         for header in data_manager_universal.USER_HEADER]
-                           )
+                                         for header in data_manager_universal.USER_HEADER])
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -352,8 +354,8 @@ def login():
         else:
             session['username'] = username
             session['user_id'] = data_manager_users.find_profile_id(email, 'email')['id']
-            return render_template("list.html", username=username,)
-    return render_template("login.html", verified='first')
+            return redirect("/")
+    return render_template("login.html", verified=True)
 
 
 @app.route('/logout')
