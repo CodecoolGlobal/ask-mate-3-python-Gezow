@@ -470,7 +470,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    for credential in ["username", "user_id"]:
+      session.pop(credential, None)
     return redirect(url_for('login'))
 
 
