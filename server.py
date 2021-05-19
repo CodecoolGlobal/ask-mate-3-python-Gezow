@@ -367,12 +367,8 @@ def accept_answer(question_id):
     if request.method == 'POST':
         accepted = ('accepted' == request.form['accept'])
         print(accepted)
-        if accepted:
-            data_manager_answer.update_accept_answer(question_id, accepted)
+        data_manager_answer.update_accept_answer(question_id, accepted)
         return redirect(request.referrer)
-    return redirect(request.referrer)
-
-
 
 
 if __name__ == "__main__":

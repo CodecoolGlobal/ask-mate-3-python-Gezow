@@ -52,12 +52,12 @@
             </p>
             <small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small><br><br>
             <form action="/question/{{ question_id }}/accept_answer" method="post">
-            {%  if not accepted %}
-               <input type="checkbox" id="accept" name="accept" value="accepted">
-               <label for="accept"> Accept answer</label>
+            {% if answer["accepted"] %}
+                <input type="checkbox" id="accept" name="accept" value="rejected">
+                <label for="accept"> Reject answer</label>
             {%  else %}
-                <input type="checkbox" id="reject" name="reject" value="rejected">
-               <label for="reject"> Reject answer</label>
+                <input type="checkbox" id="accept" name="accept" value="accepted">
+                <label for="accept"> Accept answer</label>
             {%  endif %}
                <input class="smaller-button" type="submit" value="Submit">
             </form>
