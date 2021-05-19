@@ -362,6 +362,19 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.route('/question/<question_id>/accept_answer', methods=['GET', 'POST'])
+def accept_answer(question_id):
+    if request.method == 'POST':
+        accepted = ('accepted' == request.form['accept'])
+        print(accepted)
+        if accepted:
+            data_manager_answer.update_accept_answer(question_id, accepted)
+        return redirect(request.referrer)
+    return redirect(request.referrer)
+
+
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

@@ -51,7 +51,7 @@
                 {% endif %}
             </p>
             <small>Vote(s): {{answer['vote_number']}}&nbsp;&nbsp;&nbsp;Submission time: {{answer['submission_time']}}</small><br><br>
-            <form action="/action_page.php">
+            <form action="/question/{{ question_id }}/accept_answer" method="post">
             {%  if not accepted %}
                <input type="checkbox" id="accept" name="accept" value="accepted">
                <label for="accept"> Accept answer</label>
