@@ -22,7 +22,18 @@
                       <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
                   </form>
               </div>
-          </div><hr>
+              <div>
+                      {% if username %}
+                          <div id="hd-last-name">
+                          <h3>{{ username }}</h3>
+                          <h2 class="button"><a class="button" href="/logout">Log out</a></h2></div>
+                      {% else %}
+                          <div id="hd-last"><h2 class="button"><a class="button" href="/login">Login</a></h2></div>
+                      {% endif %}
+
+              </div>
+
+          </div>
       </div>
       <div class="page-content">
       {% block page_content %}

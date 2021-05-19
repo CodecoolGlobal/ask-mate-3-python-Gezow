@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, redirect, request, session, escape
+from flask import Flask, render_template, redirect, request, session, escape, url_for
 from datetime import datetime
 import os
 
@@ -9,7 +9,7 @@ import util
 
 
 app = Flask(__name__)
-
+app.secret_key = b'secretkey'
 
 @app.route("/")
 def main():
@@ -337,6 +337,29 @@ def users():
                            user_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                          for header in data_manager_universal.USER_HEADER]
                            )
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user_emails = [email["email"] for email in data_manager_users.get_user_info('email')]
+        username = data_manager_users.find_user_name(email)['username']
+        user_password = data_manager_users.find_user_password(email)['password']
+        verified = util.verify_password(password, user_password)
+        if email not in user_emails or not verified:
+            return render_template('login.html', verified=verified)
+        else:
+            session['username'] = username
+            session['user_id'] = data_manager_users.find_profile_id(email, 'email')['id']
+            return render_template("list.html", username=username,)
+    return render_template("login.html", verified='first')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":

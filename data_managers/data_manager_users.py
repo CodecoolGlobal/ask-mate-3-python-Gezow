@@ -35,3 +35,21 @@ def get_ordered_users(cursor, filter_type, order):
             ORDER BY %s %s;""" % (filter_type, order)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def find_user_password(cursor, email):
+    query = """
+            SELECT password FROM users
+            WHERE email = '%s';""" % email
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
+def find_user_name(cursor, email):
+    query = """
+            SELECT username FROM users
+            WHERE email = '%s';""" % email
+    cursor.execute(query)
+    return cursor.fetchone()
