@@ -16,7 +16,7 @@ app.secret_key = b'secretkey'
 def main():
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else None
-    return render_template("searched_list.html",
+    return render_template("list_searched.html",
                            questions=data_manager_question.get_ordered_questions("submission_time", 'DESC')[:5],
                            if_reversed='asc',
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
@@ -104,7 +104,7 @@ def add_question():
                                 "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
                                 "else_filename": ""}, 'question')
             return redirect("/question/" + str(new_question["id"]) + "?voted=True")
-        return render_template("add-question.html",
+        return render_template("add_question.html",
                                logged_in=logged_in,
                                username=username
                                )
@@ -193,7 +193,7 @@ def add_answer(question_id):
                                 "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
                                 "else_filename": ""}, 'answer')
             return redirect("/question/" + question_id + "?voted=True")
-        return render_template("add-answer.html",
+        return render_template("add_answer.html",
                                question_id=question_id,
                                logged_in=logged_in,
                                username=username
@@ -239,7 +239,7 @@ def new_comment_to_question(question_id):
                                              edited_count='null',
                                              active_user_id=active_user_id)
             return redirect("/question/" + question_id + "?voted=True")
-        return render_template('add-comment.html',
+        return render_template('add_comment.html',
                                question_id=question_id,
                                logged_in=logged_in,
                                username=username
@@ -263,7 +263,7 @@ def add_comment_to_answer(answer_id):
                                              edited_count='null',
                                              active_user_id=active_user_id)
             return redirect("/question/" + str(q_id) + "?voted=True")
-        return render_template('add-comment-answer.html',
+        return render_template('add_comment_answer.html',
                                answer_id=answer_id,
                                question_id=q_id,
                                logged_in=logged_in,
@@ -278,7 +278,7 @@ def search_in_questions():
     username = session["username"] if logged_in else None
     if request.args.get("q"):
         relevant_questions = data_manager_question.filter_questions(request.args.get("q"))
-        return render_template("searched_list.html",
+        return render_template("list_searched.html",
                                questions=relevant_questions,
                                if_reversed="asc",
                                question_headers=[" ".join(header.capitalize() for header in header.split("_"))
@@ -302,7 +302,7 @@ def edit_answer(answer_id):
             message = request.form['message'].replace("'", "`")
             data_manager_answer.edit_answer(answer_id, message)
             return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
-        return render_template("edit_a.html",
+        return render_template("edit_answer.html",
                                a_or_c=target_answer,
                                logged_in=logged_in,
                                username=username)
@@ -320,7 +320,7 @@ def edit_comment(comment_id):
             message = request.form['message'].replace("'", "`")
             data_manager_comment.edit_comment(comment_id, message)
             return util.redirect_after_comment_action(target_comment)
-        return render_template("edit_c.html",
+        return render_template("edit_comment.html",
                                a_or_c=target_comment,
                                logged_in=logged_in,
                                username=username)
@@ -379,7 +379,7 @@ def registration():
                                     "else_filename": ""}, 'users')
                 return redirect("/user/" + str(new_profile["id"]))
             return render_template("error.html", error_code='Email address or user name already in use!')
-        return render_template("sign-up.html")
+        return render_template("sign_up.html")
     return render_template("error.html",
                            error_code='You are already signed up and logged in!',
                            logged_in=True,
@@ -398,7 +398,7 @@ def profile_page(user_id):
             comment["question_id"] = data_manager_answer.find_question_id_from_answer_id(
                 comment["answer_id"])["question_id"]
         user_comments.append(comment)
-    return render_template("profile-page.html",
+    return render_template("profile_page.html",
                            user=target_profile,
                            logged_in=logged_in,
                            answer_count=data_manager_universal.execute_count('answer', 'user_id', user_id)['count'],
@@ -432,7 +432,7 @@ def users():
     else:
         order = "asc"
         sorted_users = data_manager_users.get_ordered_users("username", 'DESC')
-    return render_template("users_list.html",
+    return render_template("list_users.html",
                            users=sorted_users,
                            if_reversed=order,
                            user_headers=[" ".join(header.capitalize() for header in header.split("_"))
@@ -481,7 +481,7 @@ def tags():
     else:
         order = "asc"
         sorted_tags = data_manager_tag.get_ordered_tags('used', 'DESC')
-    return render_template("tags_list.html",
+    return render_template("list_tags.html",
                            tags=sorted_tags,
                            if_reversed=order,
                            tag_headers=[" ".join(header.capitalize() for header in header.split("_"))
