@@ -321,3 +321,23 @@ table.a {
     background-color: #ddd;
     border-color: #F68A07FF;
 }
+
+.registration {
+    width: 250px;
+    height: 20px;
+    border: solid #52c6d2;
+    border-radius: 10px;
+}
+
+.registration:focus {
+    outline: none;
+    text-align: center;
+    border-color: #F68A07FF;
+    animation-name: border_animation;
+    animation-duration: 0.7s;
+}
+
+@keyframes border_animation {
+    from {border-color: #52c6d2;}
+    to {border-color: #F68A07FF;}
+}
