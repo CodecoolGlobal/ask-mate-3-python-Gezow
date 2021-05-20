@@ -682,11 +682,29 @@ def logout():
 
 @app.route('/question/<question_id>/accept_answer', methods=['GET', 'POST'])
 def accept_answer(question_id):
-    if request.method == 'POST':
-        accepted = ('accepted' == request.form['accept'])
-        answer_id = request.form.get('answer-id', type=int)
-        data_answer.update_accept_answer(answer_id, accepted)
-        return redirect(request.referrer)
+    logged_in, username = util.login_checker()
+    try:
+        if logged_in:
+            if session["user_id"] == data_universal.find_target(question_id, 'id', 'question')[0]["user_id"]:
+                if request.method == 'POST':
+                    accepted = ('accepted' == request.form['accept'])
+                    answer_id = request.form.get('answer-id', type=int)
+                    data_answer.update_accept_answer(answer_id, accepted)
+                    return redirect("/question/" + str(question_id) + "?voted=True")
+            return render_template("error.html",
+                                   error_code='Only the author of the question can accept this answer!',
+                                   logged_in=logged_in,
+                                   username=username)
+        return render_template("error.html",
+                               error_code='Only the author of the question can accept this answer! Log in!',
+                               logged_in=logged_in,
+                               username=username)
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 if __name__ == "__main__":
