@@ -1,2 +1,13 @@
 {% extends "list.html" %}
 {% block page_title %}<h1 class="page-title">Recent questions</h1>{% endblock %}
+              {% block table_header %}
+              <tr>
+                  {% for header in question_headers %}
+                    {% if header == 'Id' or header == 'Image' %}
+                        <th align="center">{{header}}</th>
+                    {% else %}
+                        <th align="center">{{header}}</th>
+                    {% endif %}
+                  {% endfor %}
+              </tr>
+              {% endblock table_header %}
