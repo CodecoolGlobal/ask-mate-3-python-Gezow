@@ -117,14 +117,16 @@ def edit_question(question_id):
         username = session["username"] if logged_in else None
         target_question = data_manager_universal.find_target(question_id, 'id', 'questions')[0]
         if request.method == "POST":
-            util.handle_images({"request_files": request.files,
-                                "new_id": question_id,
-                                "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
-                                "else_filename": target_question['image']}, 'questions')
-            title = request.form['title'].replace("'", "`")
-            message = request.form['message'].replace("'", "`")
-            data_manager_questions.edit_question(question_id, title, message)
-            return redirect("/question/" + str(target_question['id']) + "?voted=True")
+            if target_question["user_id"] == session["user_id"]:
+                util.handle_images({"request_files": request.files,
+                                    "new_id": question_id,
+                                    "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
+                                    "else_filename": target_question['image']}, 'questions')
+                title = request.form['title'].replace("'", "`")
+                message = request.form['message'].replace("'", "`")
+                data_manager_questions.edit_question(question_id, title, message)
+                return redirect("/question/" + str(target_question['id']) + "?voted=True")
+            return render_template("error.html", error_code='Only the author can edit this question!')
         return render_template("edit_question.html",
                                question=target_question,
                                logged_in=logged_in,
