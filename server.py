@@ -367,8 +367,8 @@ def add_comment_to_answer(answer_id):
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/search")
@@ -418,8 +418,8 @@ def edit_answer(answer_id):
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
@@ -496,8 +496,24 @@ def add_tag(question_id):
 
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
 def delete_tag(question_id, tag_id):
-    data_tag.delete_tag(question_id, tag_id)
-    return redirect("/question/" + question_id + "?voted=True")
+    logged_in, username = util.login_checker()
+    try:
+        if logged_in:
+            if session["user_id"] == data_universal.find_target(question_id, 'id', 'question')[0]["user_id"]:
+                data_tag.delete_tag(question_id, tag_id)
+                return redirect("/question/" + question_id + "?voted=True")
+            return render_template("error.html",
+                                   error_code='Only the author is allowed to add tags to this comment!',
+                                   logged_in=logged_in, user_name=username)
+        return render_template("error.html",
+                               error_code='Only the author is allowed to add tags to this comment!Log in!',
+                               logged_in=logged_in, user_name=username)
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/sign-up", methods=["GET", "POST"])
