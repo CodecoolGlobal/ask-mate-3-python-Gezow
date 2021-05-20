@@ -310,19 +310,20 @@ def edit_answer(answer_id):
     if logged_in:
         username = session["username"] if logged_in else None
         target_answer = data_manager_universal.find_target(answer_id, 'id', 'answers')[0]
-        if request.method == "POST":
-
-            util.handle_images({"request_files": request.files,
-                                "new_id": str(target_answer["id"]),
-                                "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
-                                "else_filename": target_answer["image"]}, 'answers')
-            message = request.form['message'].replace("'", "`")
-            data_manager_answers.edit_answer(answer_id, message)
-            return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
-        return render_template("edit_answer.html",
-                               a_or_c=target_answer,
-                               logged_in=logged_in,
-                               username=username)
+        if session["user_id"] == target_answer["user_id"]:
+            if request.method == "POST":
+                util.handle_images({"request_files": request.files,
+                                    "new_id": str(target_answer["id"]),
+                                    "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
+                                    "else_filename": target_answer["image"]}, 'answers')
+                message = request.form['message'].replace("'", "`")
+                data_manager_answers.edit_answer(answer_id, message)
+                return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
+            return render_template("edit_answer.html",
+                                   a_or_c=target_answer,
+                                   logged_in=logged_in,
+                                   username=username)
+        return render_template("error.html", error_message='Only the author can edit this question!')
     return redirect(url_for("login"))
 
 
