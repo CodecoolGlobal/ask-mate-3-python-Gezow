@@ -4,7 +4,7 @@ import database_common
 @database_common.connection_handler
 def add_comment(cursor, question_id, answer_id, message, submission_time, edited_count, active_user_id):
     query = """
-            INSERT INTO comments
+            INSERT INTO comment
             (question_id, answer_id, message, submission_time, edited_count, user_id)
             VALUES (%s, %s, '%s','%s',%s, '%s');
             """ % (question_id, answer_id, message, submission_time, edited_count, active_user_id)
@@ -14,7 +14,7 @@ def add_comment(cursor, question_id, answer_id, message, submission_time, edited
 @database_common.connection_handler
 def find_comment(cursor, comment_id):
     query = """
-            SELECT * FROM comments
+            SELECT * FROM comment
             WHERE id = '%s'
             """ % comment_id
     cursor.execute(query)
@@ -24,7 +24,7 @@ def find_comment(cursor, comment_id):
 @database_common.connection_handler
 def edit_comment(cursor, comment_id, message):
     query = """
-            UPDATE comments 
+            UPDATE comment 
             SET message = '%s'
             WHERE id = '%s'""" % (message, comment_id)
     cursor.execute(query)
@@ -33,7 +33,7 @@ def edit_comment(cursor, comment_id, message):
 @database_common.connection_handler
 def update_edited_count(cursor, comment_id):
     query = """
-            UPDATE comments
+            UPDATE comment
             SET edited_count = CASE WHEN edited_count IS null THEN 1 ELSE edited_count + 1 END
             WHERE id = '%s'""" % comment_id
     cursor.execute(query)

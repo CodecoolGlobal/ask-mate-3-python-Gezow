@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS public.users;
+DROP TABLE IF EXISTS public.profile;
 create table users
 (
     id         serial not null
@@ -11,7 +11,7 @@ create table users
     image      text
 );
 
- INSERT INTO users (email, password, username, reputation, image) VALUES('example@user.co.uk',
+ INSERT INTO profile (email, password, username, reputation, image) VALUES('example@user.co.uk',
                                                                          'XYZ',
                                                                          'big_daddy',
                                                                          0,
