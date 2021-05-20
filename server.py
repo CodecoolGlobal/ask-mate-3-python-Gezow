@@ -65,12 +65,12 @@ def display_question(question_id):
                                answer_headers=data_universal.ANSWER_HEADER,
                                question_id=question_id,
                                IMAGE_DIR_PATH=data_universal.QUESTION_IMG_DIR_PATH,
-                               question_comments=data_universal.look_for_comments('comment', 'question_id',
-                                                                                          question_id),
+                               question_comments=data_universal.look_for_comments('comment', 'question_id', question_id),
                                data_manager=data_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username
+                               username=username,
+                               user_id=session["user_id"]
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
