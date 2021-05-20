@@ -506,6 +506,14 @@ def accept_answer(question_id):
     if request.method == 'POST':
         accepted = ('accepted' == request.form['accept'])
         answer_id = request.form.get('answer-id', type=int)
+        if accepted is True:
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
+            reputation_change = data_profile.REPUTATION_CHANGE['a_accepted']
+            data_profile.change_user_reputation(connected_user, int(reputation_change))
+        elif accepted is False:
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
+            reputation_change = -(data_profile.REPUTATION_CHANGE['a_accepted'])
+            data_profile.change_user_reputation(connected_user, int(reputation_change))
         data_answer.update_accept_answer(answer_id, accepted)
         return redirect(request.referrer)
 
