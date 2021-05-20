@@ -64,3 +64,11 @@ def filter_questions(cursor, search_field_text):
                                         )
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_user_id(cursor, question_id):
+    query = """SELECT user_id FROM question
+            WHERE id = '%s'""" % question_id
+    cursor.execute(query)
+    return cursor.fetchone()
