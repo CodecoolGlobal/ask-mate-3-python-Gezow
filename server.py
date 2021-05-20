@@ -69,8 +69,8 @@ def display_question(question_id):
                                answer_headers=data_universal.ANSWER_HEADER,
                                question_id=question_id,
                                IMAGE_DIR_PATH=data_universal.QUESTION_IMG_DIR_PATH,
-                               question_comments=data_universal.look_for_comments(
-                                   'comment', 'question_id', question_id),
+                               question_comments=data_universal.look_for_comments('comment', 'question_id',
+                                                                                  question_id),
                                data_manager=data_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
@@ -127,7 +127,7 @@ def edit_question(question_id):
     try:
         if logged_in:
             target_question = data_universal.find_target(question_id, 'id', 'question')[0]
-            if username == target_question["user_id"]:
+            if session["user_id"] == target_question["user_id"]:
                 if request.method == "POST":
                     util.handle_images({"request_files": request.files,
                                         "new_id": question_id,
@@ -230,7 +230,6 @@ def vote_down_answer(answer_id):
 def add_answer(question_id):
     logged_in, username = util.login_checker()
     try:
-
         if logged_in:
             if request.method == "POST":
                 submission_time = str(datetime.now()).split(".")[0]
@@ -431,32 +430,53 @@ def edit_comment(comment_id):
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/comment/<comment_id>/delete")
 def delete_comment(comment_id):
-    target_comment = data_comment.find_comment(comment_id)[0]
-    data_universal.delete_from_db(comment_id, 'comment')
-    return util.redirect_after_comment_action(target_comment)
+    logged_in, username = util.login_checker()
+    try:
+        if logged_in:
+            target_comment = data_comment.find_comment(comment_id)[0]
+            if session["user_id"] == target_comment["user_id"]:
+                data_universal.delete_from_db(comment_id, 'comment')
+                return util.redirect_after_comment_action(target_comment)
+            return render_template("error.html", error_code='Only the author is allowed to delete this comment!')
+        return render_template("error.html", error_code='Only the author is allowed to delete this comment! Log in!')
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/question/<question_id>/new_tag", methods=["GET", "POST"])
 def add_tag(question_id):
-    if request.method == "POST":
-        try:
-            if request.form['message']:
-                data_tag.add_new_tag(request.form['message'].replace("'", "`"))
-                target_tag = data_tag.find_tag_id(request.form['message'].replace("'", "`"))['id']
-            else:
-                target_tag = data_tag.find_tag_id(request.form['tag-name'])['id']
-            data_tag.choose_tag(question_id, target_tag)
-            return redirect("/question/" + question_id + "?voted=True")
-        except psycopg2.Error as error:
-            return render_template("error.html", error_code=error.pgcode)
-    all_tags = data_tag.all_tags()
-    return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
+    logged_in, username = util.login_checker()
+    try:
+        if logged_in:
+            if session["u_id"] == data_question.get_user_id(question_id)["user_id"]:
+                if request.method == "POST":
+                    if request.form['message']:
+                        data_tag.add_new_tag(request.form['message'].replace("'", "`"))
+                        target_tag = data_tag.find_tag_id(request.form['message'].replace("'", "`"))['id']
+                    else:
+                        target_tag = data_tag.find_tag_id(request.form['tag-name'])['id']
+                    data_tag.choose_tag(question_id, target_tag)
+                    return redirect("/question/" + question_id + "?voted=True")
+                all_tags = data_tag.all_tags()
+                return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
+        return render_template("error.html",
+                               error_code='Only the author is allowed to add tags to this comment! Log in!')
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
@@ -575,8 +595,7 @@ def login():
 
 @app.route('/tags')
 def tags():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    logged_in, username = util.login_checker()
     sorted_tags, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
                                      "used", data_tag.get_ordered_tags)
     return render_template("list_tags.html",
