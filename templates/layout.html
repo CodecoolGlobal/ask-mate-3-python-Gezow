@@ -12,6 +12,7 @@
        <div class="header">
        {%  if logged_in %}
           <div class="topnav">
+              <img src="{{ url_for('static', filename='images/logo_200x200.png') }}">
               <a class="active" href="/">Home</a>
               <a href="/list">Go to questions</a>
               <a href="/users">List users</a>
@@ -26,6 +27,7 @@
           </div>
        {%  elif not logged_in %}
            <div class="topnav">
+                <img src="{{ url_for('static', filename='images/logo_200x200.png') }}">
                 <a class="active" href="/">Home</a>
                 <a href="/list">Go to questions</a>
                 <a href="/users">List users</a>
@@ -36,6 +38,11 @@
                       <button type="submit"><i class="fa fa-search"></i></button>
                      </form>
        {%  endif %}
+       <div>
+           {% if logged_in %}
+               <p id="hd-last-name">Logged in as: {{ username }}</p>
+           {% endif %}
+       </div>
         </div>
        </div>
       <div class="page-content">
