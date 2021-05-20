@@ -90,14 +90,14 @@ def add_question():
             title = request.form['title'].replace("'", "`")
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_manager_questions.add_new_question(submission_time=submission_time,
+            data_question.add_new_question(submission_time=submission_time,
                                                     view_number=0,
                                                     vote_number=0,
                                                     title=title,
                                                     message=message,
                                                     active_user_id=active_user_id
                                                     )
-            new_question = data_manager_questions.find_question_id(submission_time, title)
+            new_question = data_question.find_question_id(submission_time, title)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_question["id"]),
                                 "directory": data_universal.QUESTION_IMG_DIR_PATH,
@@ -180,13 +180,13 @@ def add_answer(question_id):
             submission_time = str(datetime.now()).split(".")[0]
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_manager_answers.add_new_answer(submission_time=submission_time,
+            data_answer.add_new_answer(submission_time=submission_time,
                                                 vote_number=0,
                                                 question_id=question_id,
                                                 message=message,
                                                 active_user_id=active_user_id,
                                                 )
-            new_answer = data_manager_answers.find_answer_id(submission_time, message)
+            new_answer = data_answer.find_answer_id(submission_time, message)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_answer["id"]),
                                 "directory": data_universal.ANSWER_IMG_DIR_PATH,
@@ -234,7 +234,7 @@ def new_comment_to_question(question_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_manager_comments.add_comment(question_id=question_id,
+            data_comment.add_comment(question_id=question_id,
                                               answer_id='null',
                                               message=request.form['message'].replace("'", "`"),
                                               submission_time=submission_time,
@@ -258,7 +258,7 @@ def add_comment_to_answer(answer_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_manager_comments.add_comment(question_id='null',
+            data_comment.add_comment(question_id='null',
                                               answer_id=answer_id,
                                               message=request.form["message"].replace("'", "`"),
                                               submission_time=submission_time,
