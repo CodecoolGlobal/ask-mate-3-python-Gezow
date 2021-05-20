@@ -9,7 +9,6 @@
   </head>
   <body>
   <div class="content-wrapper">
-       <div class="header">
 
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
@@ -20,7 +19,7 @@
                   {% endif %}
                       </div>
               </div>
-          </div>
+
        {%  if logged_in %}
           <div class="topnav">
               <a class="active" href="/">Home</a>
@@ -48,14 +47,15 @@
                      </form>
             </div>
        {%  endif %}
+           </div>
       </div>
-      <div class="page-content">
+
         {% block page_content %}
         {% block page_title %}{% endblock %}
         {% block table_header %}{% endblock table_header %}
         {% block home_button %}
         {% endblock home_button %}
         {% endblock page_content %}
-      </div>
+
   </body>
 </html>

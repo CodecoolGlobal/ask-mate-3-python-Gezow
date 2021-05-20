@@ -21,7 +21,16 @@ body {
     width: 100%;
     background: whitesmoke;
 }
+#not-fixed-header {
 
+    top: 0;
+    width: 100%;
+    background: whitesmoke;
+}
+#not-fixed {
+
+    padding-top: 150px;
+}
 #header-container {
     width: 100%;
     margin: auto;
@@ -29,6 +38,7 @@ body {
 }
 
 #hd-left {
+
     float: left;
     height: 120px;
     width: 120px;
