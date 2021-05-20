@@ -1,7 +1,7 @@
 from flask import redirect
 import os
-from data_managers import data_manager_universal
-from data_managers import data_manager_answers
+from data_managers import data_universal
+from data_managers import data_answer
 import bcrypt
 
 
@@ -30,7 +30,7 @@ def handle_images(update_info, data_table):
                                )
     else:
         filename = update_info["else_filename"]
-    data_manager_universal.update_image(filename,
+    data_universal.update_image(filename,
                                         update_info["new_id"],
                                         data_table)
 
@@ -39,7 +39,7 @@ def redirect_after_comment_action(target_comment):
     if target_comment['question_id']:
         return redirect(f"/question/{str(target_comment['question_id'])}?voted=True")
     if target_comment['answer_id']:
-        target_question_id = data_manager_answers.find_question_id_from_answer_id(
+        target_question_id = data_answer.find_question_id_from_answer_id(
             target_comment['answer_id'])["question_id"]
         return redirect(f"/question/{str(target_question_id)}?voted=True")
 
