@@ -135,40 +135,48 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/vote_up")
 def vote_up_question(question_id):
-    data_manager_universal.vote(question_id, 'questions', 1)
-    connected_user = data_manager_users.find_connected_user(question_id, 'questions')['user_id']
-    reputation_change = data_manager_users.REPUTATION_CHANGE['q_vote_up']
-    data_manager_users.change_user_reputation(connected_user, int(reputation_change))
-    return redirect("/question/" + question_id + "?voted=True")
+    if "username" in session:
+        data_manager_universal.vote(question_id, 'questions', 1)
+        connected_user = data_manager_users.find_connected_user(question_id, 'questions')['user_id']
+        reputation_change = data_manager_users.REPUTATION_CHANGE['q_vote_up']
+        data_manager_users.change_user_reputation(connected_user, int(reputation_change))
+        return redirect("/question/" + question_id + "?voted=True")
+    return redirect(url_for('login'))
 
 
 @app.route("/question/<question_id>/vote_down")
 def vote_down_question(question_id):
-    data_manager_universal.vote(question_id, 'questions', -1)
-    connected_user = data_manager_users.find_connected_user(question_id, 'questions')['user_id']
-    reputation_change = data_manager_users.REPUTATION_CHANGE['q_vote_down']
-    data_manager_users.change_user_reputation(connected_user, int(reputation_change))
-    return redirect("/question/" + question_id + "?voted=True")
+    if "username" in session:
+        data_manager_universal.vote(question_id, 'questions', -1)
+        connected_user = data_manager_users.find_connected_user(question_id, 'questions')['user_id']
+        reputation_change = data_manager_users.REPUTATION_CHANGE['q_vote_down']
+        data_manager_users.change_user_reputation(connected_user, int(reputation_change))
+        return redirect("/question/" + question_id + "?voted=True")
+    return redirect(url_for('login'))
 
 
 @app.route("/answer/<answer_id>/vote_up")
 def vote_up_answer(answer_id):
-    data_manager_universal.vote(answer_id, 'answers', 1)
-    question_id = data_manager_answers.find_question_id_from_answer_id(answer_id)['question_id']
-    connected_user = data_manager_users.find_connected_user(answer_id, 'answers')['user_id']
-    reputation_change = data_manager_users.REPUTATION_CHANGE['a_vote_up']
-    data_manager_users.change_user_reputation(connected_user, int(reputation_change))
-    return redirect("/question/" + str(question_id) + "?voted=True")
+    if "username" in session:
+        data_manager_universal.vote(answer_id, 'answers', 1)
+        question_id = data_manager_answers.find_question_id_from_answer_id(answer_id)['question_id']
+        connected_user = data_manager_users.find_connected_user(answer_id, 'answers')['user_id']
+        reputation_change = data_manager_users.REPUTATION_CHANGE['a_vote_up']
+        data_manager_users.change_user_reputation(connected_user, int(reputation_change))
+        return redirect("/question/" + str(question_id) + "?voted=True")
+    return redirect(url_for('login'))
 
 
 @app.route("/answer/<answer_id>/vote_down")
 def vote_down_answer(answer_id):
-    data_manager_universal.vote(answer_id, 'answers', -1)
-    question_id = data_manager_answers.find_question_id_from_answer_id(answer_id)['question_id']
-    connected_user = data_manager_users.find_connected_user(answer_id, 'answers')['user_id']
-    reputation_change = data_manager_users.REPUTATION_CHANGE['a_vote_down']
-    data_manager_users.change_user_reputation(connected_user, int(reputation_change))
-    return redirect("/question/" + str(question_id) + "?voted=True")
+    if "username" in session:
+        data_manager_universal.vote(answer_id, 'answers', -1)
+        question_id = data_manager_answers.find_question_id_from_answer_id(answer_id)['question_id']
+        connected_user = data_manager_users.find_connected_user(answer_id, 'answers')['user_id']
+        reputation_change = data_manager_users.REPUTATION_CHANGE['a_vote_down']
+        data_manager_users.change_user_reputation(connected_user, int(reputation_change))
+        return redirect("/question/" + str(question_id) + "?voted=True")
+    return redirect(url_for('login'))
 
 
 @app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
