@@ -91,12 +91,12 @@ def add_question():
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
             data_question.add_new_question(submission_time=submission_time,
-                                                    view_number=0,
-                                                    vote_number=0,
-                                                    title=title,
-                                                    message=message,
-                                                    active_user_id=active_user_id
-                                                    )
+                                           view_number=0,
+                                           vote_number=0,
+                                           title=title,
+                                           message=message,
+                                           active_user_id=active_user_id
+                                           )
             new_question = data_question.find_question_id(submission_time, title)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_question["id"]),
@@ -181,11 +181,11 @@ def add_answer(question_id):
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
             data_answer.add_new_answer(submission_time=submission_time,
-                                                vote_number=0,
-                                                question_id=question_id,
-                                                message=message,
-                                                active_user_id=active_user_id,
-                                                )
+                                       vote_number=0,
+                                       question_id=question_id,
+                                       message=message,
+                                       active_user_id=active_user_id,
+                                       )
             new_answer = data_answer.find_answer_id(submission_time, message)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_answer["id"]),
@@ -235,11 +235,11 @@ def new_comment_to_question(question_id):
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
             data_comment.add_comment(question_id=question_id,
-                                              answer_id='null',
-                                              message=request.form['message'].replace("'", "`"),
-                                              submission_time=submission_time,
-                                              edited_count='null',
-                                              active_user_id=active_user_id)
+                                     answer_id='null',
+                                     message=request.form['message'].replace("'", "`"),
+                                     submission_time=submission_time,
+                                     edited_count='null',
+                                     active_user_id=active_user_id)
             return redirect("/question/" + question_id + "?voted=True")
         return render_template('add_comment.html',
                                question_id=question_id,
@@ -259,11 +259,11 @@ def add_comment_to_answer(answer_id):
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
             data_comment.add_comment(question_id='null',
-                                              answer_id=answer_id,
-                                              message=request.form["message"].replace("'", "`"),
-                                              submission_time=submission_time,
-                                              edited_count='null',
-                                              active_user_id=active_user_id)
+                                     answer_id=answer_id,
+                                     message=request.form["message"].replace("'", "`"),
+                                     submission_time=submission_time,
+                                     edited_count='null',
+                                     active_user_id=active_user_id)
             return redirect("/question/" + str(q_id) + "?voted=True")
         return render_template('add_comment_answer.html',
                                answer_id=answer_id,
@@ -367,13 +367,12 @@ def registration():
                                 [username["username"] for username in data_profile.get_user_info('username')]
             if request.form['email'] not in user_emails and request.form['username'] not in user_names:
                 data_profile.add_new_user({'email': request.form["email"].replace("'", "`"),
-                                                 'password': util.hash_password(
-                                                     request.form["password"].replace("'", "`")),
-                                                 'username': request.form["username"].replace("'", "`"),
-                                                 'reputation': 0,
-                                                 'image': 'null',
-                                                 'registration_date': str(datetime.now()).split(".")[0]}
-                                                )
+                                           'password': util.hash_password(request.form["password"].replace("'", "`")),
+                                           'username': request.form["username"].replace("'", "`"),
+                                           'reputation': 0,
+                                           'image': 'null',
+                                           'registration_date': str(datetime.now()).split(".")[0]}
+                                          )
                 new_profile = data_profile.find_profile_id(request.form["email"].replace("'", "`"), 'email')
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_profile["id"]),
