@@ -276,7 +276,7 @@ def delete_question(question_id):
         if logged_in:
             target_answers = data_answer.find_answer_by_question_id(question_id)
             target_question = data_universal.find_target(question_id, 'id', 'question')[0]
-            if username == target_question["user_id"]:
+            if session["user_id"] == target_question["user_id"]:
                 data_comment.delete_comments("question_id", question_id)
                 data_tag.delete_tags(question_id)
                 for answer in target_answers:
@@ -294,8 +294,8 @@ def delete_question(question_id):
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route('/answer/<answer_id>/delete_answer')
