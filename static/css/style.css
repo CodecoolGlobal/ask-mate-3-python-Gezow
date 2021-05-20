@@ -23,7 +23,7 @@ body {
 
 #header-container {
     width: 100%;
-    margin: 0 auto;
+    margin: auto;
     height: 120px;
 }
 
@@ -59,14 +59,17 @@ body {
 }
 
 #hd-last-name {
-    float: left;
+    float: right;
+    padding-right: 20px;
     height: 120px;
     width: 240px;
-    padding-left: 0;
+    vertical-align: center;
     text-align: center;
-    padding-top: 0px;
 }
 
+#login-name {
+    padding-top: 30px;
+}
 #search_bar {
     margin-top: 58px;
     padding: 10px;
