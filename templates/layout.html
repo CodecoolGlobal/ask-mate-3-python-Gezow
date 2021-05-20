@@ -12,30 +12,39 @@
       <div class="header">
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+
+              <div>
+                  {% if logged_in %}
+                      <div id="hd-last-name">
+                      <h3>Logged in as: {{ username }}</h3>
+                  {% endif %}
+                      </div>
+              </div>
+          </div>
+
+          <div class="topnav">
+              <a class="active" href="/">Home</a>
+              <a href="/list">Go to questions</a>
+              <a href="/users">List users</a>
               {% if logged_in %}
-                <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
+                  <a href="/add-question">Ask a question</a>
               {% else %}
               {% endif %}
-              <div id="hd-middle-r"><h3 class="header-button"><a class="button" href="/list">Go to questions!</a></h3></div>
-              <div id="hd-right"><h3 class="header-button"><a class="button" href="/users">List users!</a></h3></div>
-              <div id="hd-right">
+
+              {% if logged_in %}
+              <a href="/logout">Log out</a></h3>
+              {% else %}
+              <a href="/login">Login</a>
+              {%  endif %}
+
+              <div class="search-container">
                   <form action="/search">
-                      <label for="search_bar"></label>
-                      <div id="search-input"><input type="text" name="q" placeholder="Search..." id="search_bar"></div>
-                      <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
+                      <input type="text" placeholder="Search.." name="search">
+                      <button type="submit"><i class="fa fa-search"></i></button>
                   </form>
               </div>
               {% block login_button %}
-              <div>
-                      {% if logged_in %}
-                          <div id="hd-last-name">
-                          <h3>Logged in as: {{ username }}</h3>
-                          <h3 class="button"><a class="button" href="/logout">Log out</a></h3></div>
-                      {% else %}
-                          <div id="hd-last"><h3 class="button"><a class="button" href="/login">Login</a></h3></div>
-                      {% endif %}
 
-              </div>
               {% endblock %}
 
           </div>

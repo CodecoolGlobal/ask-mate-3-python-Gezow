@@ -41,6 +41,6 @@ def update_edited_count(cursor, comment_id):
 
 @database_common.connection_handler
 def delete_comments(cursor, delete_by, equals_to):
-    query = """DELETE FROM comments
+    query = """DELETE FROM comment
             WHERE %s = '%s';""" % (delete_by, equals_to)
     cursor.execute(query)
