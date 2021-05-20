@@ -22,7 +22,8 @@ def main():
                                question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                                  for header in data_universal.QUESTION_HEADER],
                                logged_in=logged_in,
-                               username=username
+                               username=username,
+                               searched=False
                                )
     except psycopg2.Error and KeyError and IndexError and TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
@@ -383,7 +384,8 @@ def search_in_questions():
                                    question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                                      for header in data_universal.QUESTION_HEADER],
                                    logged_in=logged_in,
-                                   username=username)
+                                   username=username,
+                                   searched=True)
     except psycopg2.Error and KeyError and IndexError and TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",

@@ -1,5 +1,11 @@
 {% extends "list.html" %}
-{% block page_title %}<h1 class="page-title">Recent questions</h1>{% endblock %}
+{% block page_title %}
+    {% if not searched %}
+        <h1 class="page-title">Recent questions</h1>
+    {% else %}
+        <h1 class="page-title">Searched questions</h1>
+    {% endif %}
+{% endblock %}
               {% block table_header %}
               <tr>
                   {% for header in question_headers %}
