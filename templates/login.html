@@ -1,24 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Ask Mate - Sign up!!{% endblock title %}
 {% block heading %}Signing up...{% endblock heading %}
-{%  block header %}
-<div id="header-container">
-    <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-</div>
-
-<div class="topnav">
-    <a class="active" href="/">Home</a>
-    <a href="/list">Go to questions</a>
-    <a href="/users">List users</a>
-    <a href="/login"><i class="fa fa-fw fa-user"></i>Login</a>
-    <div class="search-container">
-      <form action="/search">
-          <input type="text" placeholder="Search.." name="search">
-          <button type="submit"><i class="fa fa-search"></i></button>
-      </form>
-    </div>
-
-{% endblock %}
 {% block page_content %}
     <div class="centered">
     {% block page_title %}<h1 class="page-title">Please log in!</h1>{% endblock %}

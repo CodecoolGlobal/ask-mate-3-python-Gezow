@@ -10,7 +10,7 @@
   <body>
   <div class="content-wrapper">
        <div class="header">
-       {%  block header %}
+
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
                <div>
@@ -21,7 +21,7 @@
                       </div>
               </div>
           </div>
-
+       {%  if logged_in %}
           <div class="topnav">
               <a class="active" href="/">Home</a>
               <a href="/list">Go to questions</a>
@@ -34,11 +34,20 @@
                       <button type="submit"><i class="fa fa-search"></i></button>
                   </form>
               </div>
-              {% block login_button %}
-
-              {% endblock %}
           </div>
-          {%  endblock %}
+       {%  else %}
+           <div class="topnav">
+                <a class="active" href="/">Home</a>
+                <a href="/list">Go to questions</a>
+                <a href="/users">List users</a>
+                <a href="/login"><i class="fa fa-fw fa-user"></i>Login</a>
+                <div class="search-container">
+                    <form action="/search">
+                      <input type="text" placeholder="Search.." name="search">
+                      <button type="submit"><i class="fa fa-search"></i></button>
+                     </form>
+            </div>
+       {%  endif %}
       </div>
       <div class="page-content">
         {% block page_content %}
