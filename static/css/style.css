@@ -260,9 +260,6 @@ table.a {
     color: white;
 }
 
-#display-list a:hover {
-    background-color: #F68A07FF;
-}
 
 #display-list td, #display-list th, #display-list image {
   border: 1px solid #ddd;
@@ -287,12 +284,13 @@ table.a {
 }
 
 #display-list #blue-link {
-    color: #52c6d2;
+    color: #F68A07FF;
 }
 
 #display-list #blue-link:hover {
-    color: #F68A07FF;
+    color: #52c6d2;
 }
+
 .bubble {
     z-index: -1;
     margin-left: 0;
