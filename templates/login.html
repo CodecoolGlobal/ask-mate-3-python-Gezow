@@ -9,7 +9,7 @@
     {% endif %}
     <form {% block action %}action="/login"{% endblock action %} method="post" enctype="multipart/form-data">
         <p><label for="email-input"><h3>E-mail:</h3></label></p>
-            <input  class="registration" id="email-input" name="email" minlength="6" size="30"{% block bodytitle %}{% endblock bodytitle %}>
+            <input class="registration" id="email-input" name="email" minlength="6" size="30"{% block bodytitle %}{% endblock bodytitle %}>
         <p><label for="password-input"><h3>Password:</h3></label></p>
             <input type="password" class="registration" id="password-input" name="password" minlength="3" size="30">
         <p><h3><button class="post-button" type="submit">{% block button %}<strong>Submit</strong>{% endblock button %}</button></h3></p>

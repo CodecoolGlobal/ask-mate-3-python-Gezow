@@ -10,9 +10,17 @@
   <body>
   <div class="content-wrapper">
        <div class="header">
-       {%  if logged_in %}
+       {%  block header %}
+          {%  if logged_in %}
+          <div id="header-container">
+              <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+                <div>
+                      <div id="hd-last-name">
+                      <h2 id="login-name">Logged in as: {{ username }}</h2>
+                      </div>
+                </div>
+          </div>
           <div class="topnav">
-              <img src="{{ url_for('static', filename='images/logo_200x200.png') }}">
               <a class="active" href="/">Home</a>
               <a href="/list">Go to questions</a>
               <a href="/users">List users</a>
@@ -25,9 +33,11 @@
                   </form>
               </div>
           </div>
-       {%  elif not logged_in %}
+          {%  else %}
+              <div id="header-container">
+              <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+              </div>
            <div class="topnav">
-                <img src="{{ url_for('static', filename='images/logo_200x200.png') }}">
                 <a class="active" href="/">Home</a>
                 <a href="/list">Go to questions</a>
                 <a href="/users">List users</a>
@@ -37,14 +47,11 @@
                       <input type="text" placeholder="Search.." name="search">
                       <button type="submit"><i class="fa fa-search"></i></button>
                      </form>
+                </div>
+           </div>
        {%  endif %}
-       <div>
-           {% if logged_in %}
-               <p id="hd-last-name">Logged in as: {{ username }}</p>
-           {% endif %}
-       </div>
-        </div>
-       </div>
+       {%  endblock %}
+      </div>
       <div class="page-content">
         {% block page_content %}
         {% block page_title %}{% endblock %}
