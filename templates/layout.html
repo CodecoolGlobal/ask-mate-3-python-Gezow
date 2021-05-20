@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <meta charset="utf-8">
+      <title>{% block title %}Ask Mate{% endblock title %}</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <link rel="icon" href="{{ url_for('static', filename='images/logo_200x200.png') }}">
+  </head>
+  <body>
+  <div class="content-wrapper">
+      <div class="header">
+          <div id="header-container">
+              <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+              {% if logged_in %}
+                <div id="hd-middle-l"><h3 class="header-button"><a href="/add-question" class="button">Ask a question!</a></h3></div>
+              {% else %}
+              {% endif %}
+              <div id="hd-middle-r"><h3 class="header-button"><a class="button" href="/list">Go to questions!</a></h3></div>
+              <div id="hd-right"><h3 class="header-button"><a class="button" href="/users">List users!</a></h3></div>
+              <div id="hd-right">
+                  <form action="/search">
+                      <label for="search_bar"></label>
+                      <div id="search-input"><input type="text" name="q" placeholder="Search..." id="search_bar"></div>
+                      <div id="search-button"><button type="submit" id="search_button"><i class="fa fa-search"></i></button></div>
+                  </form>
+              </div>
+              {% block login_button %}
+              <div>
+                      {% if logged_in %}
+                          <div id="hd-last-name">
+                          <h3>Logged in as: {{ username }}</h3>
+                          <h3 class="button"><a class="button" href="/logout">Log out</a></h3></div>
+                      {% else %}
+                          <div id="hd-last"><h3 class="button"><a class="button" href="/login">Login</a></h3></div>
+                      {% endif %}
+
+              </div>
+              {% endblock %}
+
+          </div>
+      </div>
+      <div class="page-content">
+        {% block page_content %}
+        {% block page_title %}{% endblock %}
+        {% block table_header %}{% endblock table_header %}
+        {% block home_button %}
+        {% endblock home_button %}
+        {% endblock page_content %}
+  </body>
+</html>
