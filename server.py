@@ -488,7 +488,7 @@ def registration():
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_profile["id"]),
                                     "directory": data_universal.PROFILE_IMG_DIR_PATH,
-                                    "else_filename": ""}, 'users')
+                                    "else_filename": ""}, 'profile')
                 return redirect("/user/" + str(new_profile["id"]))
             return render_template("error.html", error_code='Email address or user name already in use!')
         return render_template("sign_up.html")
@@ -501,34 +501,41 @@ def registration():
 @app.route("/user/<user_id>")
 def profile_page(user_id):
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
-    target_profile = data_universal.find_target(user_id, "id", "users")[0]
-    comments_of_user = [comment for comment in data_universal.find_target(user_id, 'user_id', 'comment')]
-    user_comments = []
-    for comment in comments_of_user:
-        if comment["answer_id"]:
-            comment["question_id"] = data_answer.find_question_id_from_answer_id(
-                comment["answer_id"])["question_id"]
-        user_comments.append(comment)
-    return render_template("profile_page.html",
-                           user=target_profile,
-                           logged_in=logged_in,
-                           answer_count=data_universal.execute_count('answer', 'user_id', user_id)['count'],
-                           answer_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                           for header in data_universal.ANSWER_HEADER],
-                           comment_count=data_universal.execute_count('comment', 'user_id', user_id)['count'],
-                           comment_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                            for header in data_universal.COMMENT_HEADER],
-                           question_count=data_universal.execute_count('question', 'user_id', user_id)['count'],
-                           question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                             for header in data_universal.QUESTION_HEADER],
-                           user_questions=[question for question in data_universal.find_target(
-                               user_id, 'user_id', 'question')],
-                           user_answers=[answer for answer in data_universal.find_target(
-                               user_id, 'user_id', 'answer')],
-                           user_comments=user_comments,
-                           username=username
-                           )
+    username = session["username"] if logged_in else "None"
+    try:
+        target_profile = data_universal.find_target(user_id, "id", "profile")[0]
+        comments_of_user = [comment for comment in data_universal.find_target(user_id, 'user_id', 'comment')]
+        user_comments = []
+        for comment in comments_of_user:
+            if comment["answer_id"]:
+                comment["question_id"] = data_answer.find_question_id_from_answer_id(
+                    comment["answer_id"])["question_id"]
+            user_comments.append(comment)
+        return render_template("profile_page.html",
+                               user=target_profile,
+                               logged_in=logged_in,
+                               username=username,
+                               answer_count=data_universal.execute_count('answer', 'user_id', user_id)['count'],
+                               answer_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                               for header in data_universal.ANSWER_HEADER],
+                               comment_count=data_universal.execute_count('comment', 'user_id', user_id)['count'],
+                               comment_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                                for header in data_universal.COMMENT_HEADER],
+                               question_count=data_universal.execute_count('question', 'user_id', user_id)['count'],
+                               question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                                 for header in data_universal.QUESTION_HEADER],
+                               user_questions=[question for question in data_universal.find_target(
+                                   user_id, 'user_id', 'question')],
+                               user_answers=[answer for answer in data_universal.find_target(
+                                   user_id, 'user_id', 'answer')],
+                               user_comments=user_comments
+                               )
+    except psycopg2.Error and KeyError and IndexError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/users")
