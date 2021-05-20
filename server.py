@@ -15,21 +15,28 @@ app.secret_key = b'secretkey'
 @app.route("/")
 def main():
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
-    return render_template("list_searched.html",
-                           questions=data_question.get_ordered_questions("submission_time", 'DESC')[:5],
-                           if_reversed='asc',
-                           question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                             for header in data_universal.QUESTION_HEADER],
-                           logged_in=logged_in,
-                           username=username
-                           )
+    username = session["username"] if logged_in else "None"
+    try:
+        return render_template("list_searched.html",
+                               questions=data_question.get_ordered_questions("submission_time", 'DESC')[:5],
+                               if_reversed='asc',
+                               question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                                 for header in data_universal.QUESTION_HEADER],
+                               logged_in=logged_in,
+                               username=username
+                               )
+    except psycopg2.Error and KeyError and IndexError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=True if "username" in session else False,
+                               username=session["username"] if "username" in session else None)
 
 
 @app.route("/list")
 def display_list():
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
         if request.args.get("order_by") and request.args.get("order_direction") == "desc":
             sorted_questions = data_question.get_ordered_questions(request.args.get("order_by"), 'DESC')
@@ -91,7 +98,7 @@ def display_question(question_id):
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
         if logged_in:
             if request.method == "POST":
@@ -128,7 +135,7 @@ def add_question():
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
 def edit_question(question_id):
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
         if logged_in:
             target_question = data_universal.find_target(question_id, 'id', 'question')[0]
@@ -234,7 +241,7 @@ def vote_down_answer(answer_id):
 @app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
 def add_answer(question_id):
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
 
         if logged_in:
@@ -270,21 +277,25 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else "None"
     try:
-        target_answers = data_answer.find_answer_by_question_id(question_id)
-        target_question = data_universal.find_target(question_id, 'id', 'question')[0]
-        if session["user_id"] == target_question["user_id"]:
-            data_comment.delete_comments("question_id", question_id)
-            data_tag.delete_tags(question_id)
-            for answer in target_answers:
-                data_comment.delete_comments("answer_id", answer["id"])
-                if answer['image']:
-                    os.remove(data_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
-            data_answer.delete_answers_by_question_id(question_id)
-            if target_question['image']:
-                os.remove(data_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
-            data_universal.delete_from_db(question_id, 'question')
-            return redirect("/list")
+        if logged_in:
+            target_answers = data_answer.find_answer_by_question_id(question_id)
+            target_question = data_universal.find_target(question_id, 'id', 'question')[0]
+            if username == target_question["user_id"]:
+                data_comment.delete_comments("question_id", question_id)
+                data_tag.delete_tags(question_id)
+                for answer in target_answers:
+                    data_comment.delete_comments("answer_id", answer["id"])
+                    if answer['image']:
+                        os.remove(data_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
+                data_answer.delete_answers_by_question_id(question_id)
+                if target_question['image']:
+                    os.remove(data_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
+                data_universal.delete_from_db(question_id, 'question')
+                return redirect("/list")
+            return render_template("error.html", error_code='Only the author can delete this question!')
         return render_template("error.html", error_code='Only the author can delete this question!')
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
@@ -296,20 +307,24 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else "None"
     try:
-        target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
-        if session["user_id"] == target_answer["user_id"]:
-            if target_answer['image']:
-                os.remove(data_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
-            data_universal.delete_from_db(answer_id, 'answer')
-            return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
-        return render_template("error.html", error_code='Only the author can delete this question!')
+        if logged_in:
+            target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
+            if session["user_id"] == target_answer["user_id"]:
+                if target_answer['image']:
+                    os.remove(data_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
+                data_universal.delete_from_db(answer_id, 'answer')
+                return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
+            return render_template("error.html", error_code='Only the author can delete this answer!')
+        return render_template("error.html", error_code='Only the author can delete this answer!')
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
