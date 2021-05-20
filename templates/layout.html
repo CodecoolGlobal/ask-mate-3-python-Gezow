@@ -9,18 +9,17 @@
   </head>
   <body>
   <div class="content-wrapper">
-
+       <div class="header">
+       {%  block header %}
+          {%  if logged_in %}
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-               <div>
-                  {% if logged_in %}
+                <div>
                       <div id="hd-last-name">
                       <h2 id="login-name">Logged in as: {{ username }}</h2>
-                  {% endif %}
                       </div>
-              </div>
-
-       {%  if logged_in %}
+                </div>
+          </div>
           <div class="topnav">
               <a class="active" href="/">Home</a>
               <a href="/list">Go to questions</a>
@@ -34,7 +33,10 @@
                   </form>
               </div>
           </div>
-       {%  else %}
+          {%  else %}
+              <div id="header-container">
+              <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
+              </div>
            <div class="topnav">
                 <a class="active" href="/">Home</a>
                 <a href="/list">Go to questions</a>
@@ -45,17 +47,18 @@
                       <input type="text" placeholder="Search.." name="search">
                       <button type="submit"><i class="fa fa-search"></i></button>
                      </form>
-            </div>
-       {%  endif %}
+                </div>
            </div>
+       {%  endif %}
+       {%  endblock %}
       </div>
-
+      <div class="page-content">
         {% block page_content %}
         {% block page_title %}{% endblock %}
         {% block table_header %}{% endblock table_header %}
         {% block home_button %}
         {% endblock home_button %}
         {% endblock page_content %}
-
+      </div>
   </body>
 </html>

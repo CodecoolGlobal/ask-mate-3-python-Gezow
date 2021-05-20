@@ -1,25 +1,20 @@
 {% extends "list.html" %}
-
-{% block fixed_position %}<div class="header" id="not-fixed-header">{% endblock %}
-
 {% block page_title %}
-
-    {% if not searched %}
-        <h1 class="page-title">Recent questions</h1>
-    {% else %}
-        <h1 class="page-title">Searched questions</h1>
-    {% endif %}
+{% if not searched %}
+    <h1 class="page-title">Recent questions</h1>
+{% else %}
+    <h1 class="page-title">Searched questions</h1>
+{% endif %}
 {% endblock %}
-
 <div class="page-content">
-    {% block table_header %}
-              <tr>
-                  {% for header in question_headers %}
-                    {% if header == 'Id' or header == 'Image' %}
-                        <th align="center">{{header}}</th>
-                    {% else %}
-                        <th align="center">{{header}}</th>
-                    {% endif %}
-                  {% endfor %}
-              </tr>
-              {% endblock table_header %}
+{% block table_header %}
+      <tr>
+          {% for header in question_headers %}
+            {% if header == 'Id' or header == 'Image' %}
+                <th align="center">{{header}}</th>
+            {% else %}
+                <th align="center">{{header}}</th>
+            {% endif %}
+          {% endfor %}
+      </tr>
+{% endblock table_header %}
