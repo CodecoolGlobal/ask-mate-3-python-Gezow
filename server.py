@@ -212,26 +212,30 @@ def add_answer(question_id):
 def delete_question(question_id):
     target_answers = data_manager_answers.find_answer_by_question_id(question_id)
     target_question = data_manager_universal.find_target(question_id, 'id', 'questions')[0]
-    data_manager_comments.delete_comments("question_id", question_id)
-    data_manager_tags.delete_tags(question_id)
-    for answer in target_answers:
-        data_manager_comments.delete_comments("answer_id", answer["id"])
-        if answer['image']:
-            os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
-    data_manager_answers.delete_answers_by_question_id(question_id)
-    if target_question['image']:
-        os.remove(data_manager_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
-    data_manager_universal.delete_from_db(question_id, 'questions')
-    return redirect("/list")
+    if session["user_id"] == target_question["user_id"]:
+        data_manager_comments.delete_comments("question_id", question_id)
+        data_manager_tags.delete_tags(question_id)
+        for answer in target_answers:
+            data_manager_comments.delete_comments("answer_id", answer["id"])
+            if answer['image']:
+                os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + answer['image'])
+        data_manager_answers.delete_answers_by_question_id(question_id)
+        if target_question['image']:
+            os.remove(data_manager_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
+        data_manager_universal.delete_from_db(question_id, 'questions')
+        return redirect("/list")
+    return render_template("error.html", error_code='Only the author can delete this question!')
 
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
     target_answer = data_manager_universal.find_target(answer_id, 'id', 'answers')[0]
-    if target_answer['image']:
-        os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
-    data_manager_universal.delete_from_db(answer_id, 'answers')
-    return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
+    if session["user_id"] == target_answer["user_id"]:
+        if target_answer['image']:
+            os.remove(data_manager_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
+        data_manager_universal.delete_from_db(answer_id, 'answers')
+        return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
+    return render_template("error.html", error_code='Only the author can delete this question!')
 
 
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
