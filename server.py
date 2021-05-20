@@ -588,62 +588,96 @@ def users():
     logged_in, username = util.login_checker()
     sorted_users, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
                                       "username", data_profile.get_ordered_users)
-    return render_template("list_users.html",
-                           users=sorted_users,
-                           if_reversed=order,
-                           user_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                         for header in data_universal.USER_HEADER],
-                           logged_in=logged_in,
-                           username=username
-                           )
+    try:
+        return render_template("list_users.html",
+                               users=sorted_users,
+                               if_reversed=order,
+                               user_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                             for header in data_universal.USER_HEADER],
+                               logged_in=logged_in,
+                               username=username
+                               )
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    logged_in = True if "username" in session else False
-    if not logged_in:
-        if request.method == 'POST':
-            email = request.form['email'].replace("'", "`")
-            password = request.form['password'].replace("'", "`")
-            user_emails = [email["email"] for email in data_profile.get_user_info('email')]
-            username = data_profile.find_user_name(email)['username']
-            user_password = data_profile.find_user_password(email)['password']
-            verified = util.verify_password(password, user_password)
-            if email not in user_emails or not verified:
-                return render_template('login.html', verified=verified)
-            else:
-                session['username'] = username
-                session['user_id'] = data_profile.find_profile_id(email, 'email')['id']
-                return redirect("/")
-        return render_template("login.html",
-                               verified=True,
-                               logged_in=logged_in)
-    return render_template("error.html",
-                           error_code='You are already signed up and logged in!',
-                           logged_in=logged_in,
-                           username=session["username"] if logged_in else None)
+    logged_in, username = util.login_checker()
+    try:
+        if not logged_in:
+            if request.method == 'POST':
+                email = request.form['email'].replace("'", "`")
+                password = request.form['password'].replace("'", "`")
+                user_emails = [email["email"] for email in data_profile.get_user_info('email')]
+                username = data_profile.find_user_name(email)['username']
+                user_password = data_profile.find_user_password(email)['password']
+                verified = util.verify_password(password, user_password)
+                if email not in user_emails or not verified:
+                    return render_template('login.html', verified=verified)
+                else:
+                    session['username'] = username
+                    session['user_id'] = data_profile.find_profile_id(email, 'email')['id']
+                    return redirect("/")
+            return render_template("login.html",
+                                   verified=True,
+                                   logged_in=logged_in)
+        return render_template("error.html",
+                               error_code='You are already signed up and logged in!',
+                               logged_in=logged_in,
+                               username=session["username"] if logged_in else None)
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route('/tags')
 def tags():
     logged_in, username = util.login_checker()
-    sorted_tags, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
-                                     "used", data_tag.get_ordered_tags)
-    return render_template("list_tags.html",
-                           tags=sorted_tags,
-                           if_reversed=order,
-                           tag_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                        for header in data_universal.TAG_HEADER],
-                           logged_in=logged_in,
-                           username=username
-                           )
+    try:
+        sorted_tags, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
+                                         "used", data_tag.get_ordered_tags)
+        return render_template("list_tags.html",
+                               tags=sorted_tags,
+                               if_reversed=order,
+                               tag_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                            for header in data_universal.TAG_HEADER],
+                               logged_in=logged_in,
+                               username=username
+                               )
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route('/logout')
 def logout():
-    for credential in ["username", "user_id"]:
-        session.pop(credential, None)
-    return redirect(url_for('login'))
+    logged_in, username = util.login_checker()
+    try:
+        if logged_in:
+            for credential in ["username", "user_id"]:
+                session.pop(credential, None)
+            return redirect(url_for('login'))
+        return render_template("error.html",
+                               error_code='You have to be logged in to be able to log out...',
+                               logged_in=logged_in,
+                               username=username)
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route('/question/<question_id>/accept_answer', methods=['GET', 'POST'])
