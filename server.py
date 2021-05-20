@@ -52,7 +52,7 @@ def display_list():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
         if request.args.get("voted") != "True":
             data_manager_questions.update_view_number(question_id)
@@ -70,8 +70,7 @@ def display_question(question_id):
                                data_manager=data_manager_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username,
-                               user_id=session["user_id"]
+                               username=username
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
