@@ -375,16 +375,15 @@ def add_comment_to_answer(answer_id):
 def search_in_questions():
     logged_in, username = util.login_checker()
     try:
-        if request.args.get("q"):
-            relevant_questions = data_question.filter_questions(request.args.get("q"))
+        if request.args.get("search"):
+            relevant_questions = data_question.filter_questions(request.args.get("search"))
             return render_template("list_searched.html",
                                    questions=relevant_questions,
                                    if_reversed="asc",
                                    question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                                      for header in data_universal.QUESTION_HEADER],
                                    logged_in=logged_in,
-                                   username=username
-                                   )
+                                   username=username)
     except psycopg2.Error and KeyError and IndexError and TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
