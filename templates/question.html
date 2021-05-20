@@ -1,4 +1,4 @@
-{% extends "list.html" %}
+{% extends "layout.html" %}
 {% block title %}Ask Mate - {{ question['title'] }}{% endblock title %}
 {% block page_content %}
 {% block heading %}{% endblock heading %}
@@ -87,8 +87,8 @@
             </form>
         {% endif %}
     <h4><strong>Comments:</strong></h4>
-        {% if data_manager.look_for_comments('comments', 'answer_id', answer["id"]) %}
-            {% for comment in data_manager.look_for_comments('comments', 'answer_id', answer["id"]) %}
+        {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
+            {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
                 <div class="comment">
                 <br>{{ comment["message"] }}<br><br>
                 <small>Submission time: {{comment['submission_time']}}<br>
