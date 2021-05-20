@@ -77,7 +77,8 @@ def display_question(question_id):
                                data_manager=data_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username
+                               username=username,
+                               user_id=session["user_id"] if "user_id" in session else "None"
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
@@ -109,7 +110,7 @@ def add_question():
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_question["id"]),
                                     "directory": data_universal.QUESTION_IMG_DIR_PATH,
-                                    "else_filename": ""}, 'questions')
+                                    "else_filename": ""}, 'question')
                 return redirect("/question/" + str(new_question["id"]) + "?voted=True")
             return render_template("add_question.html",
                                    logged_in=logged_in,
@@ -130,13 +131,13 @@ def edit_question(question_id):
     username = session["username"] if logged_in else None
     try:
         if logged_in:
-            target_question = data_universal.find_target(question_id, 'id', 'questions')[0]
+            target_question = data_universal.find_target(question_id, 'id', 'question')[0]
             if username == target_question["user_id"]:
                 if request.method == "POST":
                     util.handle_images({"request_files": request.files,
                                         "new_id": question_id,
                                         "directory": data_universal.QUESTION_IMG_DIR_PATH,
-                                        "else_filename": target_question['image']}, 'questions')
+                                        "else_filename": target_question['image']}, 'question')
                     title = request.form['title'].replace("'", "`")
                     message = request.form['message'].replace("'", "`")
                     data_question.edit_question(question_id, title, message)
@@ -160,8 +161,8 @@ def edit_question(question_id):
 def vote_up_question(question_id):
     try:
         if "username" in session:
-            data_universal.vote(question_id, 'questions', 1)
-            connected_user = data_profile.find_connected_user(question_id, 'questions')['user_id']
+            data_universal.vote(question_id, 'question', 1)
+            connected_user = data_profile.find_connected_user(question_id, 'question')['user_id']
             reputation_change = data_profile.REPUTATION_CHANGE['q_vote_up']
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + question_id + "?voted=True")
@@ -178,8 +179,8 @@ def vote_up_question(question_id):
 def vote_down_question(question_id):
     try:
         if "username" in session:
-            data_universal.vote(question_id, 'questions', -1)
-            connected_user = data_profile.find_connected_user(question_id, 'questions')['user_id']
+            data_universal.vote(question_id, 'question', -1)
+            connected_user = data_profile.find_connected_user(question_id, 'question')['user_id']
             reputation_change = data_profile.REPUTATION_CHANGE['q_vote_down']
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + question_id + "?voted=True")
@@ -196,9 +197,9 @@ def vote_down_question(question_id):
 def vote_up_answer(answer_id):
     try:
         if "username" in session:
-            data_universal.vote(answer_id, 'answers', 1)
+            data_universal.vote(answer_id, 'answer', 1)
             question_id = data_answer.find_question_id_from_answer_id(answer_id)['question_id']
-            connected_user = data_profile.find_connected_user(answer_id, 'answers')['user_id']
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
             reputation_change = data_profile.REPUTATION_CHANGE['a_vote_up']
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + str(question_id) + "?voted=True")
@@ -215,9 +216,9 @@ def vote_up_answer(answer_id):
 def vote_down_answer(answer_id):
     try:
         if "username" in session:
-            data_universal.vote(answer_id, 'answers', -1)
+            data_universal.vote(answer_id, 'answer', -1)
             question_id = data_answer.find_question_id_from_answer_id(answer_id)['question_id']
-            connected_user = data_profile.find_connected_user(answer_id, 'answers')['user_id']
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
             reputation_change = data_profile.REPUTATION_CHANGE['a_vote_down']
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + str(question_id) + "?voted=True")
@@ -251,7 +252,7 @@ def add_answer(question_id):
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_answer["id"]),
                                     "directory": data_universal.ANSWER_IMG_DIR_PATH,
-                                    "else_filename": ""}, 'answers')
+                                    "else_filename": ""}, 'answer')
                 return redirect("/question/" + question_id + "?voted=True")
             return render_template("add_answer.html",
                                    question_id=question_id,
@@ -271,7 +272,7 @@ def add_answer(question_id):
 def delete_question(question_id):
     try:
         target_answers = data_answer.find_answer_by_question_id(question_id)
-        target_question = data_universal.find_target(question_id, 'id', 'questions')[0]
+        target_question = data_universal.find_target(question_id, 'id', 'question')[0]
         if session["user_id"] == target_question["user_id"]:
             data_comment.delete_comments("question_id", question_id)
             data_tag.delete_tags(question_id)
@@ -282,7 +283,7 @@ def delete_question(question_id):
             data_answer.delete_answers_by_question_id(question_id)
             if target_question['image']:
                 os.remove(data_universal.QUESTION_IMG_DIR_PATH + "/" + target_question['image'])
-            data_universal.delete_from_db(question_id, 'questions')
+            data_universal.delete_from_db(question_id, 'question')
             return redirect("/list")
         return render_template("error.html", error_code='Only the author can delete this question!')
     except psycopg2.Error and KeyError and IndexError as error:
@@ -296,11 +297,11 @@ def delete_question(question_id):
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
     try:
-        target_answer = data_universal.find_target(answer_id, 'id', 'answers')[0]
+        target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
         if session["user_id"] == target_answer["user_id"]:
             if target_answer['image']:
                 os.remove(data_universal.ANSWER_IMG_DIR_PATH + "/" + target_answer['image'])
-            data_universal.delete_from_db(answer_id, 'answers')
+            data_universal.delete_from_db(answer_id, 'answer')
             return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
         return render_template("error.html", error_code='Only the author can delete this question!')
     except psycopg2.Error and KeyError and IndexError as error:
@@ -388,13 +389,13 @@ def edit_answer(answer_id):
     username = session["username"] if logged_in else None
     try:
         if logged_in:
-            target_answer = data_universal.find_target(answer_id, 'id', 'answers')[0]
+            target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
             if session["user_id"] == target_answer["user_id"]:
                 if request.method == "POST":
                     util.handle_images({"request_files": request.files,
                                         "new_id": str(target_answer["id"]),
                                         "directory": data_universal.ANSWER_IMG_DIR_PATH,
-                                        "else_filename": target_answer["image"]}, 'answers')
+                                        "else_filename": target_answer["image"]}, 'answer')
                     message = request.form['message'].replace("'", "`")
                     data_answer.edit_answer(answer_id, message)
                     return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
@@ -502,7 +503,7 @@ def profile_page(user_id):
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else None
     target_profile = data_universal.find_target(user_id, "id", "users")[0]
-    comments_of_user = [comment for comment in data_universal.find_target(user_id, 'user_id', 'comments')]
+    comments_of_user = [comment for comment in data_universal.find_target(user_id, 'user_id', 'comment')]
     user_comments = []
     for comment in comments_of_user:
         if comment["answer_id"]:
@@ -512,19 +513,19 @@ def profile_page(user_id):
     return render_template("profile_page.html",
                            user=target_profile,
                            logged_in=logged_in,
-                           answer_count=data_universal.execute_count('answers', 'user_id', user_id)['count'],
+                           answer_count=data_universal.execute_count('answer', 'user_id', user_id)['count'],
                            answer_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                            for header in data_universal.ANSWER_HEADER],
-                           comment_count=data_universal.execute_count('comments', 'user_id', user_id)['count'],
+                           comment_count=data_universal.execute_count('comment', 'user_id', user_id)['count'],
                            comment_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                             for header in data_universal.COMMENT_HEADER],
-                           question_count=data_universal.execute_count('questions', 'user_id', user_id)['count'],
+                           question_count=data_universal.execute_count('question', 'user_id', user_id)['count'],
                            question_headers=[" ".join(header.capitalize() for header in header.split("_"))
                                              for header in data_universal.QUESTION_HEADER],
                            user_questions=[question for question in data_universal.find_target(
-                               user_id, 'user_id', 'questions')],
+                               user_id, 'user_id', 'question')],
                            user_answers=[answer for answer in data_universal.find_target(
-                               user_id, 'user_id', 'answers')],
+                               user_id, 'user_id', 'answer')],
                            user_comments=user_comments,
                            username=username
                            )

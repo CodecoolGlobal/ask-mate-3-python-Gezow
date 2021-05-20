@@ -72,7 +72,7 @@ def get_ordered_tags(cursor, filter_type, order):
 @database_common.connection_handler
 def delete_tags(cursor, question_id):
     query = """
-                DELETE FROM question_tags
+                DELETE FROM question_tag
                 WHERE question_id = '%s';
                 """ % question_id
     cursor.execute(query)
