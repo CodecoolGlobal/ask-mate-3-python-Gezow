@@ -14,8 +14,7 @@ app.secret_key = b'secretkey'
 
 @app.route("/")
 def main():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         return render_template("list_searched.html",
                                questions=data_question.get_ordered_questions("submission_time", 'DESC')[:5],
@@ -35,8 +34,7 @@ def main():
 
 @app.route("/list")
 def display_list():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if request.args.get("order_by") and request.args.get("order_direction") == "desc":
             sorted_questions = data_question.get_ordered_questions(request.args.get("order_by"), 'DESC')
@@ -65,8 +63,7 @@ def display_list():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if request.args.get("voted") != "True":
             data_question.update_view_number(question_id)
@@ -97,8 +94,7 @@ def display_question(question_id):
 
 @app.route("/add-question", methods=["GET", "POST"])
 def add_question():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             if request.method == "POST":
@@ -134,8 +130,7 @@ def add_question():
 
 @app.route("/question/<question_id>/edit_question", methods=["GET", "POST"])
 def edit_question(question_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             target_question = data_universal.find_target(question_id, 'id', 'question')[0]
@@ -240,8 +235,7 @@ def vote_down_answer(answer_id):
 
 @app.route("/question/<question_id>/new_answer", methods=["GET", "POST"])
 def add_answer(question_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
 
         if logged_in:
@@ -277,8 +271,7 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/delete_question')
 def delete_question(question_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             target_answers = data_answer.find_answer_by_question_id(question_id)
@@ -307,8 +300,7 @@ def delete_question(question_id):
 
 @app.route('/answer/<answer_id>/delete_answer')
 def delete_answer(answer_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
@@ -329,9 +321,8 @@ def delete_answer(answer_id):
 
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
 def new_comment_to_question(question_id):
-    logged_in = True if "username" in session else False
+    logged_in, username = util.login_checker()
     if logged_in:
-        username = session["username"] if logged_in else None
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
@@ -352,8 +343,7 @@ def new_comment_to_question(question_id):
 
 @app.route("/answer/<answer_id>/new_comment", methods=["GET", "POST"])
 def add_comment_to_answer(answer_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             q_id = data_answer.find_question_id_from_answer_id(answer_id)['question_id']
@@ -384,8 +374,7 @@ def add_comment_to_answer(answer_id):
 
 @app.route("/search")
 def search_in_questions():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    logged_in, username = util.login_checker()
     if request.args.get("q"):
         relevant_questions = data_question.filter_questions(request.args.get("q"))
         return render_template("list_searched.html",
@@ -400,8 +389,7 @@ def search_in_questions():
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
 def edit_answer(answer_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             target_answer = data_universal.find_target(answer_id, 'id', 'answer')[0]
@@ -430,8 +418,7 @@ def edit_answer(answer_id):
 
 @app.route("/comment/<comment_id>/edit", methods=["GET", "POST"])
 def edit_comment(comment_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    logged_in, username = util.login_checker()
     try:
         if logged_in:
             target_comment = data_comment.find_comment(comment_id)[0]

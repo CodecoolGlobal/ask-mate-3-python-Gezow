@@ -1,4 +1,4 @@
-from flask import redirect
+from flask import redirect, session
 import os
 from data_managers import data_universal
 from data_managers import data_answer
@@ -31,8 +31,8 @@ def handle_images(update_info, data_table):
     else:
         filename = update_info["else_filename"]
     data_universal.update_image(filename,
-                                        update_info["new_id"],
-                                        data_table)
+                                update_info["new_id"],
+                                data_table)
 
 
 def redirect_after_comment_action(target_comment):
@@ -50,3 +50,9 @@ def find_error_code(error, pgcode):
     else:
         error_code = "Invalid ID!"
     return error_code
+
+
+def login_checker():
+    logged_in = True if "username" in session else False
+    username = session["username"] if logged_in else "None"
+    return logged_in, username
