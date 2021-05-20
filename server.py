@@ -314,23 +314,30 @@ def delete_answer(answer_id):
 @app.route('/question/<question_id>/new_comment', methods=['GET', 'POST'])
 def new_comment_to_question(question_id):
     logged_in, username = util.login_checker()
-    if logged_in:
-        if request.method == 'POST':
-            active_user_id = escape(session['user_id'])
-            submission_time = str(datetime.now()).split(".")[0]
-            data_comment.add_comment(question_id=question_id,
-                                     answer_id='null',
-                                     message=request.form['message'].replace("'", "`"),
-                                     submission_time=submission_time,
-                                     edited_count='null',
-                                     active_user_id=active_user_id)
-            return redirect("/question/" + question_id + "?voted=True")
-        return render_template('add_comment.html',
-                               question_id=question_id,
+    try:
+        if logged_in:
+            if request.method == 'POST':
+                active_user_id = escape(session['user_id'])
+                submission_time = str(datetime.now()).split(".")[0]
+                data_comment.add_comment(question_id=question_id,
+                                         answer_id='null',
+                                         message=request.form['message'].replace("'", "`"),
+                                         submission_time=submission_time,
+                                         edited_count='null',
+                                         active_user_id=active_user_id)
+                return redirect("/question/" + question_id + "?voted=True")
+            return render_template('add_comment.html',
+                                   question_id=question_id,
+                                   logged_in=logged_in,
+                                   username=username
+                                   )
+        return redirect(url_for("login"))
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
                                logged_in=logged_in,
-                               username=username
-                               )
-    return redirect(url_for("login"))
+                               username=username)
 
 
 @app.route("/answer/<answer_id>/new_comment", methods=["GET", "POST"])
@@ -367,16 +374,23 @@ def add_comment_to_answer(answer_id):
 @app.route("/search")
 def search_in_questions():
     logged_in, username = util.login_checker()
-    if request.args.get("q"):
-        relevant_questions = data_question.filter_questions(request.args.get("q"))
-        return render_template("list_searched.html",
-                               questions=relevant_questions,
-                               if_reversed="asc",
-                               question_headers=[" ".join(header.capitalize() for header in header.split("_"))
-                                                 for header in data_universal.QUESTION_HEADER],
+    try:
+        if request.args.get("q"):
+            relevant_questions = data_question.filter_questions(request.args.get("q"))
+            return render_template("list_searched.html",
+                                   questions=relevant_questions,
+                                   if_reversed="asc",
+                                   question_headers=[" ".join(header.capitalize() for header in header.split("_"))
+                                                     for header in data_universal.QUESTION_HEADER],
+                                   logged_in=logged_in,
+                                   username=username
+                                   )
+    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+        error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
+        return render_template("error.html",
+                               error_code=error_code,
                                logged_in=logged_in,
-                               username=username
-                               )
+                               username=username)
 
 
 @app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
@@ -458,7 +472,7 @@ def add_tag(question_id):
     logged_in, username = util.login_checker()
     try:
         if logged_in:
-            if session["u_id"] == data_question.get_user_id(question_id)["user_id"]:
+            if session["user_id"] == data_question.get_user_id(question_id)["user_id"]:
                 if request.method == "POST":
                     if request.form['message']:
                         data_tag.add_new_tag(request.form['message'].replace("'", "`"))
@@ -470,7 +484,8 @@ def add_tag(question_id):
                 all_tags = data_tag.all_tags()
                 return render_template("add_tag.html", all_tags=all_tags, question_id=question_id)
         return render_template("error.html",
-                               error_code='Only the author is allowed to add tags to this comment! Log in!')
+                               error_code='Only the author is allowed to add tags to this comment!',
+                               logged_in=logged_in, user_name=username)
     except psycopg2.Error and KeyError and IndexError and TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
