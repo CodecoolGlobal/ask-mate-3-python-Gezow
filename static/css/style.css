@@ -15,6 +15,7 @@ body {
 }
 
 .header {
+
     position: fixed;
     top: 0;
     width: 100%;
@@ -366,7 +367,7 @@ table.a {
     to {border-color: #F68A07FF;}
 }
 
-span {
+#tick {
     content: "\2713";
     color: green;
     font-size: xx-large;

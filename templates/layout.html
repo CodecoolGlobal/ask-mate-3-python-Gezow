@@ -9,11 +9,11 @@
   </head>
   <body>
   <div class="content-wrapper">
-      <div class="header">
+       <div class="header">
+       {%  block header %}
           <div id="header-container">
               <div id="hd-left"><a href="/"><img src="/static/images/logo_200x200.png" alt="logo" /></a></div>
-
-              <div>
+               <div>
                   {% if logged_in %}
                       <div id="hd-last-name">
                       <h2 id="login-name">Logged in as: {{ username }}</h2>
@@ -26,17 +26,8 @@
               <a class="active" href="/">Home</a>
               <a href="/list">Go to questions</a>
               <a href="/users">List users</a>
-              {% if logged_in %}
-                  <a href="/add-question">Ask a question</a>
-              {% else %}
-              {% endif %}
-
-              {% if logged_in %}
+              <a href="/add-question">Ask a question</a>
               <a href="/logout">Log out</a></h3>
-              {% else %}
-              <a href="/login">Login</a>
-              {%  endif %}
-
               <div class="search-container">
                   <form action="/search">
                       <input type="text" placeholder="Search.." name="search">
@@ -46,8 +37,8 @@
               {% block login_button %}
 
               {% endblock %}
-
           </div>
+          {%  endblock %}
       </div>
       <div class="page-content">
         {% block page_content %}
@@ -56,5 +47,6 @@
         {% block home_button %}
         {% endblock home_button %}
         {% endblock page_content %}
+      </div>
   </body>
 </html>
