@@ -1,7 +1,6 @@
 from flask import redirect, session
 import os
-from data_managers import data_universal
-from data_managers import data_answer
+from data_managers import data_universal, data_answer, data_question
 import bcrypt
 
 
@@ -56,3 +55,16 @@ def login_checker():
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else "None"
     return logged_in, username
+
+
+def sorter(order_by, order_direction, default_value, query):
+    if order_by and order_direction == "desc":
+        sorted_questions = query(order_by, 'DESC')
+        order = "asc"
+    elif order_by and order_direction == "asc":
+        sorted_questions = query(order_by, 'ASC')
+        order = "desc"
+    else:
+        order = "asc"
+        sorted_questions = query(default_value, 'DESC')
+    return sorted_questions, order

@@ -28,23 +28,16 @@ def main():
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
-                               logged_in=True if "username" in session else False,
-                               username=session["username"] if "username" in session else None)
+                               logged_in=logged_in,
+                               username=username)
 
 
 @app.route("/list")
 def display_list():
     logged_in, username = util.login_checker()
     try:
-        if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-            sorted_questions = data_question.get_ordered_questions(request.args.get("order_by"), 'DESC')
-            order = "asc"
-        elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-            sorted_questions = data_question.get_ordered_questions(request.args.get("order_by"), 'ASC')
-            order = "desc"
-        else:
-            order = "asc"
-            sorted_questions = data_question.get_ordered_questions("submission_time", 'DESC')
+        sorted_questions, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
+                                              "submission_time", data_question.get_ordered_questions)
         return render_template("list.html",
                                questions=sorted_questions,
                                if_reversed=order,
@@ -502,8 +495,7 @@ def registration():
 
 @app.route("/user/<user_id>")
 def profile_page(user_id):
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else "None"
+    logged_in, username = util.login_checker()
     try:
         target_profile = data_universal.find_target(user_id, "id", "profile")[0]
         comments_of_user = [comment for comment in data_universal.find_target(user_id, 'user_id', 'comment')]
@@ -542,17 +534,9 @@ def profile_page(user_id):
 
 @app.route("/users")
 def users():
-    logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
-    if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-        sorted_users = data_profile.get_ordered_users(request.args.get("order_by"), 'DESC')
-        order = "asc"
-    elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-        sorted_users = data_profile.get_ordered_users(request.args.get("order_by"), 'ASC')
-        order = "desc"
-    else:
-        order = "asc"
-        sorted_users = data_profile.get_ordered_users("username", 'DESC')
+    logged_in, username = util.login_checker()
+    sorted_users, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
+                                      "username", data_profile.get_ordered_users)
     return render_template("list_users.html",
                            users=sorted_users,
                            if_reversed=order,
@@ -593,15 +577,8 @@ def login():
 def tags():
     logged_in = True if "username" in session else False
     username = session["username"] if logged_in else None
-    if request.args.get("order_by") and request.args.get("order_direction") == "desc":
-        sorted_tags = data_tag.get_ordered_tags(request.args.get("order_by"), 'DESC')
-        order = "asc"
-    elif request.args.get("order_by") and request.args.get("order_direction") == "asc":
-        sorted_tags = data_tag.get_ordered_tags(request.args.get("order_by"), 'ASC')
-        order = "desc"
-    else:
-        order = "asc"
-        sorted_tags = data_tag.get_ordered_tags('used', 'DESC')
+    sorted_tags, order = util.sorter(request.args.get("order_by"), request.args.get("order_direction"),
+                                     "used", data_tag.get_ordered_tags)
     return render_template("list_tags.html",
                            tags=sorted_tags,
                            if_reversed=order,
