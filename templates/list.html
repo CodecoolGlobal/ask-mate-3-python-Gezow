@@ -12,7 +12,7 @@
                     {% if header == 'Id' or header == 'Image' %}
                         <th align="center">{{header}}</th>
                     {% else %}
-                        <th id="hover-hd" align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                        <th align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
                     {% endif %}
                   {% endfor %}
               </tr>

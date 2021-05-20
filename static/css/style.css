@@ -260,7 +260,7 @@ table.a {
 }
 
 #display-list a:hover {
-    color: #F68A07FF;
+    background-color: #F68A07FF;
 }
 
 #display-list td, #display-list th, #display-list image {
@@ -280,7 +280,8 @@ table.a {
   color: white;
 }
 
-#hover-hd:hover {
+#display-list th:hover {
+    color: white;
     background-color: #F68A07FF;
 }
 
