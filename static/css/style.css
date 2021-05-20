@@ -361,3 +361,9 @@ table.a {
     from {border-color: #52c6d2;}
     to {border-color: #F68A07FF;}
 }
+
+span {
+    content: "\2713";
+    color: green;
+    font-size: xx-large;
+}

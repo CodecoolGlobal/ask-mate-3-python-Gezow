@@ -505,8 +505,8 @@ def logout():
 def accept_answer(question_id):
     if request.method == 'POST':
         accepted = ('accepted' == request.form['accept'])
-        print(accepted)
-        data_manager_answers.update_accept_answer(question_id, accepted)
+        answer_id = request.form.get('answer-id', type=int)
+        data_manager_answers.update_accept_answer(answer_id, accepted)
         return redirect(request.referrer)
 
 
