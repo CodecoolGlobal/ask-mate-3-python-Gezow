@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
-          </div>
-      </div>
-      <div class="page-content">
+
       {% block page_content %}
       {% block page_title %}<h1 class="page-title">All questions</h1>{% endblock %}
       <div class="table">
@@ -12,7 +10,7 @@
                     {% if header == 'Id' or header == 'Image' %}
                         <th align="center">{{header}}</th>
                     {% else %}
-                        <th id="hover-hd" align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
+                        <th align="center"><a href="/list?order_by={{ "_".join(header.lower().split(" ")) }}&order_direction={{ if_reversed }}">{{header}}</a></th>
                     {% endif %}
                   {% endfor %}
               </tr>
