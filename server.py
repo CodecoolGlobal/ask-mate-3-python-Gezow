@@ -52,7 +52,7 @@ def display_list():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     logged_in = True if "username" in session else False
-    username = session["username"] if logged_in else None
+    username = session["username"] if logged_in else "None"
     try:
         if request.args.get("voted") != "True":
             data_question.update_view_number(question_id)
@@ -70,8 +70,7 @@ def display_question(question_id):
                                data_manager=data_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username,
-                               user_id=session["user_id"]
+                               username=username
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
@@ -91,14 +90,14 @@ def add_question():
             title = request.form['title'].replace("'", "`")
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_question.add_new_question(submission_time=submission_time,
-                                                   view_number=0,
-                                                   vote_number=0,
-                                                   title=title,
-                                                   message=message,
-                                                   active_user_id=active_user_id
-                                                   )
-            new_question = data_question.find_question_id(submission_time, title)
+            data_manager_questions.add_new_question(submission_time=submission_time,
+                                                    view_number=0,
+                                                    vote_number=0,
+                                                    title=title,
+                                                    message=message,
+                                                    active_user_id=active_user_id
+                                                    )
+            new_question = data_manager_questions.find_question_id(submission_time, title)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_question["id"]),
                                 "directory": data_universal.QUESTION_IMG_DIR_PATH,
@@ -181,13 +180,13 @@ def add_answer(question_id):
             submission_time = str(datetime.now()).split(".")[0]
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_answer.add_new_answer(submission_time=submission_time,
-                                               vote_number=0,
-                                               question_id=question_id,
-                                               message=message,
-                                               active_user_id=active_user_id,
-                                               )
-            new_answer = data_answer.find_answer_id(submission_time, message)
+            data_manager_answers.add_new_answer(submission_time=submission_time,
+                                                vote_number=0,
+                                                question_id=question_id,
+                                                message=message,
+                                                active_user_id=active_user_id,
+                                                )
+            new_answer = data_manager_answers.find_answer_id(submission_time, message)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_answer["id"]),
                                 "directory": data_universal.ANSWER_IMG_DIR_PATH,
@@ -235,12 +234,12 @@ def new_comment_to_question(question_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_comment.add_comment(question_id=question_id,
-                                             answer_id='null',
-                                             message=request.form['message'].replace("'", "`"),
-                                             submission_time=submission_time,
-                                             edited_count='null',
-                                             active_user_id=active_user_id)
+            data_manager_comments.add_comment(question_id=question_id,
+                                              answer_id='null',
+                                              message=request.form['message'].replace("'", "`"),
+                                              submission_time=submission_time,
+                                              edited_count='null',
+                                              active_user_id=active_user_id)
             return redirect("/question/" + question_id + "?voted=True")
         return render_template('add_comment.html',
                                question_id=question_id,
@@ -259,12 +258,12 @@ def add_comment_to_answer(answer_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_comment.add_comment(question_id='null',
-                                             answer_id=answer_id,
-                                             message=request.form["message"].replace("'", "`"),
-                                             submission_time=submission_time,
-                                             edited_count='null',
-                                             active_user_id=active_user_id)
+            data_manager_comments.add_comment(question_id='null',
+                                              answer_id=answer_id,
+                                              message=request.form["message"].replace("'", "`"),
+                                              submission_time=submission_time,
+                                              edited_count='null',
+                                              active_user_id=active_user_id)
             return redirect("/question/" + str(q_id) + "?voted=True")
         return render_template('add_comment_answer.html',
                                answer_id=answer_id,
@@ -498,7 +497,7 @@ def tags():
 @app.route('/logout')
 def logout():
     for credential in ["username", "user_id"]:
-      session.pop(credential, None)
+        session.pop(credential, None)
     return redirect(url_for('login'))
 
 
@@ -506,8 +505,8 @@ def logout():
 def accept_answer(question_id):
     if request.method == 'POST':
         accepted = ('accepted' == request.form['accept'])
-        print(accepted)
-        data_answer.update_accept_answer(question_id, accepted)
+        answer_id = request.form.get('answer-id', type=int)
+        data_answer.update_accept_answer(answer_id, accepted)
         return redirect(request.referrer)
 
 

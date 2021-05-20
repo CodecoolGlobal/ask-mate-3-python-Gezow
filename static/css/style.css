@@ -260,7 +260,7 @@ table.a {
     color: #F68A07FF;
 }
 
-#display-list td, #display-list th {
+#display-list td, #display-list th, #display-list image {
   border: 1px solid #ddd;
   padding: 8px;
 }
@@ -360,4 +360,10 @@ table.a {
 @keyframes border_animation {
     from {border-color: #52c6d2;}
     to {border-color: #F68A07FF;}
+}
+
+span {
+    content: "\2713";
+    color: green;
+    font-size: xx-large;
 }

@@ -21,15 +21,15 @@
     </div>
     {% if logged_in %}
     <div class="buttons">
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
-            <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>&nbsp;&nbsp;
-            {% if question["user_id"] == user_id %}
+        <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_up';">Vote up</button>&nbsp;&nbsp;
+        <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/vote_down';">Vote down</button>&nbsp;&nbsp;
+        <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_answer';">Answer this question</button>&nbsp;&nbsp;
+        <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_comment';">New comment</button>&nbsp;&nbsp;
+        {% if question["user_id"] == user_id %}
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/delete_question';">Delete this question</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/edit_question';">Edit this question</button>&nbsp;&nbsp;
             <button class="small-button" onclick="window.location.href='/question/{{ question_id }}/new_tag';">Add tag</button>
-            {% endif %}
+        {% endif %}
     </div>
     {% endif %}
         <h3><strong>Comments:</strong></h3>
@@ -50,7 +50,11 @@
         {% endif %}
         <h2><strong>Answers:</strong></h2>
           {% for answer in answers %}
-            <p>{{answer['message']}}</p>
+            <p>
+                {% if answer["accepted"] %}
+                <span>&#10003;</span>
+                {%  endif %}
+                {{answer['message']}}</p>
             <p>
                 {% if answer["image"] %}
                     <img src="{{ url_for("static", filename="/images/answer/" + answer["image"]) }}" alt="User image." width="290">
@@ -68,7 +72,7 @@
                 {% endif %}
           </div>
         {% endif %}
-        {% if question["user_id"] == user_id %}
+        {% if logged_in and question["user_id"] == user_id %}
             <div class="buttons"></div>
             <form action="/question/{{ question_id }}/accept_answer" method="post">
             {% if answer["accepted"] %}
@@ -78,9 +82,10 @@
                 <input type="checkbox" id="accept" name="accept" value="accepted">
                 <label for="accept"> Accept answer</label>
             {%  endif %}
-               <input class="smaller-button" type="submit" value="Submit">
+                <input type="hidden" name="answer-id" value="{{ answer['id'] }}">
+                <input class="smaller-button" type="submit" value="Submit">
             </form>
-            {% endif %}
+        {% endif %}
     <h4><strong>Comments:</strong></h4>
         {% if data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
             {% for comment in data_manager.look_for_comments('comment', 'answer_id', answer["id"]) %}
