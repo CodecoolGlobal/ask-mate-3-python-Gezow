@@ -116,8 +116,8 @@ def edit_question(question_id):
     if logged_in:
         username = session["username"] if logged_in else None
         target_question = data_manager_universal.find_target(question_id, 'id', 'questions')[0]
-        if request.method == "POST":
-            if target_question["user_id"] == session["user_id"]:
+        if username == target_question["user_id"]:
+            if request.method == "POST":
                 util.handle_images({"request_files": request.files,
                                     "new_id": question_id,
                                     "directory": data_manager_universal.QUESTION_IMG_DIR_PATH,
@@ -126,12 +126,12 @@ def edit_question(question_id):
                 message = request.form['message'].replace("'", "`")
                 data_manager_questions.edit_question(question_id, title, message)
                 return redirect("/question/" + str(target_question['id']) + "?voted=True")
-            return render_template("error.html", error_code='Only the author can edit this question!')
-        return render_template("edit_question.html",
-                               question=target_question,
-                               logged_in=logged_in,
-                               username=username
-                               )
+            return render_template("edit_question.html",
+                                   question=target_question,
+                                   logged_in=logged_in,
+                                   username=username
+                                   )
+        return render_template("error.html", error_code='Only the author can edit this question!')
     return redirect(url_for("login"))
 
 
@@ -311,6 +311,7 @@ def edit_answer(answer_id):
         username = session["username"] if logged_in else None
         target_answer = data_manager_universal.find_target(answer_id, 'id', 'answers')[0]
         if request.method == "POST":
+
             util.handle_images({"request_files": request.files,
                                 "new_id": str(target_answer["id"]),
                                 "directory": data_manager_universal.ANSWER_IMG_DIR_PATH,
