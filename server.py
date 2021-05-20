@@ -65,12 +65,12 @@ def display_question(question_id):
                                answer_headers=data_universal.ANSWER_HEADER,
                                question_id=question_id,
                                IMAGE_DIR_PATH=data_universal.QUESTION_IMG_DIR_PATH,
-                               question_comments=data_universal.look_for_comments('comment', 'question_id',
-                                                                                          question_id),
+                               question_comments=data_universal.look_for_comments('comment', 'question_id', question_id),
                                data_manager=data_universal,
                                tags=relevant_tags,
                                logged_in=logged_in,
-                               username=username
+                               username=username,
+                               user_id=session["user_id"]
                                )
     except psycopg2.Error and KeyError and IndexError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
@@ -90,14 +90,14 @@ def add_question():
             title = request.form['title'].replace("'", "`")
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_manager_questions.add_new_question(submission_time=submission_time,
-                                                    view_number=0,
-                                                    vote_number=0,
-                                                    title=title,
-                                                    message=message,
-                                                    active_user_id=active_user_id
-                                                    )
-            new_question = data_manager_questions.find_question_id(submission_time, title)
+            data_question.add_new_question(submission_time=submission_time,
+                                           view_number=0,
+                                           vote_number=0,
+                                           title=title,
+                                           message=message,
+                                           active_user_id=active_user_id
+                                           )
+            new_question = data_question.find_question_id(submission_time, title)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_question["id"]),
                                 "directory": data_universal.QUESTION_IMG_DIR_PATH,
@@ -180,13 +180,13 @@ def add_answer(question_id):
             submission_time = str(datetime.now()).split(".")[0]
             message = request.form['message'].replace("'", "`")
             active_user_id = escape(session['user_id'])
-            data_manager_answers.add_new_answer(submission_time=submission_time,
-                                                vote_number=0,
-                                                question_id=question_id,
-                                                message=message,
-                                                active_user_id=active_user_id,
-                                                )
-            new_answer = data_manager_answers.find_answer_id(submission_time, message)
+            data_answer.add_new_answer(submission_time=submission_time,
+                                       vote_number=0,
+                                       question_id=question_id,
+                                       message=message,
+                                       active_user_id=active_user_id,
+                                       )
+            new_answer = data_answer.find_answer_id(submission_time, message)
             util.handle_images({"request_files": request.files,
                                 "new_id": str(new_answer["id"]),
                                 "directory": data_universal.ANSWER_IMG_DIR_PATH,
@@ -234,12 +234,12 @@ def new_comment_to_question(question_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_manager_comments.add_comment(question_id=question_id,
-                                              answer_id='null',
-                                              message=request.form['message'].replace("'", "`"),
-                                              submission_time=submission_time,
-                                              edited_count='null',
-                                              active_user_id=active_user_id)
+            data_comment.add_comment(question_id=question_id,
+                                     answer_id='null',
+                                     message=request.form['message'].replace("'", "`"),
+                                     submission_time=submission_time,
+                                     edited_count='null',
+                                     active_user_id=active_user_id)
             return redirect("/question/" + question_id + "?voted=True")
         return render_template('add_comment.html',
                                question_id=question_id,
@@ -258,12 +258,12 @@ def add_comment_to_answer(answer_id):
         if request.method == 'POST':
             active_user_id = escape(session['user_id'])
             submission_time = str(datetime.now()).split(".")[0]
-            data_manager_comments.add_comment(question_id='null',
-                                              answer_id=answer_id,
-                                              message=request.form["message"].replace("'", "`"),
-                                              submission_time=submission_time,
-                                              edited_count='null',
-                                              active_user_id=active_user_id)
+            data_comment.add_comment(question_id='null',
+                                     answer_id=answer_id,
+                                     message=request.form["message"].replace("'", "`"),
+                                     submission_time=submission_time,
+                                     edited_count='null',
+                                     active_user_id=active_user_id)
             return redirect("/question/" + str(q_id) + "?voted=True")
         return render_template('add_comment_answer.html',
                                answer_id=answer_id,
@@ -367,13 +367,12 @@ def registration():
                                 [username["username"] for username in data_profile.get_user_info('username')]
             if request.form['email'] not in user_emails and request.form['username'] not in user_names:
                 data_profile.add_new_user({'email': request.form["email"].replace("'", "`"),
-                                                 'password': util.hash_password(
-                                                     request.form["password"].replace("'", "`")),
-                                                 'username': request.form["username"].replace("'", "`"),
-                                                 'reputation': 0,
-                                                 'image': 'null',
-                                                 'registration_date': str(datetime.now()).split(".")[0]}
-                                                )
+                                           'password': util.hash_password(request.form["password"].replace("'", "`")),
+                                           'username': request.form["username"].replace("'", "`"),
+                                           'reputation': 0,
+                                           'image': 'null',
+                                           'registration_date': str(datetime.now()).split(".")[0]}
+                                          )
                 new_profile = data_profile.find_profile_id(request.form["email"].replace("'", "`"), 'email')
                 util.handle_images({"request_files": request.files,
                                     "new_id": str(new_profile["id"]),
@@ -506,6 +505,14 @@ def accept_answer(question_id):
     if request.method == 'POST':
         accepted = ('accepted' == request.form['accept'])
         answer_id = request.form.get('answer-id', type=int)
+        if accepted is True:
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
+            reputation_change = data_profile.REPUTATION_CHANGE['a_accepted']
+            data_profile.change_user_reputation(connected_user, int(reputation_change))
+        elif accepted is False:
+            connected_user = data_profile.find_connected_user(answer_id, 'answer')['user_id']
+            reputation_change = -(data_profile.REPUTATION_CHANGE['a_accepted'])
+            data_profile.change_user_reputation(connected_user, int(reputation_change))
         data_answer.update_accept_answer(answer_id, accepted)
         return redirect(request.referrer)
 
