@@ -25,7 +25,7 @@ def main():
                                username=username,
                                searched=False
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -47,7 +47,7 @@ def display_list():
                                logged_in=logged_in,
                                username=username
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -78,7 +78,7 @@ def display_question(question_id):
                                username=username,
                                user_id=session["user_id"] if "user_id" in session else "None"
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -114,7 +114,7 @@ def add_question():
                                    username=username
                                    )
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -145,7 +145,7 @@ def edit_question(question_id):
                                        )
             return render_template("error.html", error_code='Only the author can edit this question!')
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -163,7 +163,7 @@ def vote_up_question(question_id):
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + question_id + "?voted=True")
         return redirect(url_for('login'))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -181,7 +181,7 @@ def vote_down_question(question_id):
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + question_id + "?voted=True")
         return redirect(url_for('login'))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -200,7 +200,7 @@ def vote_up_answer(answer_id):
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + str(question_id) + "?voted=True")
         return redirect(url_for('login'))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -219,7 +219,7 @@ def vote_down_answer(answer_id):
             data_profile.change_user_reputation(connected_user, int(reputation_change))
             return redirect("/question/" + str(question_id) + "?voted=True")
         return redirect(url_for('login'))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -254,7 +254,7 @@ def add_answer(question_id):
                                    username=username
                                    )
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -283,7 +283,7 @@ def delete_question(question_id):
                 return redirect("/list")
             return render_template("error.html", error_code='Only the author can delete this question!')
         return render_template("error.html", error_code='Only the author can delete this question!')
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -304,7 +304,7 @@ def delete_answer(answer_id):
                 return redirect("/question/" + str(target_answer['question_id']) + "?voted=True")
             return render_template("error.html", error_code='Only the author can delete this answer!')
         return render_template("error.html", error_code='Only the author can delete this answer!')
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -333,7 +333,7 @@ def new_comment_to_question(question_id):
                                    username=username
                                    )
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -364,7 +364,7 @@ def add_comment_to_answer(answer_id):
                                    username=username
                                    )
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -386,7 +386,7 @@ def search_in_questions():
                                    logged_in=logged_in,
                                    username=username,
                                    searched=True)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -415,7 +415,7 @@ def edit_answer(answer_id):
                                        username=username)
             return render_template("error.html", error_code='Only the author can edit this question!')
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -441,7 +441,7 @@ def edit_comment(comment_id):
                                        username=username)
             return render_template("error.html", error_code='Only the author can edit this question!')
         return redirect(url_for("login"))
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -460,7 +460,7 @@ def delete_comment(comment_id):
                 return util.redirect_after_comment_action(target_comment)
             return render_template("error.html", error_code='Only the author is allowed to delete this comment!')
         return render_template("error.html", error_code='Only the author is allowed to delete this comment! Log in!')
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -487,7 +487,7 @@ def add_tag(question_id):
         return render_template("error.html",
                                error_code='Only the author is allowed to add tags to this comment!',
                                logged_in=logged_in, user_name=username)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -509,7 +509,7 @@ def delete_tag(question_id, tag_id):
         return render_template("error.html",
                                error_code='Only the author is allowed to add tags to this comment!Log in!',
                                logged_in=logged_in, user_name=username)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -576,7 +576,7 @@ def profile_page(user_id):
                                    user_id, 'user_id', 'answer')],
                                user_comments=user_comments
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -598,7 +598,7 @@ def users():
                                logged_in=logged_in,
                                username=username
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -631,7 +631,7 @@ def login():
                                error_code='You are already signed up and logged in!',
                                logged_in=logged_in,
                                username=session["username"] if logged_in else None)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -653,7 +653,7 @@ def tags():
                                logged_in=logged_in,
                                username=username
                                )
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -673,7 +673,7 @@ def logout():
                                error_code='You have to be logged in to be able to log out...',
                                logged_in=logged_in,
                                username=username)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
@@ -700,7 +700,7 @@ def accept_answer(question_id):
                                error_code='Only the author of the question can accept this answer! Log in!',
                                logged_in=logged_in,
                                username=username)
-    except psycopg2.Error and KeyError and IndexError and TypeError as error:
+    except psycopg2.Error or KeyError or IndexError or TypeError as error:
         error_code = util.find_error_code(error, pgcode=psycopg2.Error.pgcode)
         return render_template("error.html",
                                error_code=error_code,
