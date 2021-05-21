@@ -60,7 +60,6 @@ body {
 }
 
 #hd-last-name {
-    color: #52c6d2;
     float: right;
     padding-right: 20px;
     height: 120px;
@@ -135,12 +134,9 @@ h2, h3, h4 {
 }
 .header img {
     float: left;
-    height: 50px;
+    width: 120px;
+    height: 120px;
     background: whitesmoke;
-}
-
-.header {
-    height: 45px;
 }
 
 .button {
